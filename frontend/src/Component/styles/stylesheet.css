@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://cdn.lineicons.com/4.0/lineicons.css");
+@import url("sidebar.css");
+@import url("navbar.css");
+@import url("guide.css");
+@import url("createproject.css");
+@import url("projectsection.css");
+
+:root{
+--subheader-font-size:13px;
+--title-color:#333;
+--light-color:#eee;
+--darkblue-background-color: #339AF0;
+--blue-color:#339AF0;
+--header-font-weight: 400;
+--subtitle-font-size:11px; 
+--box-border:1px solid #ddd;
+--light-background-color:#eeeef9;
+--round-border-radius: 20px;
+--page-font-size:23px;
+}
+.container{
+    width: 94%;
+    margin: 0 auto;
+}
+.page-row{
+    display: flex;
+    flex-direction: row;
+}
+.project-wrapper{
+    width: 82%;
+    left: 16%;
+    top: 0;
+    height: 100%;
+    background-color: #eee;
+    position: absolute;
+    padding:0 20px;
+}
