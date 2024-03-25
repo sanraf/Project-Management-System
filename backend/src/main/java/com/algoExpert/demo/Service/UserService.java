@@ -4,13 +4,11 @@ import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.UserRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class UserService {
@@ -34,15 +32,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-
-//    update user by id
-//    TODO
-
 //    delete user by id
     public List<User> deleteUser(int userId){
         userRepository.deleteById(userId);
         return userRepository.findAll();
     }
+
+
     public List<Project> getUserProjectIds(int userId) {
         // Find all members
         List<Member> memberList = memberRepository.findAll();
@@ -55,5 +51,7 @@ public class UserService {
 
         return projectRepository.findAllById(userProjectIds);
     }
+
+
 
 }

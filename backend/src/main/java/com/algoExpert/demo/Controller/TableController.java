@@ -2,6 +2,8 @@ package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.Table;
+
+import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-// @CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 @RequestMapping("/table")
 public class TableController {
 
@@ -18,7 +20,7 @@ public class TableController {
 
 //    create table
     @PostMapping("/createTable/{project_id}/{member_id}")
-    public Project createTable(@PathVariable Integer project_id, @PathVariable int member_id){
+    public Project createTable(@PathVariable Integer project_id, @PathVariable int member_id) throws InvalidArgument{
         return tableService.createTable(project_id,member_id);
     }
 
@@ -28,27 +30,18 @@ public class TableController {
     return tableService.getAllTables();
 }
 
+//    delete table
     @DeleteMapping("/deleteTable/{project_id}/{table_id}")
-    public List<Table> deleteTable(@PathVariable Integer project_id, Integer table_id){
+
+    public List<Table> deleteTable(@PathVariable Integer project_id, Integer table_id) throws InvalidArgument{
         return tableService.deleteTable(project_id,table_id);
     }
 
 //    update table
-//    @PutMapping("/updateTable/{id}")
-//    public Table updateTable(@PathVariable int id, @RequestBody Table table) {
-//        return tableService.updateTable(id, table);
-//    }
-//
-////    delete table
-//    @DeleteMapping("/deleteTable/{id}")
-//    public void deleteTable(@PathVariable int id) {
-//        tableService.deleteTable(id);
-//    }
+    @PutMapping("/updateTable/{table_id}")
+    public Table updateTable(@RequestBody Table table,@PathVariable int table_id) throws InvalidArgument {
+        return tableService.editTable( table,table_id);
+    }
 
-//  get  table by id
-    // @GetMapping("/getTable/{id}")
-    // public Table getTableById(@PathVariable int id) {
-    //     return tableService.getTableById(id);
-    // }
 
 }

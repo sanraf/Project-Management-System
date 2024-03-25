@@ -3,6 +3,9 @@ package com.algoExpert.demo.Service;
 
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
+import com.algoExpert.demo.Entity.User;
+
+import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.UserRepository;
@@ -24,16 +27,24 @@ public class MemberService {
     private MemberRepository memberRepository;
 
 //    Invite member to project
-    public Project inviteMember (int project_id , int user_id){
 
-        Project userproject = projectRepository.findById(project_id).get();
-
+    public Project inviteMember (int project_id , int user_id)throws InvalidArgument{
+        User user = userRepository.findById(user_id).orElseThrow(()->new InvalidArgument("User wth ID "+user_id+" not found"));
+        Project userproject = projectRepository.findById(project_id).orElseThrow(()->new InvalidArgument("Project wth ID "+project_id+" not found"));
         List<Member> members =  userproject.getMembersList();
-        Member newMember = new Member(0,user_id, project_id,null);
-        members.add(newMember);
-        userproject.setMembersList(members);
+        boolean memberExist = members.stream()
+                .map(Member::getUser_id)
+                .anyMatch(id->id==user_id);
 
-        return projectRepository.save(userproject);
+        if(memberExist){
+            throw new InvalidArgument("User ID " + user_id + " is already a member");
+        }else{
+            Member newMember = new Member(0,user.getUser_id(), userproject.getProject_id(),null);
+            members.add(newMember);
+            userproject.setMembersList(members);
+
+            return projectRepository.save(userproject);
+        }
     }
 
 //    get all members

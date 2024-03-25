@@ -3,6 +3,7 @@ package com.algoExpert.demo.Controller;
 import com.algoExpert.demo.Entity.Comment;
 import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class CommentController {
 
 //  create new comment using member and task id
     @PostMapping("/create/{member_id}/{task_id}")
-    private Task createComment(@RequestBody Comment comment, @PathVariable int member_id,@PathVariable int task_id){
+    private Task createComment(@RequestBody Comment comment, @PathVariable int member_id,@PathVariable int task_id)throws InvalidArgument {
         return commentService.createComment(comment,member_id,task_id);
     }
 
@@ -29,7 +30,7 @@ public class CommentController {
     }
 
 
-    @PutMapping("/edit/{comment_id}")
+    @PutMapping("/editComment/{comment_id}")
     private Comment editComment(@PathVariable int comment_id,@RequestBody Comment comment){
         return commentService.editComment(comment_id, comment);
     }

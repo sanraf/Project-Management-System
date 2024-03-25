@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-
+@jakarta.persistence.Table(name = "task_container")
 public class Table {
 
     @Id

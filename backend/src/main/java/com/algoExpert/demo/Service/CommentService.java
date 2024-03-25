@@ -4,6 +4,7 @@ import com.algoExpert.demo.Entity.Comment;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.CommentRepository;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.TaskRepository;
@@ -30,9 +31,9 @@ public class CommentService {
     private MemberRepository memberRepository;
 
 //    create comment
-    public Task createComment(Comment comment,int member_id,int task_id){
-        Member findMember = memberRepository.findById(member_id).get();
-        Task task = taskRepository.findById(task_id).get();
+    public Task createComment(Comment comment,int member_id,int task_id)throws InvalidArgument {
+        Member findMember = memberRepository.findById(member_id).orElseThrow(() -> new InvalidArgument("Task with ID " + member_id + " not found"));
+        Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
         User user = userRepository.findById(findMember.getUser_id()).get();
         comment.setUsername(user.getUsername());
 
@@ -54,7 +55,7 @@ public class CommentService {
 // update comment by id
     public Comment editComment(int commentId,Comment newComment){
         return commentRepository.findById(commentId)
-                .map(oldComment -> {oldComment.setComment(newComment.getComment());
+                .map(oldComment -> {oldComment.setCommentBody(newComment.getCommentBody());
                 return commentRepository.save(oldComment);}).orElseThrow();
     }
 

@@ -4,6 +4,9 @@ package com.algoExpert.demo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -13,7 +16,9 @@ public class User {
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  private Integer user_id;
+ @NotBlank(message = "username required")
  private String username;
+ @Email(message = "invalid user email")
  private String email;
 
  public User() {

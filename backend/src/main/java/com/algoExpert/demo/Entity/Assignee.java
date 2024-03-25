@@ -16,14 +16,17 @@ public class Assignee {
 
 	private Integer task_id;
 
+	private String username;
+
 
 	public Assignee() {
 	}
 
-	public Assignee(Integer assignee_id, Integer member_id, Integer task_id) {
+	public Assignee(Integer assignee_id, Integer member_id, Integer task_id, String username) {
 		this.assignee_id = assignee_id;
 		this.member_id = member_id;
 		this.task_id = task_id;
+		this.username = username;
 	}
 
 	public Integer getAssignee_id() {
@@ -48,5 +51,13 @@ public class Assignee {
 
 	public void setTask_id(Integer task_id) {
 		this.task_id = task_id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
