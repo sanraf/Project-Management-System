@@ -1,10 +1,14 @@
 package com.algoExpert.demo.Service;
 
+import com.algoExpert.demo.Dto.CommentDto;
+import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.Comment;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Mapper.CommentMapper;
+import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.CommentRepository;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.TaskRepository;
@@ -15,59 +19,24 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CommentService {
+public interface CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private UserRepository userRepository ;
+    //    create comment
+    TaskDto createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    //  create comment
+    Task createComment(Comment comment, int member_id, int task_id) throws InvalidArgument;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    //    get all comments
+    public List<CommentDto> getAllComments();
 
-//    create comment
-    public Task createComment(Comment comment,int member_id,int task_id)throws InvalidArgument {
-        Member findMember = memberRepository.findById(member_id).orElseThrow(() -> new InvalidArgument("Task with ID " + member_id + " not found"));
-        Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
-        User user = userRepository.findById(findMember.getUser_id()).get();
-        comment.setUsername(user.getUsername());
+    // update comment by id
+    public CommentDto editComment(int commentId, CommentDto newCommentDto) throws InvalidArgument;
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-        comment.setDate_created(simpleDateFormat.format(new Date()));
-        List<Comment> commentList = task.getComments();
-        commentList.add(comment);
-
-        task.setComments(commentList);
-
-        return taskRepository.save(task);
-    }
-
-//    get all comments
-    public List<Comment> getAllComments(){
-    return commentRepository.findAll();
-}
-
-// update comment by id
-    public Comment editComment(int commentId,Comment newComment){
-        return commentRepository.findById(commentId)
-                .map(oldComment -> {oldComment.setCommentBody(newComment.getCommentBody());
-                return commentRepository.save(oldComment);}).orElseThrow();
-    }
-
-//    delete comment by id
-    public List<Comment> deleteComment(int commentId){
-        Comment findComment = commentRepository.findById(commentId).orElseThrow(()->new IllegalArgumentException("comment with Id "+commentId+" does not exist"));
-        if(findComment !=null){
-            commentRepository.deleteById(commentId);
-            return commentRepository.findAll();
-        }
-
-        return null;
-    }
+    //    delete comment by id
+    public List<Comment> deleteComment(int commentId);
 
 }

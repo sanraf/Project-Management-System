@@ -1,41 +1,27 @@
-package com.algoExpert.demo.Entity;
+package com.algoExpert.demo.Dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.algoExpert.demo.Entity.Comment;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TaskDto {
+
     private Integer task_id;
     private String title;
     private String description;
-    private String username;
+    private int owner;
     private String start_date;
     private String end_date;
     private String status;
     private String priority;
+    List<Comment> comments;
 
-//    relationships
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-   List<Comment> comments;
-
-   @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-   List<Assignee> assignees;
-
-   /*
-    public Task() {
+    public TaskDto() {
     }
 
-    public Task(int task_id, String title, String description, int owner, String start_date, String end_date, String status, String priority, List<Comment> comments) {
+    public TaskDto(Integer task_id, String title, String description, int owner, String start_date, String end_date, String status, String priority, List<Comment> comments) {
         this.task_id = task_id;
         this.title = title;
         this.description = description;
@@ -45,14 +31,13 @@ public class Task {
         this.status = status;
         this.priority = priority;
         this.comments = comments;
-        this.assignees = assignees;
     }
 
-    public int getTask_id() {
+    public Integer getTask_id() {
         return task_id;
     }
 
-    public void setTask_id(int task_id) {
+    public void setTask_id(Integer task_id) {
         this.task_id = task_id;
     }
 
@@ -119,13 +104,4 @@ public class Task {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-
-    public List<Assignee> getAssignees() {
-        return assignees;
-    }
-
-    public void setAssignees(List<Assignee> assignees) {
-        this.assignees = assignees;
-    }
-    */
 }
