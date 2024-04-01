@@ -281,7 +281,7 @@ function ProjectSection() {
                                     <div className='field_name table-task text_task row_description'>
                                         <input defaultValue={task.description} onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e) => rowUpdate('description', e.target.
                                             value, task, table.table_id)} />
-                                            <i onClick={()=>loadComments(task.comments, task.task_id)} className="lni lni-reply"></i>
+                                            <i onClick={()=>loadComments(task.comments, task.task_id)} className="lni lni-comments-alt-2"></i>
                                     </div>
                                     <div className='field_name table-task text_task'>{task.owner}</div>
                                     <div className='assignee field_name table-task text_task'>
