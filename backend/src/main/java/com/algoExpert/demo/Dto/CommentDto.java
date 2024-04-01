@@ -1,42 +1,27 @@
-package com.algoExpert.demo.Entity;
+package com.algoExpert.demo.Dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Comment {
+public class CommentDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int comment_id;
     private String username;
     private String date_created;
-
-    @Column(length = 1000)
-    @NotBlank(message = "comment is required")
     private String commentBody;
 
-
-//    constructors
-/*
-    public Comment() {
+    public CommentDto() {
     }
 
-    public Comment(int comment_id, String username, String date_created, String comment) {
+    public CommentDto(int comment_id, String username, String date_created, String commentBody) {
         this.comment_id = comment_id;
         this.username = username;
         this.date_created = date_created;
-        this.commentBody = comment;
+        this.commentBody = commentBody;
     }
 
     public int getComment_id() {
-        return this.comment_id;
+        return comment_id;
     }
 
     public void setComment_id(int comment_id) {
@@ -44,7 +29,7 @@ public class Comment {
     }
 
     public String getUsername() {
-        return this.username;
+        return username;
     }
 
     public void setUsername(String username) {
@@ -52,7 +37,7 @@ public class Comment {
     }
 
     public String getDate_created() {
-        return this.date_created;
+        return date_created;
     }
 
     public void setDate_created(String date_created) {
@@ -60,12 +45,10 @@ public class Comment {
     }
 
     public String getCommentBody() {
-        return this.commentBody;
+        return commentBody;
     }
 
     public void setCommentBody(String commentBody) {
         this.commentBody = commentBody;
     }
- */
-
 }

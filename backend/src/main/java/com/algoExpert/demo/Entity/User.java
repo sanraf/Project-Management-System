@@ -7,9 +7,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
 
@@ -21,6 +25,7 @@ public class User {
  @Email(message = "invalid user email")
  private String email;
 
+ /*
  public User() {
  }
 
@@ -53,6 +58,6 @@ public class User {
  public void setEmail(String email) {
   this.email = email;
  }
-
+*/
 }
 

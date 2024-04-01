@@ -1,5 +1,6 @@
 package com.algoExpert.demo.Controller;
 
+import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Service.UserService;
@@ -19,13 +20,13 @@ public class UserController {
 
 //    create user
     @PostMapping("/saveUser")
-    public User saveUser(@RequestBody User user){
-        return userService.create(user);
+    public UserDto saveUser(@RequestBody UserDto userDto){
+        return userService.create(userDto);
     }
 
 //    get all users of the system
     @GetMapping("/getAllUsers")
-    public List<User> getAll(){
+    public List<UserDto> getAll(){
         return userService.getUsers();
     }
 
