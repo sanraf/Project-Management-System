@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectDto {
 
-
     private Integer project_id;
     private String title;
     private String description;

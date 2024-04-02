@@ -13,4 +13,5 @@ import java.util.List;
 public class TableDto {
     private int table_id;
     private String table_name;
+    private List<Task> tasks;
 }
