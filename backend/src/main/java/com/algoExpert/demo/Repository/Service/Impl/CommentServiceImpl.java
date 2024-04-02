@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     //    create comment
     @Override
     public Task createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument {
-        Comment comment = commentMapper.commentDtoToComment(commentDto);
+        Comment comment = CommentMapper.mapToComment(commentDto);
         Member findMember = memberRepository.findById(member_id).orElseThrow(() -> new InvalidArgument("Task with ID " + member_id + " not found"));
         Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
         User user = userRepository.findById(findMember.getUser_id()).get();
@@ -96,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
                     }
                     return commentRepository.save(oldComment);
                 }).orElseThrow(() -> new InvalidArgument("Comment ID " + commentId + " not fount"));
-        return commentMapper.commentToCommentDto(comment);
+        return CommentMapper.mapToCommentDto(comment);
 
     }
     /*
