@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 
 import com.algoExpert.demo.Entity.Member;
@@ -7,8 +7,8 @@ import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.MemberService;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +27,15 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-//    Invite member to project
+    //    Invite member to project
     @Override
-    public Member inviteMember (int project_id , int user_id)throws InvalidArgument{
+    public Member inviteMember(int project_id, int user_id) throws InvalidArgument {
         // check if user and project exist
-        User user = userRepository.findById(user_id).orElseThrow(()->
-                new InvalidArgument("User wth ID "+user_id+" not found"));
+        User user = userRepository.findById(user_id).orElseThrow(() ->
+                new InvalidArgument("User wth ID " + user_id + " not found"));
 
-        Project userProject = projectRepository.findById(project_id).orElseThrow(()->
-                new InvalidArgument("Project wth ID "+project_id+" not found"));
+        Project userProject = projectRepository.findById(project_id).orElseThrow(() ->
+                new InvalidArgument("Project wth ID " + project_id + " not found"));
 
         // Initialize the members list if it's null
         List<Member> members = userProject.getMemberList();
@@ -46,13 +46,13 @@ public class MemberServiceImpl implements MemberService {
         // check if member exist
         boolean memberExist = members.stream()
                 .map(Member::getUser_id)
-                .anyMatch(id->id==user_id);
+                .anyMatch(id -> id == user_id);
 
-        if(memberExist){
+        if (memberExist) {
             throw new InvalidArgument("User ID " + user_id + " is already a member");
-        }else{
+        } else {
             // create a new member
-            Member newMember = new Member(0,user.getUser_id(), userProject.getProject_id(),null);
+            Member newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername());
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
@@ -61,9 +61,9 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-//    get all members
+    //    get all members
     @Override
-    public List<Member> getAllMembers(){
+    public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
 

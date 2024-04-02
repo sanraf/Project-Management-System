@@ -1,8 +1,9 @@
 package com.algoExpert.demo.Controller;
 
+import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
-import com.algoExpert.demo.Service.ProjectService;
+import com.algoExpert.demo.Repository.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +25,12 @@ public class ProjectController {
 
 //    get all projects
     @GetMapping("/findAllProject")
-    public List<Project> getAllProject(){
+    public List<ProjectDto> getAllProject(){
         return projectService.getAllProjects();
     }
 
     @GetMapping("/getSingleProject/{project_id}")
-    public Project getSingleProject(@PathVariable int project_id){
+    public ProjectDto getSingleProject(@PathVariable int project_id) throws InvalidArgument{
         return projectService.findProject(project_id);
     }
     @DeleteMapping("/deleteProject/{project_id}")
@@ -38,7 +39,7 @@ public class ProjectController {
     }
 
     @PutMapping("/editProject/{project_id}")
-    public Project deleteProject(@RequestBody Project project,@PathVariable int project_id) throws InvalidArgument{
+    public ProjectDto deleteProject(@RequestBody ProjectDto project,@PathVariable int project_id) throws InvalidArgument{
         return projectService.editProject(project,project_id);
     }
 

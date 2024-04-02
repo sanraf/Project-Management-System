@@ -1,30 +1,18 @@
-package com.algoExpert.demo.Entity;
+package com.algoExpert.demo.Dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.algoExpert.demo.Entity.Task;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@jakarta.persistence.Table(name = "task_container")
-public class Table {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TableDto {
     private int table_id;
     private String table_name;
-
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks;
 
-    /*
-    public Table() {
+    public TableDto() {
     }
 
-    public Table(int table_id, String table_name, List<Task> tasks) {
+    public TableDto(int table_id, String table_name, List<Task> tasks) {
         this.table_id = table_id;
         this.table_name = table_name;
         this.tasks = tasks;
@@ -53,6 +41,4 @@ public class Table {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
-
-     */
 }

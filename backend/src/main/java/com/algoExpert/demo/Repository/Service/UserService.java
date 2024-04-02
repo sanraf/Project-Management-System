@@ -1,6 +1,8 @@
-package com.algoExpert.demo.Service;
+package com.algoExpert.demo.Repository.Service;
 
+import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.*;
+import com.algoExpert.demo.Mapper.UserMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.UserRepository;
@@ -13,15 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public interface UserService {
 
-//    create user
-    User create(User user);
+    //    create user
+    UserDto create(UserDto userDto);
 
-// get all users
-    List<User> getUsers();
+    // get all users
+    List<UserDto> getUsers();
 
-//  get all projects
+    //    delete user by id
+    List<UserDto> deleteUser(int userId)
+
+    //    get User Project Ids
     List<Project> getUserProjectIds(int userId);
-
-//    delete user by id
-    List<User> deleteUser(int userId);
 }

@@ -1,10 +1,12 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.*;
+import com.algoExpert.demo.Mapper.UserMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.UserService;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,26 +25,40 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ProjectRepository projectRepository;
 
-//  create user
+    @Autowired
+    UserMapper userMapper;
+
+    //  create user
     @Override
-    public User create(User user){
-        return userRepository.save(user);
+    public UserDto create(UserDto userDto) {
+        User user = userMapper.userDtoToUser(userDto);
+        User userResults = userRepository.save(user);
+        return userMapper.userToUserDto(userResults);
     }
 
-// get all users
+    // get all users
     @Override
-    public List<User> getUsers(){
-        return userRepository.findAll();
+    public List<UserDto> getUsers() {
+        List<User> users = userRepository.findAll();
+        return userMapper.usersToUserDtos(users);
     }
 
-//  delete user by id
+    //  delete user by id
     @Override
-    public List<User> deleteUser(int userId){
+    public List<UserDto> deleteUser(int userId) {
         userRepository.deleteById(userId);
-        return userRepository.findAll();
+        return userRepository.findAll()
+                .stream().map(user -> new UserDto(user.getUser_id(),
+                        user.getUsername(),
+                        user.getEmail())).collect(Collectors.toList());
     }
 
-//    get User Project Ids
+//    public List<User> deleteUser(int userId){
+//        userRepository.deleteById(userId);
+//        return userRepository.findAll();
+//    }
+
+    //    get User Project Ids
     @Override
     public List<Project> getUserProjectIds(int userId) {
         // Find all members

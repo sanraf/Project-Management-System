@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service;
+package com.algoExpert.demo.Repository.Service;
 
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -9,10 +9,10 @@ import java.util.List;
 @Service
 public interface MemberService {
 
-//    Invite member to project
-    Member inviteMember (int project_id , int user_id)throws InvalidArgument;
+    //    Invite member to project
+    Member inviteMember(int project_id, int user_id) throws InvalidArgument;
 
-//    get all members
+    //    get all members
     List<Member> getAllMembers();
 
     //    get member id
