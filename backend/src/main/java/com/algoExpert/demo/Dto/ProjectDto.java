@@ -1,7 +1,6 @@
 package com.algoExpert.demo.Dto;
 
 import com.algoExpert.demo.Entity.Member;
-import com.algoExpert.demo.Entity.Table;
 import com.algoExpert.demo.Entity.User;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public class ProjectDto {
     private Integer project_id;
     private String title;
     private String description;
-    private List<Table> tables;
+    private List<TaskTable> tables;
     private List<Member> memberList;
     private User user;
 
