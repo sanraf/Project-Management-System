@@ -43,12 +43,11 @@ public class TableServiceImpl implements TableService {
     @Override
     public ProjectDto createTable(int project_id, int member_id) throws InvalidArgument {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-
-        List<Table> tables = project.getTables();
+        Member member =  memberRepository.findById(member_id).get();
+        List<TaskTable> tables = project.getTables();
         int count = project.getTables().size();
-        Table table = new Table(0, "Table" + count, null);
-        Task task = new Task(0, "task", "description"
-                , member_id, "", "", "", "", null);
+        TaskTable table = new TaskTable(0, "Table" + count, null);
+        Task task = new Task(0, "task", "description",member.getUsername() , "", "", "", "", null,null);
 
 
         tables.add(table);
@@ -111,21 +110,20 @@ public class TableServiceImpl implements TableService {
 
     //  get all table
     @Override
-    public List<TableDto> getAllTables() {
-        List<Table> tables = tableRepository.findAll();
-        return tableMapper.tableDtos(tables);
+    public List<TaskTable> getAllTables() {
+        return tableRepository.findAll();
     }
 
     //  update table
     @Override
-    public TableDto editTable(TableDto newTableValue, int table_id) throws InvalidArgument {
-        Table table = tableRepository.findById(table_id)
+    public TableDto editTable(TableDto newTableValue) throws InvalidArgument {
+        TaskTable table = tableRepository.findById(newTableValue.getTable_id())
                 .map(existingTable -> {
                     if (newTableValue != null) {
                         Optional.ofNullable(newTableValue.getTable_name()).ifPresent(existingTable::setTable_name);
                     }
                     return tableRepository.save(existingTable);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + table_id + " not found"));
+                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTable_id() + " not found"));
 
         return tableMapper.tableToTableDto(table);
 
@@ -134,16 +132,15 @@ public class TableServiceImpl implements TableService {
     //    delete table
     @Override
     @Transactional
-    public List<TableDto> deleteTable(Integer project_id, Integer table_id) throws InvalidArgument {
+    public List<TaskTable> deleteTable(Integer project_id, Integer table_id) throws InvalidArgument {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-        Table table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("Table with ID " + table_id + " not found"));
+        TaskTable table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("Table with ID " + table_id + " not found"));
 
-        List<Table> tablesList = project.getTables();
+        List<TaskTable> tablesList = project.getTables();
         tablesList.remove(table);
         project.setTables(tablesList);
         projectRepository.save(project);
-        List<Table> tables = tableRepository.findAll();
-        return tableMapper.tableDtos(tables);
+        return tableRepository.findAll();
     }
 
 }

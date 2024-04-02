@@ -25,12 +25,12 @@ public class ProjectController {
 
 //    get all projects
     @GetMapping("/findAllProject")
-    public List<ProjectDto> getAllProject(){
+    public List<Project> getAllProject(){
         return projectService.getAllProjects();
     }
 
     @GetMapping("/getSingleProject/{project_id}")
-    public ProjectDto getSingleProject(@PathVariable int project_id) throws InvalidArgument{
+    public Project getSingleProject(@PathVariable int project_id) throws InvalidArgument{
         return projectService.findProject(project_id);
     }
     @DeleteMapping("/deleteProject/{project_id}")
@@ -38,9 +38,9 @@ public class ProjectController {
         return projectService.deleteProjectById(project_id);
     }
 
-    @PutMapping("/editProject/{project_id}")
-    public ProjectDto deleteProject(@RequestBody ProjectDto project,@PathVariable int project_id) throws InvalidArgument{
-        return projectService.editProject(project,project_id);
+    @PutMapping("/editProject")
+    public Project deleteProject(@RequestBody Project project) throws InvalidArgument{
+        return projectService.editProject(project);
     }
 
 //    @GetMapping("/fetchUserProject/{user_id}")

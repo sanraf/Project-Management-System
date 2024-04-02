@@ -17,11 +17,12 @@ public class AssigneeController {
     private AssigneesService assigneesService;
 
     //    assign member to task using their IDs
-    @PostMapping("/saveAssignee/{dtoMember_id}/{dtoTask_id}")
-    private AssigneeDto saveAssignee(@PathVariable int dtoMember_id, @PathVariable int dtoTask_id) throws InvalidArgument {
-        return assigneesService.assignTaskToMember(dtoMember_id, dtoTask_id);
+    @PostMapping("/saveAssignee/{member_id}/{task_id}")
+    private Assignee saveAssignee(@PathVariable int member_id, @PathVariable int task_id) throws InvalidArgument {
+        return assigneesService.assignTaskToMember(member_id, task_id);
     }
 
+//    get all assignees of a task
     @GetMapping("/getAllAssignees")
     public List<Assignee> getAllAssignees() {
         return assigneesService.getAllAssignees();

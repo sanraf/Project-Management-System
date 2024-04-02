@@ -19,16 +19,16 @@ public interface TaskService {
 
 
     //    create new task
-    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument;
+    TaskTable createTask(int member_id, int table_id) throws InvalidArgument;
 
     //    get all tasks
-    public List<TaskDto> getAllTask();
+    List<Task> getAllTask();
 
     //    update task
-    public TaskDto editTask(TaskDto newTaskDto) throws InvalidArgument;
+    TaskDto editTask(TaskDto newTaskDto) throws InvalidArgument;
 
     //duplicate task
-    public TaskTable duplicateTask(Task task, Integer table_id);
+    TaskTable duplicateTask(Task task, Integer table_id);
 
     //  delete task
     @Transactional

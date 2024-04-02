@@ -23,7 +23,7 @@ public class Project {
 
 //  relationships
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Table> tables;
+    private List<TaskTable> tables;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Member> memberList;

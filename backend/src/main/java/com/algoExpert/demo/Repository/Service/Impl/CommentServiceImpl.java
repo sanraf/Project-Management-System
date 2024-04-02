@@ -7,6 +7,7 @@ import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Mapper.CommentMapper;
 import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.CommentRepository;
 import com.algoExpert.demo.Repository.MemberRepository;
@@ -38,9 +39,12 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private TaskMapper taskMapper;
 
+    @Autowired
+    private CommentMapper commentMapper;
+
     //    create comment
     @Override
-    public TaskDto createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument {
+    public Task createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument {
         Comment comment = commentMapper.commentDtoToComment(commentDto);
         Member findMember = memberRepository.findById(member_id).orElseThrow(() -> new InvalidArgument("Task with ID " + member_id + " not found"));
         Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
@@ -53,8 +57,8 @@ public class CommentServiceImpl implements CommentService {
         commentList.add(comment);
 
         task.setComments(commentList);
-        Task taskResult = taskRepository.save(task);
-        return taskMapper.taskToTaskDto(taskResult);
+        return taskRepository.save(task);
+
     }
     /*public Task createComment(Comment comment,int member_id,int task_id)throws InvalidArgument {
         Member findMember = memberRepository.findById(member_id).orElseThrow(() ->
@@ -78,9 +82,8 @@ public class CommentServiceImpl implements CommentService {
 
     //    get all comments
     @Override
-    public List<CommentDto> getAllComments() {
-        List<Comment> comments = commentRepository.findAll();
-        return commentMapper.commentDtos(comments);
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
     }
 
     // update comment by id
@@ -94,6 +97,7 @@ public class CommentServiceImpl implements CommentService {
                     return commentRepository.save(oldComment);
                 }).orElseThrow(() -> new InvalidArgument("Comment ID " + commentId + " not fount"));
         return commentMapper.commentToCommentDto(comment);
+
     }
     /*
     public Comment editComment(int commentId, Comment newComment) {

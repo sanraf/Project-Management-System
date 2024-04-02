@@ -35,7 +35,7 @@ public class AssigneesServiceImpl implements AssigneesService {
         Member member = memberRepository.findById(member_id).orElseThrow(() ->
                 new InvalidArgument("Member wth ID " + member_id + " not found"));
 
-        Assignee assignee = new Assignee(0, member.getMember_id(), storedTask.getTask_id());
+        Assignee assignee = new Assignee(0, member.getMember_id(), storedTask.getTask_id(), member.getUsername());
 
         return assigneesRepository.save(assignee);
     }
@@ -48,9 +48,9 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     //	get all assignees
     @Override
-    public List<AssigneeDto> getAllAssignees() {
-        List<Assignee> assignees = assigneesRepository.findAll();
-        return assigneeMapper.assigneeDtos(assignees);
+    public List<Assignee> getAllAssignees() {
+       return assigneesRepository.findAll();
+
     }
 
 }

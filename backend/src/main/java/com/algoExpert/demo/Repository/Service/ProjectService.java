@@ -20,17 +20,17 @@ import java.util.Optional;
 public interface ProjectService {
 
     //  create project
-    public Integer createProject(Project project, int user_id) throws InvalidArgument;
+    Integer createProject(Project project, int user_id) throws InvalidArgument;
 
     //  get all projects
-    public List<ProjectDto> getAllProjects();
+    List<Project> getAllProjects();
 
     //get one project
-    public ProjectDto findProject(int project_id) throws InvalidArgument;
+    Project findProject(int project_id) throws InvalidArgument;
 
     @Transactional
-    public List<Project> deleteProjectById(Integer projectId) throws InvalidArgument;
+    List<Project> deleteProjectById(Integer projectId) throws InvalidArgument;
 
-    public ProjectDto editProject(ProjectDto projectDto, int project_id) throws InvalidArgument;
+    Project editProject(Project Project) throws InvalidArgument;
 
 }
