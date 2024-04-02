@@ -1,11 +1,11 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.*;
-import com.algoExpert.demo.Service.TaskService;
+import com.algoExpert.demo.Repository.Service.TaskService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -42,9 +42,9 @@ public class TaskServiceImpl implements TaskService {
 
     //    create new task
     @Override
-    public Table createTask(int member_id, int table_id) throws InvalidArgument {
+    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument {
 
-        Table table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("Table with ID " + table_id + " not found"));
+        TaskTable table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
@@ -57,11 +57,11 @@ public class TaskServiceImpl implements TaskService {
         return tableRepository.save(table);
     }
     /*
-    public Table createTask(int member_id, int table_id) throws InvalidArgument {
+    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument {
 
         // check if table and member exist
-        Table table = tableRepository.findById(table_id).orElseThrow(()->
-                new InvalidArgument("Table with ID " + table_id + " not found"));
+        TaskTable table = tableRepository.findById(table_id).orElseThrow(()->
+                new InvalidArgument("TaskTable with ID " + table_id + " not found"));
         Member member = memberRepository.findById(member_id).orElseThrow(()->
                 new InvalidArgument("Member wth ID "+member_id+" not found"));
 
@@ -81,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDto> getAllTask() {
         List<Task> tasks = taskRepository.findAll();
-        return taskMapper.taskDtos(tasks);
+        return taskRepository.save(tasks);
     }
 
     //    update task
@@ -104,12 +104,10 @@ public class TaskServiceImpl implements TaskService {
 
     //duplicate task
     @Override
-    public Table duplicateTask(Task task, Integer table_id) {
-        Table table = tableRepository.findById(table_id).get();
+    public TaskTable duplicateTask(Task task, Integer table_id) {
+        TaskTable table = tableRepository.findById(table_id).get();
 
-        Task newTask = new Task(0, task.getTitle(), task.getDescription()
-
-                , task.getOwner(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
+        Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getOwner(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
                 task.getPriority(), null);
         List<Task> taskList = table.getTasks();
 
@@ -122,11 +120,11 @@ public class TaskServiceImpl implements TaskService {
     //  delete task
     @Override
     @Transactional
-    public Table deleteTaskById(Integer task_id, Integer table_id) throws InvalidArgument {
+    public TaskTable deleteTaskById(Integer task_id, Integer table_id) throws InvalidArgument {
         Task storedTask = taskRepository.findById(task_id).orElseThrow(() ->
                 new InvalidArgument("Task with ID " + task_id + " not found"));
-        Table table = tableRepository.findById(table_id).orElseThrow(() ->
-                new InvalidArgument("Table with ID " + table_id + " not found"));
+        TaskTable table = tableRepository.findById(table_id).orElseThrow(() ->
+                new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
         List<Comment> comments = storedTask.getComments();
         if (!comments.isEmpty()) {

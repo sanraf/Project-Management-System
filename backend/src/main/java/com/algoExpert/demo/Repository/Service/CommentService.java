@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service;
+package com.algoExpert.demo.Repository.Service;
 
 import com.algoExpert.demo.Dto.CommentDto;
 import com.algoExpert.demo.Dto.TaskDto;

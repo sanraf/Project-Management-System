@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service;
+package com.algoExpert.demo.Repository.Service;
 
 import com.algoExpert.demo.Dto.AssigneeDto;
 import com.algoExpert.demo.Entity.Assignee;

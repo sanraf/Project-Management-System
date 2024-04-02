@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service;
+package com.algoExpert.demo.Repository.Service;
 
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.*;
@@ -19,7 +19,7 @@ public interface TaskService {
 
 
     //    create new task
-    public Table createTask(int member_id, int table_id) throws InvalidArgument;
+    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument;
 
     //    get all tasks
     public List<TaskDto> getAllTask();
@@ -28,11 +28,11 @@ public interface TaskService {
     public TaskDto editTask(TaskDto newTaskDto) throws InvalidArgument;
 
     //duplicate task
-    public Table duplicateTask(Task task, Integer table_id);
+    public TaskTable duplicateTask(Task task, Integer table_id);
 
     //  delete task
     @Transactional
-    Table deleteTaskById(Integer taskId, Integer table_id) throws InvalidArgument;
+    TaskTable deleteTaskById(Integer taskId, Integer table_id) throws InvalidArgument;
 
 }
 
