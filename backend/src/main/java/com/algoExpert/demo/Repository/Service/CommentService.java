@@ -24,19 +24,16 @@ import java.util.Optional;
 @Service
 public interface CommentService {
 
-    //    create comment
-    TaskDto createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument;
-
-    //  create comment
-    Task createComment(Comment comment, int member_id, int task_id) throws InvalidArgument;
+   //  create comment
+    Task createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument;
 
     //    get all comments
-    public List<CommentDto> getAllComments();
+  List<Comment> getAllComments();
 
     // update comment by id
-    public CommentDto editComment(int commentId, CommentDto newCommentDto) throws InvalidArgument;
+  CommentDto editComment(int commentId, CommentDto newCommentDto) throws InvalidArgument;
 
     //    delete comment by id
-    public List<Comment> deleteComment(int commentId);
+  List<Comment> deleteComment(int commentId);
 
 }

@@ -1,8 +1,8 @@
 package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.CommentDto;
-import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.Comment;
+import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ public class CommentController {
 
 //  create new comment using member and task id
     @PostMapping("/create/{member_id}/{task_id}")
-    private TaskDto createComment(@RequestBody CommentDto commentDto, @PathVariable int member_id, @PathVariable int task_id)throws InvalidArgument {
+    private Task createComment(@RequestBody CommentDto commentDto, @PathVariable int member_id, @PathVariable int task_id)throws InvalidArgument {
         return commentService.createComment(commentDto,member_id,task_id);
     }
 
 //    get all comments
     @GetMapping("/getAllComments")
-    private List<CommentDto> getUsers(){
+    private List<Comment> getAllComments(){
         return commentService.getAllComments();
     }
 
