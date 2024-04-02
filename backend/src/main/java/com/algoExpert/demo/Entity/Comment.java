@@ -21,4 +21,7 @@ public class Comment {
     @Column(length = 1000)
     @NotBlank(message = "comment is required")
     private String commentBody;
+
+    public Comment(int commentId, String commentBody) {
+    }
 }
