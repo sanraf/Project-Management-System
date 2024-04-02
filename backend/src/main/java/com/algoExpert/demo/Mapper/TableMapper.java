@@ -2,7 +2,9 @@ package com.algoExpert.demo.Mapper;
 
 import com.algoExpert.demo.Dto.TableDto;
 import com.algoExpert.demo.Entity.TaskTable;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TableMapper {
     public static TableDto mapToTableDto(TaskTable taskTable) {
         return new TableDto(

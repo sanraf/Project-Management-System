@@ -2,7 +2,9 @@ package com.algoExpert.demo.Mapper;
 
 import com.algoExpert.demo.Dto.AssigneeDto;
 import com.algoExpert.demo.Entity.Assignee;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AssigneeMapper {
 
     public static AssigneeDto mapToAssigneeDto(Assignee assignee){

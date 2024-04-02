@@ -2,8 +2,9 @@ package com.algoExpert.demo.Mapper;
 
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.User;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class UserMapper {
     public static UserDto mapToUserDto(User user) {
         return new UserDto(

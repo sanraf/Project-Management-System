@@ -2,7 +2,9 @@ package com.algoExpert.demo.Mapper;
 
 import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Entity.Project;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProjectMapper {
     public static ProjectDto mapToProjectDto(Project project) {
         return new ProjectDto(

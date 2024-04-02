@@ -1,11 +1,10 @@
 package com.algoExpert.demo.Mapper;
 
-
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.Task;
+import org.springframework.stereotype.Component;
 
-
-
+@Component
 public class TaskMapper {
     public static TaskDto mapToTaskDto(Task task) {
         return new TaskDto(
