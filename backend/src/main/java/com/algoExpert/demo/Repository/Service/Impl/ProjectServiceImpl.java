@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Entity.*;
@@ -6,12 +6,12 @@ import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.ProjectMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.MemberService;
+import com.algoExpert.demo.Repository.Service.ProjectService;
+import com.algoExpert.demo.Repository.Service.TableService;
+import com.algoExpert.demo.Repository.Service.TaskService;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.MemberService;
-import com.algoExpert.demo.Service.ProjectService;
-import com.algoExpert.demo.Service.TableService;
-import com.algoExpert.demo.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project savedProject = projectRepository.save(project);
 
         // save member
-        Member newMember = memberService.inviteMember(savedProject.getProject_id(), user.getUser_id());
+        Member newMember = memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
         // Create a default table using new member id
         tableService.createTable(savedProject.getProject_id(), newMember.getMember_id());

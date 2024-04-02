@@ -1,9 +1,8 @@
 package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Entity.Member;
-import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
-import com.algoExpert.demo.Service.MemberService;
+import com.algoExpert.demo.Repository.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class MemberController {
         return memberService.getAllMembers();
     }
 
-    @GetMapping("/getMemebrId/{user_id}")
+    @GetMapping("/getMemberId/{user_id}")
     public Integer getMemberId(@PathVariable int user_id ){
         return memberService.findLoginMember(user_id);
     }

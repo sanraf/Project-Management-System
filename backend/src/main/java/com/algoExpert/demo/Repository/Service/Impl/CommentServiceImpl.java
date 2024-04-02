@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.CommentDto;
 import com.algoExpert.demo.Dto.TaskDto;
@@ -10,9 +10,9 @@ import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.CommentRepository;
 import com.algoExpert.demo.Repository.MemberRepository;
+import com.algoExpert.demo.Repository.Service.CommentService;
 import com.algoExpert.demo.Repository.TaskRepository;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

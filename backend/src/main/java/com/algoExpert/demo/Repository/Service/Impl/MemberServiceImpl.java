@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 
 import com.algoExpert.demo.Entity.Member;
@@ -7,8 +7,8 @@ import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.MemberService;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
             throw new InvalidArgument("User ID " + user_id + " is already a member");
         } else {
             // create a new member
-            Member newMember = new Member(0, user.getUser_id(), userProject.getProject_id(), null);
+            Member newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername());
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);

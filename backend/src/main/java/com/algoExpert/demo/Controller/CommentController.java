@@ -3,10 +3,8 @@ package com.algoExpert.demo.Controller;
 import com.algoExpert.demo.Dto.CommentDto;
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.Comment;
-import com.algoExpert.demo.Entity.Task;
-import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
-import com.algoExpert.demo.Service.CommentService;
+import com.algoExpert.demo.Repository.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,12 +1,12 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.Mapper.UserMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.UserService;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

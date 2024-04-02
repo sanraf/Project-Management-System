@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Dto.TableDto;
@@ -8,9 +8,9 @@ import com.algoExpert.demo.Mapper.ProjectMapper;
 import com.algoExpert.demo.Mapper.TableMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.TableService;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.TaskRepository;
-import com.algoExpert.demo.Service.TableService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

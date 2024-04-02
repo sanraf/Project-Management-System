@@ -1,4 +1,4 @@
-package com.algoExpert.demo.Service.Impl;
+package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.AssigneeDto;
 import com.algoExpert.demo.Entity.Assignee;
@@ -7,8 +7,8 @@ import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.AssigneesRepository;
 import com.algoExpert.demo.Repository.MemberRepository;
+import com.algoExpert.demo.Repository.Service.AssigneesService;
 import com.algoExpert.demo.Repository.TaskRepository;
-import com.algoExpert.demo.Service.AssigneesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
