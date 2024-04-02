@@ -19,7 +19,7 @@ public class Member {
 
     private Integer project_id;
 
-    private  String username;
+    private String username;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Task> taskList;

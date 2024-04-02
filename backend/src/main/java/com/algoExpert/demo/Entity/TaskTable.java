@@ -18,5 +18,6 @@ public class TaskTable {
     private String table_name;
 
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Task> tasks;
+    private List<Task> tasks;
+
 }

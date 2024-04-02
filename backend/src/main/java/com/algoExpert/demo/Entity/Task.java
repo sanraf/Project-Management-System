@@ -24,12 +24,12 @@ public class Task {
     private String status;
     private String priority;
 
-//    relationships
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-   List<Comment> comments;
+    //    relationships
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
-   @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-   List<Assignee> assignees;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assignee> assignees;
 
 
 }
