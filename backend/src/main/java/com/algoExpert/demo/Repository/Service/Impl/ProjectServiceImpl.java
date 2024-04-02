@@ -94,16 +94,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     //  get all projects
     @Override
-    public List<ProjectDto> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
-        return projectMapper.projectDtos(projects);
+    public List<Project> getAllProjects() {
+      return projectRepository.findAll();
     }
 
     //get one project
     @Override
-    public ProjectDto findProject(int project_id) throws InvalidArgument {
-        Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-        return projectMapper.projectToProjectDto(project);
+    public Project findProject(int project_id) throws InvalidArgument {
+        return projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
     }
 
     //    delete project
@@ -113,7 +111,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new InvalidArgument("Project with ID " + projectId + " not found"));
 
         // Delete associated tables
-        for (Table table : project.getTables()) {
+        for (TaskTable table : project.getTables()) {
             tableRepository.delete(table);
         }
 
@@ -129,30 +127,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     //    update project
     @Override
-    public ProjectDto editProject(ProjectDto projectDto, int project_id) throws InvalidArgument {
 
-        Project project = projectRepository.findById(project_id).map(existingProject -> {
-            if (projectDto != null) {
-                Optional.ofNullable(projectDto.getTitle()).ifPresent(existingProject::setTitle);
-                Optional.ofNullable(projectDto.getDescription()).ifPresent(existingProject::setDescription);
-            }
-            return projectRepository.save(existingProject);
-        }).orElseThrow(() -> new InvalidArgument("Task with ID " + project_id + " not found"));
-
-        return projectMapper.projectToProjectDto(project);
+    public Project editProject(Project newProjectValue) throws InvalidArgument{
+        return projectRepository.findById(newProjectValue.getProject_id())
+                .map(existingProject -> {
+                    if (newProjectValue != null) {
+                        Optional.ofNullable(newProjectValue.getTitle()).ifPresent(existingProject::setTitle);
+                        Optional.ofNullable(newProjectValue.getDescription()).ifPresent(existingProject::setDescription);
+                    }
+                    return projectRepository.save(existingProject);
+                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newProjectValue.getProject_id() + " not found"));
 
     }
-
-//    public Project editProject(Project newProjectValue, int project_id) throws InvalidArgument{
-//        return projectRepository.findById(project_id)
-//                .map(existingProject -> {
-//                    if (newProjectValue != null) {
-//                        Optional.ofNullable(newProjectValue.getTitle()).ifPresent(existingProject::setTitle);
-//                        Optional.ofNullable(newProjectValue.getDescription()).ifPresent(existingProject::setDescription);
-//                    }
-//                    return projectRepository.save(existingProject);
-//                }).orElseThrow(() -> new InvalidArgument("Task with ID " + project_id + " not found"));
-//
-//    }
 
 }

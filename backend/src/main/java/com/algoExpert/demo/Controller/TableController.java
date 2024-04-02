@@ -2,6 +2,7 @@ package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Dto.TableDto;
+import com.algoExpert.demo.Entity.TaskTable;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,19 @@ public class TableController {
 
     //    get all tables
     @GetMapping("/getAllTables")
-    public List<TableDto> getAllTables() {
+    public List<TaskTable> getAllTables() {
         return tableService.getAllTables();
     }
 
     //    delete table
     @DeleteMapping("/deleteTable/{project_id}/{table_id}")
-    public List<TableDto> deleteTable(@PathVariable Integer project_id, Integer table_id) throws InvalidArgument {
+    public List<TaskTable> deleteTable(@PathVariable Integer project_id, Integer table_id) throws InvalidArgument {
         return tableService.deleteTable(project_id, table_id);
     }
 
     //    update table
-    @PutMapping("/updateTable/{table_id}")
-    public TableDto updateTable(@RequestBody TableDto tableDto, @PathVariable int table_id) throws InvalidArgument {
-        return tableService.editTable(tableDto, table_id);
+    @PutMapping("/updateTable")
+    public TableDto updateTable(@RequestBody TableDto tableDto) throws InvalidArgument {
+        return tableService.editTable(tableDto);
     }
 }

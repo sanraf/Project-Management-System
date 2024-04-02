@@ -22,7 +22,7 @@ public interface UserService {
     List<UserDto> getUsers();
 
     //    delete user by id
-    List<UserDto> deleteUser(int userId)
+    List<UserDto> deleteUser(int userId);
 
     //    get User Project Ids
     List<Project> getUserProjectIds(int userId);

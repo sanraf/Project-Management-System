@@ -17,14 +17,10 @@ import java.util.List;
 public interface AssigneesService {
 
     //	 Assign a task to member
-    Assignee assignTaskToMember(int member_id, int task_id) throws InvalidArgument
-    /*AssigneeDto assignTaskToMember(int dtoMember_id, int dtoTask_id);*/
-
-    //	get all assignees
     Assignee assignTaskToMember(int member_id, int task_id) throws InvalidArgument;
 
     //  get all projects
-    List<AssigneeDto> getAllAssignees();
+    List<Assignee> getAllAssignees();
 
 //	get all assignees
 

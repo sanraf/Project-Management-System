@@ -44,44 +44,26 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskTable createTask(int member_id, int table_id) throws InvalidArgument {
 
-        TaskTable table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("TaskTable with ID " + table_id + " not found"));
+        TaskTable table = tableRepository.findById(table_id).orElseThrow(() ->
+                new InvalidArgument("TaskTable with ID " + table_id + " not found"));
+
+        Member member = memberRepository.findById(member_id).orElseThrow(()->
+                new InvalidArgument("Member wth ID "+member_id+" not found"));
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
-        Task task = new Task(0, "task" + count, ""
-                , member_id, "", "", "", "", null);
+        Task task = new Task(0, "task " + count, ""
+                , member.getUsername(), "", "", "", "", null, null);
 
         taskList.add(task);
         table.setTasks(taskList);
 
         return tableRepository.save(table);
     }
-    /*
-    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument {
-
-        // check if table and member exist
-        TaskTable table = tableRepository.findById(table_id).orElseThrow(()->
-                new InvalidArgument("TaskTable with ID " + table_id + " not found"));
-        Member member = memberRepository.findById(member_id).orElseThrow(()->
-                new InvalidArgument("Member wth ID "+member_id+" not found"));
-
-        List<Task> taskList = table.getTasks();
-        int count = taskList.size()+1;
-        Task task = new Task(0,"task "+count,""
-                ,member.getMember_id(),"","","","",null);
-
-        taskList.add(task);
-        table.setTasks(taskList);
-
-        return tableRepository.save(table);
-    }*/
-
-
     //    get all tasks
     @Override
-    public List<TaskDto> getAllTask() {
-        List<Task> tasks = taskRepository.findAll();
-        return taskRepository.save(tasks);
+    public List<Task> getAllTask() {
+        return taskRepository.findAll();
     }
 
     //    update task
@@ -107,8 +89,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskTable duplicateTask(Task task, Integer table_id) {
         TaskTable table = tableRepository.findById(table_id).get();
 
-        Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getOwner(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
-                task.getPriority(), null);
+        Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getUsername(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
+                task.getPriority(), null, null);
         List<Task> taskList = table.getTasks();
 
 

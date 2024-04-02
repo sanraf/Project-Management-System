@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
             throw new InvalidArgument("User ID " + user_id + " is already a member");
         } else {
             // create a new member
-            Member newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername());
+            Member newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),null);
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
@@ -60,6 +60,7 @@ public class MemberServiceImpl implements MemberService {
             return memberRepository.save(newMember);
         }
     }
+
 
     //    get all members
     @Override
