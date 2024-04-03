@@ -2,6 +2,7 @@ package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.Project;
+import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Repository.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
 
 //    get all users of the system
     @GetMapping("/getAllUsers")
-    public List<UserDto> getAll(){
+    public List<User> getAll(){
         return userService.getUsers();
     }
 

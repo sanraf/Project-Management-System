@@ -2,26 +2,37 @@ package com.algoExpert.demo.Mapper;
 
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.Task;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TaskMapper {
+    public static TaskDto mapToTaskDto(Task task) {
+        return new TaskDto(
+                task.getTask_id(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getUsername(),
+                task.getStart_date(),
+                task.getEnd_date(),
+                task.getStatus(),
+                task.getPriority(),
+                task.getComments(),
+                task.getAssignees()
+        );
+    }
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public Task taskDtoToTask(TaskDto taskDto){return modelMapper.map(taskDto,Task.class); }
-
-    public TaskDto taskToTaskDto(Task task){return modelMapper.map(task,TaskDto.class);}
-
-    public List<TaskDto> taskDtos(List<Task> tasks){
-        return tasks.stream()
-                .map(task -> modelMapper.map(task,TaskDto.class))
-                .collect(Collectors.toList());
+    public static Task mapToTask(TaskDto taskDto) {
+        return new Task(
+                taskDto.getTask_id(),
+                taskDto.getTitle(),
+                taskDto.getDescription(),
+                taskDto.getUsername(),
+                taskDto.getStart_date(),
+                taskDto.getEnd_date(),
+                taskDto.getStatus(),
+                taskDto.getPriority(),
+                taskDto.getComments(),
+                taskDto.getAssignees()
+        );
     }
 }
