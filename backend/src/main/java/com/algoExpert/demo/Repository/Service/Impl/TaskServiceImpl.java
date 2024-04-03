@@ -81,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
                     }
                     return taskRepository.save(existingTask);
                 }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTaskDto.getTask_id() + " not found"));
-        return taskMapper.taskToTaskDto(task);
+        return TaskMapper.mapToTaskDto(task);
     }
 
     //duplicate task

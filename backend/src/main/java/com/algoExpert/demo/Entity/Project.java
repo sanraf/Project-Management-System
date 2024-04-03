@@ -21,7 +21,7 @@ public class Project {
 
     private String description;
 
-//  relationships
+    //  relationships
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskTable> tables;
 
@@ -29,7 +29,7 @@ public class Project {
     private List<Member> memberList;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
 }

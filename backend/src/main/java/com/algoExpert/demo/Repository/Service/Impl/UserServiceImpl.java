@@ -31,16 +31,15 @@ public class UserServiceImpl implements UserService {
     //  create user
     @Override
     public UserDto create(UserDto userDto) {
-        User user = userMapper.userDtoToUser(userDto);
+        User user = UserMapper.mapToUser(userDto);
         User userResults = userRepository.save(user);
-        return userMapper.userToUserDto(userResults);
+        return UserMapper.mapToUserDto(userResults);
     }
 
     // get all users
     @Override
-    public List<UserDto> getUsers() {
-        List<User> users = userRepository.findAll();
-        return userMapper.usersToUserDtos(users);
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     //  delete user by id

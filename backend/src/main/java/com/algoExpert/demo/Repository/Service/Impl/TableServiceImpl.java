@@ -57,7 +57,7 @@ public class TableServiceImpl implements TableService {
         table.setTasks(taskList);
 
         Project projectResult = projectRepository.save(project);
-        return projectMapper.projectToProjectDto(projectResult);
+        return ProjectMapper.mapToProjectDto(projectResult);
     }
 
     /*
@@ -125,7 +125,7 @@ public class TableServiceImpl implements TableService {
                     return tableRepository.save(existingTable);
                 }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTable_id() + " not found"));
 
-        return tableMapper.tableToTableDto(table);
+        return TableMapper.mapToTableDto(table);
 
     }
 
