@@ -11,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class TaskTable {
+//@Table(name = "task_tble")
+public class TaskContainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int table_id;

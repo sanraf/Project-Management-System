@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface UserService {
+public interface AuthService {
 
     //    create user
-    UserDto create(UserDto userDto);
+    User register(User user);
 
     // get all users
     List<User> getUsers();
