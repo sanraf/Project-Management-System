@@ -1,21 +1,23 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.UserDto;
-import com.algoExpert.demo.Entity.*;
-import com.algoExpert.demo.Mapper.UserMapper;
+import com.algoExpert.demo.Entity.Member;
+import com.algoExpert.demo.Entity.Project;
+import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
-import com.algoExpert.demo.Repository.Service.UserService;
+import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
+import com.algoExpert.demo.role.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
-
+public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserRepository userRepository;
 
@@ -26,14 +28,23 @@ public class UserServiceImpl implements UserService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+
+//    @Autowired
+//    UserMapper userMapper;
 
     //  create user
+//    public UserDto create(UserDto userDto) {
+////        User user = UserMapper.mapToUser(userDto);
+//        User userResults = userRepository.save(user);
+////        return UserMapper.mapToUserDto(userResults);
+//    }
+
     @Override
-    public UserDto create(UserDto userDto) {
-        User user = UserMapper.mapToUser(userDto);
-        User userResults = userRepository.save(user);
-        return UserMapper.mapToUserDto(userResults);
+    public User register(User user) {
+         user.setPassword(passwordEncoder.encode(user.getPassword()));
+         user.setRole(Role.valueOf("USER"));
+         return userRepository.save(user);
     }
 
     // get all users
@@ -71,5 +82,4 @@ public class UserServiceImpl implements UserService {
 
         return projectRepository.findAllById(userProjectIds);
     }
-
 }

@@ -21,6 +21,8 @@ public class Member {
 
     private String username;
 
+    private String projectRole;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Task> taskList;
 

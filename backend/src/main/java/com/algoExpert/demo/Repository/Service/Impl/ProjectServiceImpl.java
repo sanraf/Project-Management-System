@@ -1,6 +1,5 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
-import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.ProjectMapper;
@@ -111,7 +110,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new InvalidArgument("Project with ID " + projectId + " not found"));
 
         // Delete associated tables
-        for (TaskTable table : project.getTables()) {
+        for (TaskContainer table : project.getTables()) {
             tableRepository.delete(table);
         }
 

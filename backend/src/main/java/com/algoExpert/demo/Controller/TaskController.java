@@ -4,7 +4,7 @@ import com.algoExpert.demo.Dto.TaskDto;
 
 import com.algoExpert.demo.Entity.Task;
 
-import com.algoExpert.demo.Entity.TaskTable;
+import com.algoExpert.demo.Entity.TaskContainer;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.TaskService;
 
@@ -21,7 +21,7 @@ public class TaskController {
 
     //  create task using table and member id
     @PostMapping("/createTask/{member_id}/{table_id}")
-    public TaskTable createTask(@PathVariable int member_id, @PathVariable int table_id) throws InvalidArgument {
+    public TaskContainer createTask(@PathVariable int member_id, @PathVariable int table_id) throws InvalidArgument {
         return taskService.createTask(member_id, table_id);
     }
 
@@ -38,13 +38,13 @@ public class TaskController {
 
     // duplicate task by id
     @PostMapping("/duplicateTask/{table_id}")
-    public TaskTable taskUpdate(@PathVariable Integer table_id, @RequestBody Task task) {
+    public TaskContainer taskUpdate(@PathVariable Integer table_id, @RequestBody Task task) {
         return taskService.duplicateTask(task, table_id);
     }
 
     //delete task
     @DeleteMapping("/deleteTaskById/{task_id}/{table_id}")
-    public TaskTable deleteTaskById(@PathVariable Integer task_id, @PathVariable Integer table_id) throws InvalidArgument {
+    public TaskContainer deleteTaskById(@PathVariable Integer task_id, @PathVariable Integer table_id) throws InvalidArgument {
         return taskService.deleteTaskById(task_id, table_id);
     }
 
