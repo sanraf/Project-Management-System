@@ -39,6 +39,8 @@ public class Config {
                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
                         .requestMatchers(DELETE, "/project/**").hasAnyAuthority(OWNER_DELETE.getPermission())
+                        .requestMatchers("/member/**").hasAnyRole(USER.name(), OWNER.name())
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())

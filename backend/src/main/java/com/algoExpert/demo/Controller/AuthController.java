@@ -31,8 +31,8 @@ public class AuthController {
 //        return authService.getUsers();
 //    }
 //
-//    @GetMapping("/fetchUserProject/{user_id}")
-//    public List<Project> getUserProject(@PathVariable int user_id){
-//        return authService.getUserProjectIds(user_id);
-//    }
+    @GetMapping("/fetchUserProject/{user_id}")
+    public List<Project> getUserProject(@PathVariable int user_id){
+        return authService.getUserProjectIds(user_id);
+    }
 }

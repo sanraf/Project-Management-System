@@ -51,8 +51,14 @@ public class MemberServiceImpl implements MemberService {
         if (memberExist) {
             throw new InvalidArgument("User ID " + user_id + " is already a member");
         } else {
+            Member newMember;
             // create a new member
-            Member newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),null);
+            if(members.isEmpty()){
+                newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),"OWNER",null);
+            }else {
+               newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),"MEMBER",null);
+            }
+
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
