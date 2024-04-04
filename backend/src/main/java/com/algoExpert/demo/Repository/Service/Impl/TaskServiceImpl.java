@@ -42,9 +42,9 @@ public class TaskServiceImpl implements TaskService {
 
     //    create new task
     @Override
-    public TaskTable createTask(int member_id, int table_id) throws InvalidArgument {
+    public TaskContainer createTask(int member_id, int table_id) throws InvalidArgument {
 
-        TaskTable table = tableRepository.findById(table_id).orElseThrow(() ->
+        TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
         Member member = memberRepository.findById(member_id).orElseThrow(()->
@@ -86,8 +86,8 @@ public class TaskServiceImpl implements TaskService {
 
     //duplicate task
     @Override
-    public TaskTable duplicateTask(Task task, Integer table_id) {
-        TaskTable table = tableRepository.findById(table_id).get();
+    public TaskContainer duplicateTask(Task task, Integer table_id) {
+        TaskContainer table = tableRepository.findById(table_id).get();
 
         Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getUsername(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
                 task.getPriority(), null, null);
@@ -102,10 +102,10 @@ public class TaskServiceImpl implements TaskService {
     //  delete task
     @Override
     @Transactional
-    public TaskTable deleteTaskById(Integer task_id, Integer table_id) throws InvalidArgument {
+    public TaskContainer deleteTaskById(Integer task_id, Integer table_id) throws InvalidArgument {
         Task storedTask = taskRepository.findById(task_id).orElseThrow(() ->
                 new InvalidArgument("Task with ID " + task_id + " not found"));
-        TaskTable table = tableRepository.findById(table_id).orElseThrow(() ->
+        TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
         List<Comment> comments = storedTask.getComments();

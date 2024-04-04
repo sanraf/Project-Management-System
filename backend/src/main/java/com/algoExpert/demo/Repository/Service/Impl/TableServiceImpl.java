@@ -44,9 +44,9 @@ public class TableServiceImpl implements TableService {
     public ProjectDto createTable(int project_id, int member_id) throws InvalidArgument {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
         Member member =  memberRepository.findById(member_id).get();
-        List<TaskTable> tables = project.getTables();
-        int count = project.getTables().size();
-        TaskTable table = new TaskTable(0, "Table" + count, null);
+        List<TaskContainer> tables = project.getTables();
+//        int count = project.getTables().size();
+        TaskContainer table = new TaskContainer(0, "Table", null);
         Task task = new Task(0, "task", "description",member.getUsername() , "", "", "", "", null,null);
 
 
@@ -110,14 +110,14 @@ public class TableServiceImpl implements TableService {
 
     //  get all table
     @Override
-    public List<TaskTable> getAllTables() {
+    public List<TaskContainer> getAllTables() {
         return tableRepository.findAll();
     }
 
     //  update table
     @Override
     public TableDto editTable(TableDto newTableValue) throws InvalidArgument {
-        TaskTable table = tableRepository.findById(newTableValue.getTable_id())
+        TaskContainer table = tableRepository.findById(newTableValue.getTable_id())
                 .map(existingTable -> {
                     if (newTableValue != null) {
                         Optional.ofNullable(newTableValue.getTable_name()).ifPresent(existingTable::setTable_name);
@@ -132,11 +132,11 @@ public class TableServiceImpl implements TableService {
     //    delete table
     @Override
     @Transactional
-    public List<TaskTable> deleteTable(Integer project_id, Integer table_id) throws InvalidArgument {
+    public List<TaskContainer> deleteTable(Integer project_id, Integer table_id) throws InvalidArgument {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-        TaskTable table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("Table with ID " + table_id + " not found"));
+        TaskContainer table = tableRepository.findById(table_id).orElseThrow(() -> new InvalidArgument("Table with ID " + table_id + " not found"));
 
-        List<TaskTable> tablesList = project.getTables();
+        List<TaskContainer> tablesList = project.getTables();
         tablesList.remove(table);
         project.setTables(tablesList);
         projectRepository.save(project);

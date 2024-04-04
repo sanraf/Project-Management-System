@@ -22,6 +22,4 @@ public class Comment {
     @NotBlank(message = "comment is required")
     private String commentBody;
 
-    public Comment(int commentId, String commentBody) {
-    }
 }
