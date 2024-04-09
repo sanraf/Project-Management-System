@@ -30,10 +30,7 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping("/getSingleProject/{project_id}")
-    public User getSingleProject(@PathVariable int project_id) throws InvalidArgument{
-        return projectService.findProject(project_id);
-    }
+
     @DeleteMapping("/deleteProject/{project_id}")
     public List<Project> deleteProject(@PathVariable int project_id) throws InvalidArgument{
         return projectService.deleteProjectById(project_id);

@@ -13,6 +13,9 @@ import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,7 +56,6 @@ public class ProjectServiceImpl implements ProjectService {
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new InvalidArgument("User with ID " + user_id + " not found"));
         project.setUser(user);
-
 
         // Save the project and retrieve the saved instance
         Project savedProject = projectRepository.save(project);
@@ -99,33 +101,7 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> getAllProjects() {
       return projectRepository.findAll();
     }
-
     //get one project
-    @Override
-    public User findProject(int project_id) throws InvalidArgument {
-        Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-
-
-        List<Member> memberList=   foundProject.getMemberList();
-
-        int user_id=0;
-
-        for (Member member: memberList){
-                    if(member.getProjectRole().equals("OWNER")){
-                       user_id= member.getUser_id();
-                    }
-        }
-
-
-        User owner=  userRepository.findById(user_id).get();
-       List<Role> roleList= owner.getRoles();
-       roleList.add(Role.valueOf("OWNER"));
-
-       owner.setRoles(roleList);
-
-
-return   userRepository.save(owner);
-    }
 
     //    delete project
     @Override
