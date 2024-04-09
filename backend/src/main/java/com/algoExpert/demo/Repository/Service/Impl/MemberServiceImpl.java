@@ -58,7 +58,6 @@ public class MemberServiceImpl implements MemberService {
             }else {
                newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),"MEMBER",null);
             }
-
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
