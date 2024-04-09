@@ -19,7 +19,6 @@ public class MemberController {
     public Member inviteMember(@PathVariable int project_id, @PathVariable int user_id)throws InvalidArgument {
         return memberService.inviteMember(project_id,user_id);
     }
-
 //    get all members of a project
     @GetMapping("/getAllMembers")
     public List<Member> getAllMembers(){

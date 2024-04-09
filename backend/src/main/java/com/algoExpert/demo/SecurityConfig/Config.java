@@ -40,7 +40,11 @@ public class Config {
                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
                         .requestMatchers(DELETE, "/project/**").hasAnyAuthority(OWNER_DELETE.getPermission())
                         .requestMatchers("/member/**").hasAnyRole(USER.name(), OWNER.name())
-
+                        .requestMatchers(DELETE,"/member/**").hasAnyAuthority(OWNER_DELETE.getPermission())
+                        .requestMatchers(PUT,"/member/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
+                        .requestMatchers(GET, "/member/**").hasAnyAuthority(OWNER_READ.getPermission())
+                        .requestMatchers(POST, "/member/**").hasAnyAuthority(OWNER_CREATE.getPermission())
+                        .requestMatchers("/user/**").hasAnyRole(USER.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
