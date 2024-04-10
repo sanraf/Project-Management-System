@@ -28,25 +28,28 @@ public class Config {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 //.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
+
                         .requestMatchers("/project/**").hasAnyRole(USER.name(), OWNER.name())
                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
                         .requestMatchers(DELETE, "/project/**").hasAnyAuthority(OWNER_DELETE.getPermission())
+
                         .requestMatchers("/member/**").hasAnyRole(USER.name(), OWNER.name())
                         .requestMatchers(DELETE,"/member/**").hasAnyAuthority(OWNER_DELETE.getPermission())
                         .requestMatchers(PUT,"/member/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
                         .requestMatchers(GET, "/member/**").hasAnyAuthority(OWNER_READ.getPermission())
                         .requestMatchers(POST, "/member/**").hasAnyAuthority(OWNER_CREATE.getPermission())
+                        
                         .requestMatchers("/user/**").hasAnyRole(USER.name())
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
                  return httpSecurity.build();
