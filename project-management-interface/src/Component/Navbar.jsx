@@ -1,7 +1,20 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import imageOne from "../assets/topnav-image1.jpg"
 
 function Navbar() {
+  const [loggedInUser, setloggedInUser] = useState();
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("systemUser")
+  
+    if (user) {
+      setloggedInUser(JSON.parse(user))
+    }
+  
+    return  () => {
+      
+    }
+  }, []);
   return (
     <>
     <div className="navbar">
@@ -16,8 +29,8 @@ function Navbar() {
                 </div>
                 <div className="profile">
                   <div>
-                    <span>owner</span>
-                    <span> John Doe</span>
+                    <span>{ loggedInUser ? loggedInUser.fullname : ""}</span>
+                    <span>{ loggedInUser ? loggedInUser.email : ""}</span>
                   </div>
                   <img src={imageOne} alt="" />
                 </div>

@@ -53,6 +53,7 @@
 }
 .profile span{
     display: block;
+    text-align: right;
 }
 .profile span:first-child{
     color: #bbb;

@@ -35,17 +35,17 @@
     right: 20px;
     cursor: pointer;
 }
-
 .assign_container h6{
     font-size: 14px;
     font-weight: 400;
     color: #333;
     margin-bottom: 1rem;
 }
-.task_member_name,.task_project_names_details{
+.task_member_name,.task_project_names_details, .assignee_details{
     display: flex;
     align-items: center;
 }
+.task_member_name{justify-content: space-between;cursor: pointer;}
 .assign_container .assignee_letters{
     border-radius: 50%;
     padding:  8px 10px;
@@ -53,27 +53,24 @@
     color: #fff;
     margin-right: 10px;
 }
-.assignee_details span{
+#assignee_username, #assignee_email{
     display: block;
     font-size: 11px;
     line-height: 18px;
-}
-.assignee_details span:last-child{
-    color: #999;
 }
 .project_members_list{margin-top: 3rem;}
 .project_members_names {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #eee;
-    padding: 6px 6px;
+    padding: 6px;
     justify-content: space-between;
 }
 .project_members_names:hover{
     background-color: #f8f8f8;
     cursor: pointer;
 }
-.invite_to_task{color: var(--blue-color);}
+.invite_to_task, .remove_from_task{color: var(--blue-color);}
 .task_project_names_details .lni-user{
     background-color: var(--blue-color);
     padding: 8px;

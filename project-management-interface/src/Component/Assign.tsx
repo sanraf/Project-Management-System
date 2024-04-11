@@ -24,11 +24,14 @@ function Assign(props) {
               props.taskMembers ?
                 props.taskMembers.map((member,i) =>
               <div key={i} className="task_member_name">
-                <span className='assignee_letters'>M</span>
-                <div className='assignee_details'>
-                  <span>{member.username}</span>
-                  <span>email@email.com</span>
-                </div>
+                  <div  className='assignee_details'>
+                    <span className='assignee_letters'>M</span>
+                    <div>
+                      <span id='assignee_username'>{member.username}</span>
+                      <span id='assignee_email'>email@email.com</span>
+                    </div>
+                  </div>
+                  <i className="lni lni-circle-minus remove_from_task"></i>  
               </div>
             ):""}
           </div>
