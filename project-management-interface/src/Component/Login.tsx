@@ -1,26 +1,78 @@
-import React from 'react'
-import loginImageOne from "../assets/login-image2.png"
-import loginImageTwo from "../assets/login-image1.png"
+import React,{useState} from 'react'
+import loginImageOne from "../assets/login-image2.png";
+import loginImageTwo from "../assets/login-image1.png";
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 
 function Login() {
-  return (
+    const [showRegister, setShowRegister] = useState("none");
+    const { register, handleSubmit, setValue } = useForm({
+        shouldUseNativeValidation:true,
+        defaultValues:{
+         fullname: "",  
+         email:"",
+         password:"",
+      }
+    });
+    
+    const login = async(userDetails) => {
+        if (showRegister == "none") {
+            const basicAuth = 'Basic ' + btoa(userDetails.email + ':' + userDetails.password); // Creating Basic Authorization header
+            try {
+                const response = await axios.post(`http://localhost:8080/auth/login`,userDetails);
+                if (response.data.statusCode == "401") {
+                    console.log(response.data.status)
+                    setShowRegister("block")
+                } else {
+                    const userDetails = { email: response.data.email, fullname: response.data.fullname,user_id:response.data.userId}
+                    sessionStorage.setItem("systemUser",JSON.stringify(userDetails))
+                    window.location.href = "help"
+                }
+                } catch (error) {
+                    console.error("Error adding task: ", error);
+            }
+        } else {
+            try {
+                const response = await axios.post(`http://localhost:8080/auth/registerUser`,userDetails);
+                if (response.data) {
+                    setShowRegister("none")
+                }
+                } catch (error) {
+                    console.error("Error adding task: ", error);
+                }
+        }
+    }
+
+    return (
       <>
           <div className="login_page">
               <div className="page-row">
                   <div className="user_login">
                       <div className="user_login_details">
-                           <h5>Please register</h5>
-                            <p>New to our system? please register your details to use the system</p>
-                            <form action="">
+                            <div>
+                                <h5 style={{display:showRegister}}>Please Register before login</h5>
+                                <p style={{ display: showRegister }}>New to our system? please register your
+                                details to use the system</p>
+                            </div>
+                            <div style={{display:showRegister == "block"?"none":"block"}}>
+                                <h5 >Please Login</h5>
+                                <p>Thank you for choosing us, if registered please login</p>
+                            </div>
+                          <a href="">Register on this page</a>
+                            <form action="" onSubmit={handleSubmit(login)} >
+                              <div style={{display:showRegister}}>
                                 <h6>Full name</h6>
-                              <input id='fullname' type="text" placeholder='fullname' />
+                                <input  {...register("fullname",{required: showRegister == "block" ? true:false})} id='fullname' name ='fullname' type="text" placeholder='fullname' />
+                              </div>
                               <h6>Email</h6>
-                                <input type="text" id='email' placeholder='fullname' />
+                                <input {...register("email",{required:"please enter email"})} type="text" id='email' name="email"  placeholder='email' />
                                <h6>Password</h6>
-                              <input id='password' type="text" placeholder='password' />
-                              <h6>Re-enter password</h6>
+                              <input  {...register("password",{required:"please enter password"})} id='password' type="text" name="password" placeholder='password' />
+                              <div style={{display:showRegister}}>
+                                <h6>Re-enter password</h6>
                                 <input id='password' type="text" placeholder='password' />
-                                <button type='submit'>Register</button>
+                               </div>
+                              <button type='submit'>{showRegister == "block " ? "Register" : "Login" }</button>
                             </form>
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
