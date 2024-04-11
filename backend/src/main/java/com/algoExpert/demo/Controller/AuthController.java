@@ -1,6 +1,7 @@
 package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.AuthRequest;
+import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Repository.Service.AuthService;
@@ -33,12 +34,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void userLogin(){
-        System.out.print("user is logged in the system");
-
+    public HttpResponse userLogin(@RequestBody User userCredentials){
+        return authService.login(userCredentials);
     }
 
-//    get all users of the system
+
+    //    get all users of the system
 //    @GetMapping("/getAllUsers")
 //    public List<User> getAll(){
 //        return authService.getUsers();
