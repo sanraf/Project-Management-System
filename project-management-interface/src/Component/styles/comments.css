@@ -99,7 +99,9 @@
     display: flex;
     margin-top: 20px;
     width: 100%;
+
 }
+
 #user_letter{
     background-color: var(--light-background-color);
     padding: 8px 16px;
@@ -136,3 +138,15 @@
     width: 100%;
     display: block;
 }
+.commentEdit{
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 1rem;
+}
+.commentEdit div{
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+    margin-right: 20px;
+}
+.commentEdit span{margin-left: 5px;}

@@ -6,15 +6,22 @@ function Comment(props) {
   
   const comment = async (e) => {
     e.preventDefault()
-    if (createComment) {
+   
+    const userSytem = (JSON.parse(sessionStorage.getItem("systemUser")));
+    if(createComment && userSytem) {
       try {
-        const response = await axios.post(`http://localhost:8080/comment/create/${props.commentMember}/${props.dropDownValue.commentTaskId}`,createComment);
-        if (response.data) {
-            window.location.reload();
+        const response = await axios.post(`http://localhost:8080/comment/create/${props.dropDownValue.commentTaskId}`,JSON.stringify(createComment), {
+            headers: {
+                Authorization: `Bearer ${userSytem.token}`, // Assuming token is stored in a variable
+                'Content-Type': 'application/json'
+            }
+        });
+        if(response.data) {
+          window.location.reload()
         }
-      } catch (error) {
-          console.error('Error fetching data:', error);
-      } 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+      }
     }
   }
   
@@ -38,14 +45,25 @@ function Comment(props) {
                             </div>
                         </form>
                         <div className="user_comment_thread">
-                          <h6 className='comments_size'>12 Comments</h6>
+                          <h6 className='comments_size'>{props.commentList.length} Comments</h6>
                           {props.commentList.map((comments,key) =>
                             <div key={key} className="comment_details">
                                 <div><span id="user_letter">{comments.username.charAt(0)}</span></div>
                                 <div className="user_massage">
                                       <span id="user_name">{comments.username}</span>
                                       <span id='comment_time'>{comments.date_created}</span>
-                                      <p>{comments.commentBody}</p>
+                                    <p>{comments.commentBody}</p>
+                                  <div className='commentEdit'>
+                                    <div className='commentRemove'>
+                                      <i className="lni lni-trash-can"></i>
+                                       <span>Delete</span>
+                                    </div>
+                                   <div className='commentReplay'>
+                                      <i className="lni lni-comments-reply"></i>
+                                       <span>Reply</span>
+                                    </div>
+                                  </div>
+                                    
                                 </div>
                             </div>
                           )}

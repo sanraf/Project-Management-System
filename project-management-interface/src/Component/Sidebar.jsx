@@ -3,28 +3,32 @@ import React,{useEffect,useState} from 'react'
 import logo from "../assets/logo.png";
 import axios from 'axios';
 
-function Sidebar() {
+function Sidebar(props) {
   const [project, setProject] = useState([]);
-  const [userId, setuserId] = useState(1);
-
-  useEffect(() => {
+  
+  useEffect(() => { 
     const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/user/fetchUserProject/${1}`);
-        setProject(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      const systemUser = JSON.parse(sessionStorage.getItem("systemUser"));
+      if (systemUser) {
+        try {
+          const response = await axios.get(`http://localhost:8080/user/fetchUserProject`, {
+            headers: {
+              Authorization: `Bearer ${systemUser.token}`, // Assuming token is stored in a variable
+              'Content-Type': 'application/json'}
+            });
+            setProject(response.data);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+        }
       }
     };
-
     fetchData();
-  }, []);
+  },[]);
   const loadProject =(event,project_id)=>{
     event.preventDefault();
     sessionStorage.setItem("projectId",project_id);
     window.location.href = "project";
   }
-  
   return (
     <>
     <div className="sidebar">

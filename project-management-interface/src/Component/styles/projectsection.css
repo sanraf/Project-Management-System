@@ -206,12 +206,18 @@
     display: flex;
     align-items: center;
     position: relative;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
 }
 #table_title{
     font-size: 14px;
     color: var(--title-color);
     font-weight: var(--header-font-weight);
     text-transform: capitalize;
+    display: inline-block;
+    border: none;
+    width: auto;
+    padding-right: 3px;
 }
 .edit-table .lni-chevron-down{
     margin-left: 15px;
@@ -221,7 +227,7 @@
 } 
 .edit-table-hidden-box{
     position: absolute;
-    top: 4rem;
+    top: 2rem;
     left: 0;
     z-index: 4;
     overflow: hidden;

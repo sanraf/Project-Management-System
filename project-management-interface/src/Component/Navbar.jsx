@@ -2,17 +2,10 @@ import React,{useEffect,useState} from 'react'
 import imageOne from "../assets/topnav-image1.jpg"
 
 function Navbar() {
-  const [loggedInUser, setloggedInUser] = useState();
-
+  const [siteUser, setSiteUser] = useState();
   useEffect(() => {
-    const user = sessionStorage.getItem("systemUser")
-  
-    if (user) {
-      setloggedInUser(JSON.parse(user))
-    }
-  
-    return  () => {
-      
+    setSiteUser(JSON.parse(sessionStorage.getItem("systemUser")));
+    return()=>{
     }
   }, []);
   return (
@@ -28,10 +21,10 @@ function Navbar() {
                     <i className="lni lni-cog"></i>
                 </div>
                 <div className="profile">
-                  <div>
-                    <span>{ loggedInUser ? loggedInUser.fullname : ""}</span>
-                    <span>{ loggedInUser ? loggedInUser.email : ""}</span>
-                  </div>
+                <div>
+                 <span>{siteUser?siteUser.fullname:""}</span>
+                  <span>{siteUser?siteUser.email:""}</span>
+                </div>
                   <img src={imageOne} alt="" />
                 </div>
             </div>

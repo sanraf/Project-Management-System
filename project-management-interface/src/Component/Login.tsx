@@ -24,9 +24,10 @@ function Login() {
                     console.log(response.data.status)
                     setShowRegister("block")
                 } else {
-                    const userDetails = { email: response.data.email, fullname: response.data.fullname,user_id:response.data.userId}
+                    const userDetails = { email: response.data.email,token:response.data.token, fullname: response.data.fullname,user_id:response.data.userId}
                     sessionStorage.setItem("systemUser",JSON.stringify(userDetails))
                     window.location.href = "help"
+                    console.log(userDetails)
                 }
                 } catch (error) {
                     console.error("Error adding task: ", error);

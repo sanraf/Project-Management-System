@@ -10,6 +10,7 @@ function ProjectSection() {
     const [users, setUsers] = useState(["Alex Smith"]);
     const [memeberFound, setmemeberFound] = useState([]);
     const [loginMemberId, setloginMemberId] = useState();
+    const [loggedInUser, setloggedInUser] = useState();
     const [taskComments, settaskComments] = useState([{ comment_id: 0, username: "", date_created: "", commentBody: "" }]);
     const [assignees, setassignees] = useState([]);
     const [dropDownBoxesHeight, setDropDownBoxesHeight] = useState(
@@ -21,7 +22,7 @@ function ProjectSection() {
     );
 
     const [oneProject, setoneProject] = useState({
-        project_id: "",
+        project_id: 0,
         title: "",
         description: "",
         tables: [
@@ -43,7 +44,7 @@ function ProjectSection() {
                 ]
             }
         ],
-        membersList: [
+        memberList: [
             {
                 member_id: 0,
                 user_id: 0,
@@ -51,44 +52,61 @@ function ProjectSection() {
                 username: ""
             }
         ]
-});
-
+    });
+   
     useEffect(() => {
         const projectId = sessionStorage.getItem("projectId");
+        const foundUser = (JSON.parse(sessionStorage.getItem("systemUser")));
+        setloggedInUser(foundUser);
+        
         const fetchProject = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/project/getSingleProject/${projectId}`);
-                setoneProject(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if(projectId) {
+                try {
+                    const response = await axios.get(`http://localhost:8080/user/getSingleProject/${projectId}`, {
+                       headers: {
+                            Authorization: `Bearer ${foundUser.token}`, // Assuming token is stored in a variable
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if(response.data) {
+                        setoneProject(response.data);
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         };
         if(projectId){
             fetchProject();
         }
-        const memberId = async () => {
-            const userId = 1
-            try {
-                const response = await axios.get(`http://localhost:8080/member/getMemberId/${userId}`);
-                setloginMemberId(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-        memberId()
-      
+       
         return () => {
         }
     }, []);
+         
     const toogleDropDownBoxes=(contentType,height,rowIndex,indexType)=>{
         setDropDownBoxesHeight(prevState => ({
         ...prevState,
         [contentType]: dropDownBoxesHeight[contentType] === 0 ? height : 0,
         [indexType !== "" ? indexType : '']: rowIndex
     }));} 
-    const createTable=()=>{
-        const newTable = tables[0];
-        settables([...tables,newTable])
+    const createTable = async (projectNo) => {
+     console.log(loggedInUser.token)
+        if (loggedInUser) {
+            try {
+                const response = await axios.post(`http://localhost:8080/table/createTable/${projectNo}`,{}, {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data.project_id) {
+                    window.location.reload
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
+        }
     }
     const showSearchedMember=(e)=>{
         const memberPresent = users.filter(name=>
@@ -113,34 +131,114 @@ function ProjectSection() {
         if (columnType == 'status') {
             taskToSend = {...task, status: updatedValue}
         }
-        try {
-            const response = await axios.put(`http://localhost:8080/task/editTask`,taskToSend);
-            if (response.data) {
-                window.location.reload();
+        if (loggedInUser) {
+            try {
+                const response = await axios.put(`http://localhost:8080/task/editTask`,JSON.stringify(taskToSend), {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    window.location.reload()
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }   
+        }
+           
     }
     const Adding_Task = async (table_id) => {
-        if(loginMemberId) {
-            try {
-                const response = await axios.post(`http://localhost:8080/task/createTask/${loginMemberId}/${table_id}`);
-                if (response.data) {window.location.reload()}
-            } catch (error) {
-                console.error("Error adding task: ", error);
+        if(loggedInUser) {
+             try {
+                const response = await axios.post(`http://localhost:8080/task/createTask/${table_id}`,{}, {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    window.location.reload()
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
             }
         }
     }
     
-    async function onDelete(task_id,table_id) {
-        try {
-            const response = await axios.delete(`http://localhost:8080/task/deleteTaskById/${task_id}/${table_id}`);
-            if (response.data) {window.location.reload()}
-        } catch (error) {
-            console.error("Error adding task: ", error);
+    async function deleteTask(task_id,table_id) {
+        if (loggedInUser) {
+            try {
+                const response = await axios.delete(`http://localhost:8080/task/deleteTaskById/${task_id}/${table_id}`,{
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    window.location.reload()
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
         }
     }
+    const deleteTable = async (project_id, table_id) => {
+        console.log(loggedInUser.token)
+        if (loggedInUser) {
+             try {
+                const response = await axios.delete(`http://localhost:8080/table/deleteTable/${project_id}/${table_id}`,{
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    window.location.reload()
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
+         }
+        
+    }
+    const duplicateTask = async(table_id,task)=> {
+        if (loggedInUser) {
+            try {
+                const response = await axios.post(`http://localhost:8080/task/duplicateTask/${table_id}`,JSON.stringify(task), {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    window.location.reload()
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
+        }
+    } 
+    const updateTableName = async (newName, tableObg) => {
+        if (tableObg.table_name != newName) {  
+            tableObg.table_name = newName;
+            try {
+                const response = await axios.put(`http://localhost:8080/table/updateTable`,JSON.stringify(tableObg), {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.data) {
+                    console.log(response.data)
+                   
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
+        }
+    } 
+        
     const toogleHiddenColumns = (column) =>{
         sethiddenColumns(prevCol => ({
             ...prevCol, [column]: "block"
@@ -157,13 +255,13 @@ function ProjectSection() {
         }
         toogleDropDownBoxes("assigneeHieght",100,taskId,'assigneeId')
     }
-     
+   
   return (
     <>
         <div className="project-section">
-              <Assign closeMode={toogleDropDownBoxes} taskMembers={assignees} projectPeople={oneProject.membersList} assignModel={dropDownBoxesHeight} />  
+              <Assign closeMode={toogleDropDownBoxes} authToken={loggedInUser?loggedInUser.token:""} taskMembers={assignees} projectPeople={oneProject.memberList} assignModel={dropDownBoxesHeight} />  
               <div className="container">
-                <Comment commentMember={loginMemberId} closeComment={toogleDropDownBoxes} dropDownValue={dropDownBoxesHeight} commentList={taskComments} />
+                <Comment  closeComment={toogleDropDownBoxes} dropDownValue={dropDownBoxesHeight} commentList={taskComments} />
                 <h6 className='page-section-header'>{oneProject.title}</h6>
                 <div className="filter_project_section">
                     <div className="page-row project_filter_row">
@@ -215,7 +313,7 @@ function ProjectSection() {
                                    </div>
                                 </div>
                             </div>   
-                            <button onClick={createTable}>
+                            <button onClick={()=>createTable(oneProject.project_id)}>
                                 <i className="lni lni-layers"></i>
                                 <span>create table</span>
                             </button>
@@ -226,10 +324,10 @@ function ProjectSection() {
                   oneProject.tables.map((table,table_index)=>
                         <div key={table.table_id} className="table_section">
                             <div className='edit-table'>
-                                <h6 id='table_title'>{table.table_name}</h6>
+                                <input id='table_title' onBlur={(e)=>updateTableName(e.target.value, table)} defaultValue={table.table_name} contentEditable/>
                                 <i className="lni lni-chevron-down" onClick={()=>toogleDropDownBoxes("table", 90,table_index,'tableIndex')}></i>
                                 <div style={{height: table_index == dropDownBoxesHeight.tableIndex ? dropDownBoxesHeight.table :0}} className="edit-table-hidden-box">
-                                    <div className='edit_table_icon'>
+                                    <div className='edit_table_icon' onClick={()=>deleteTable(oneProject.project_id, table.table_id)}>
                                         <i className="lni lni-trash-can"></i>
                                         <span>Delete table</span>
                                     </div>
@@ -264,11 +362,11 @@ function ProjectSection() {
                                   <div  className="page-row table_task_row">
                                     <div style={{height:dropDownBoxesHeight.rowId == task.task_id ? dropDownBoxesHeight.editRow : 0 }} className="edit_task_box">
                                         <div className="box-arrow"></div>
-                                        <p onClick={() => onDelete(task.task_id,table.table_id)}>
+                                        <p onClick={() => deleteTask(task.task_id,table.table_id)}>
                                             <i className="lni lni-trash-can"></i>
                                             <span>Delete</span>
                                         </p>
-                                        <p>
+                                        <p onClick={()=>duplicateTask(table.table_id,task)}>
                                             <i className="lni lni-clipboard"></i>
                                             <span>Duplicate</span>
                                         </p>
