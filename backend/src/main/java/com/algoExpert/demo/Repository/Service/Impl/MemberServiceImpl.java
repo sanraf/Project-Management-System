@@ -1,6 +1,8 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 
+import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+import com.algoExpert.demo.AppNotification.EmailService;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
@@ -10,32 +12,46 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.MemberService;
 import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.algoExpert.demo.AppUtils.AppConstants.*;
+
 @Service
 public class MemberServiceImpl implements MemberService {
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private EmailHtmlLayout emailHtmlLayout;
+    @Value("${project.invite.url}")
+    String projectUrl;
+
+
 
     //    Invite member to project
     @Override
     public Member inviteMember(int project_id, int user_id) throws InvalidArgument {
         // check if user and project exist
         User user = userRepository.findById(user_id).orElseThrow(() ->
-                new InvalidArgument("User wth ID " + user_id + " not found"));
+                new InvalidArgument(String.format(USER_NOT_FOUND,user_id)));
 
         Project userProject = projectRepository.findById(project_id).orElseThrow(() ->
-                new InvalidArgument("Project wth ID " + project_id + " not found"));
+                new InvalidArgument(String.format(PROJECT_NOT_FOUND,project_id)));
+
 
         // Initialize the members list if it's null
         List<Member> members = userProject.getMemberList();
@@ -49,21 +65,26 @@ public class MemberServiceImpl implements MemberService {
                 .anyMatch(id -> id == user_id);
 
         if (memberExist) {
-            throw new InvalidArgument("User ID " + user_id + " is already a member");
+            throw new InvalidArgument(String.format(ALREADY_A_MEMBER,user_id));
         } else {
             Member newMember;
             // create a new member
-            if(members.isEmpty()){
-                newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),"OWNER",null);
-            }else {
-               newMember = new Member(0, user.getUser_id(),userProject.getProject_id(),user.getUsername(),"MEMBER",null);
-            }
+
+            String role = members.isEmpty() ? "OWNER" : "MEMBER";
+            newMember = new Member(0, user.getUser_id(), userProject.getProject_id(), user.getUsername(), role, null);
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
 
+
+            String projectLink = projectUrl + project_id;
+            emailService.sendEmailInvite("santoschrist1234@gmail.com",emailHtmlLayout.buildProjectInviteEmail(user.getFullname(),projectLink));
+            System.out.println(projectLink);
+
             return memberRepository.save(newMember);
         }
+
+
     }
 
 
@@ -89,5 +110,36 @@ public class MemberServiceImpl implements MemberService {
             return null; // Or throw an exception, depending on your use case
         }
     }
+
+
+
+    public User someMethod() {
+        // Get the authentication object from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated()) {
+            // If using UsernamePasswordAuthenticationToken, cast it
+            UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) authentication;
+
+            // Now you can retrieve the credentials (password) or principal (username)
+            Object credentials = authenticationToken.getCredentials();
+            Object principal = authenticationToken.getPrincipal();
+
+            System.err.println(credentials);
+            System.err.println(principal);
+
+            // In most cases, you'll want to cast the principal to your UserDetails implementation
+            // UserDetails userDetails = (UserDetails) principal;
+
+            // You can also retrieve other details like authorities
+            // Collection<? extends GrantedAuthority> authorities = authenticationToken.getAuthorities();
+
+            // Now you have access to the authentication token details
+        }
+        return (User) authentication.getPrincipal();
+    }
+
+
+
 
 }
