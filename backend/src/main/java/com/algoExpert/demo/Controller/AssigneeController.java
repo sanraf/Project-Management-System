@@ -2,6 +2,7 @@ package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.AssigneeDto;
 import com.algoExpert.demo.Entity.Assignee;
+import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.AssigneesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class AssigneeController {
 
     //    assign member to task using their IDs
     @PostMapping("/saveAssignee/{member_id}/{task_id}")
-    private Assignee saveAssignee(@PathVariable int member_id, @PathVariable int task_id) throws InvalidArgument {
+    private Task saveAssignee(@PathVariable int member_id, @PathVariable int task_id) throws InvalidArgument {
         return assigneesService.assignTaskToMember(member_id, task_id);
     }
 

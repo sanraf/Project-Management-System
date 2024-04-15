@@ -5,10 +5,7 @@ import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.ProjectMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
-import com.algoExpert.demo.Repository.Service.MemberService;
-import com.algoExpert.demo.Repository.Service.ProjectService;
-import com.algoExpert.demo.Repository.Service.TableService;
-import com.algoExpert.demo.Repository.Service.TaskService;
+import com.algoExpert.demo.Repository.Service.*;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
@@ -49,12 +46,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     ProjectMapper projectMapper;
 
+    @Autowired
+    ProjectUserImpl projectUser;
+
     //  create project
     @Override
-    public Integer createProject(Project project, int user_id) throws InvalidArgument {
+    public Integer createProject(Project project) throws InvalidArgument {
         // Find user by id
-        User user = userRepository.findById(user_id)
-                .orElseThrow(() -> new InvalidArgument("User with ID " + user_id + " not found"));
+        User user = userRepository.findById(projectUser.loggedInUserId())
+                .orElseThrow(() -> new InvalidArgument("User with ID " + projectUser.loggedInUserId() + " not found"));
         project.setUser(user);
 
         // Save the project and retrieve the saved instance
@@ -64,7 +64,7 @@ public class ProjectServiceImpl implements ProjectService {
         Member newMember = memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
         // Create a default table using new member id
-        tableService.createTable(savedProject.getProject_id(), newMember.getMember_id());
+        tableService.createTable(savedProject.getProject_id());
 
         // Save the updated project with the added member
         savedProject = projectRepository.save(savedProject);

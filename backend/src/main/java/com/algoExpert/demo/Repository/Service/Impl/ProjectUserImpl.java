@@ -4,6 +4,7 @@ import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import com.algoExpert.demo.Repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectUserImpl implements ProjectUserService {
@@ -21,7 +23,13 @@ public class ProjectUserImpl implements ProjectUserService {
     private ProjectRepository projectRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private  ProjectUserImpl projectUser;
 
     @Override
     public User findProject(int project_id) throws InvalidArgument {
@@ -53,4 +61,33 @@ public class ProjectUserImpl implements ProjectUserService {
         projectUser.setRoles(roleList);
         return userRepository.save(projectUser);
     }
+    @Override
+    public Integer loggedInUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
+        return loggedUser.getUser_id();
+    }
+
+    @Override
+    public List<Project> getUserProjectIds() {
+        // Find all members
+        List<Member> memberList = memberRepository.findAll();
+
+        User systemUser = userRepository.findById(projectUser.loggedInUserId()).get();
+
+        // Filter members by user_id and map them to project ids
+        List<Integer> userProjectIds = memberList.stream()
+                .filter(member -> member.getUser_id() == systemUser.getUser_id())
+                .map(Member::getProject_id) // Assuming you have a method getProject_id() in Member class
+                .collect(Collectors.toList());
+
+        return projectRepository.findAllById(userProjectIds);
+    }
+    //    get User Project Ids
+
 }

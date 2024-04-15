@@ -41,13 +41,13 @@ public class TableServiceImpl implements TableService {
 
     //  create a new table
     @Override
-    public ProjectDto createTable(int project_id, int member_id) throws InvalidArgument {
+    public ProjectDto createTable(int project_id) throws InvalidArgument {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
-        Member member =  memberRepository.findById(member_id).get();
+
         List<TaskContainer> tables = project.getTables();
 //        int count = project.getTables().size();
         TaskContainer table = new TaskContainer(0, "Table", null);
-        Task task = new Task(0, "task", "description",member.getUsername() , "", "", "", "", null,null);
+        Task task = new Task(0, "task", "description",project.getUser().getFullname(), "", "", "", "", null,null);
 
 
         tables.add(table);
@@ -116,17 +116,19 @@ public class TableServiceImpl implements TableService {
 
     //  update table
     @Override
-    public TableDto editTable(TableDto newTableValue) throws InvalidArgument {
+    public TaskContainer editTable(TaskContainer newTableValue) throws InvalidArgument {
+        if (newTableValue == null) {
+            throw new IllegalArgumentException("Invalid newTableValue");
+        }
+
         TaskContainer table = tableRepository.findById(newTableValue.getTable_id())
-                .map(existingTable -> {
-                    if (newTableValue != null) {
-                        Optional.ofNullable(newTableValue.getTable_name()).ifPresent(existingTable::setTable_name);
-                    }
-                    return tableRepository.save(existingTable);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTable_id() + " not found"));
+                .orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTable_id() + " not found"));
 
-        return TableMapper.mapToTableDto(table);
+        if (newTableValue.getTable_name() != null) {
+            table.setTable_name(newTableValue.getTable_name());
+        }
 
+        return tableRepository.save(table);
     }
 
     //    delete table

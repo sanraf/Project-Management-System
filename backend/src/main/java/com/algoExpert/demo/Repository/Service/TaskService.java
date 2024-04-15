@@ -13,13 +13,13 @@ public interface TaskService {
 
 
     //    create new task
-    TaskContainer createTask(int member_id, int table_id) throws InvalidArgument;
+    TaskContainer createTask(int table_id) throws InvalidArgument;
 
     //    get all tasks
     List<Task> getAllTask();
 
     //    update task
-    TaskDto editTask(TaskDto newTaskDto) throws InvalidArgument;
+    Task editTask(Task newTask) throws InvalidArgument;
 
     //duplicate task
     TaskContainer duplicateTask(Task task, Integer table_id);
