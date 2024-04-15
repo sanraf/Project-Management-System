@@ -14,14 +14,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
 import java.util.Collections;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import static com.algoExpert.demo.role.Permission.*;
 import static com.algoExpert.demo.role.Role.*;
 import static org.springframework.http.HttpMethod.*;
@@ -33,6 +33,10 @@ public class Config {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private JwtAuthFilter authFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -83,6 +87,10 @@ public class Config {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())
+                .sessionManagement(session->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
                  return httpSecurity.build();
