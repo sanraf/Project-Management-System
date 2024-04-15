@@ -23,9 +23,6 @@ public class AssigneesServiceImpl implements AssigneesService {
     private AssigneesRepository assigneesRepository;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private TaskRepository taskRepository;
     @Autowired
     private ProjectUserImpl projectUser;
