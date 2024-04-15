@@ -20,6 +20,5 @@ public interface AuthService {
     //    delete user by id
     List<UserDto> deleteUser(int userId);
 
-    //    get User Project Ids
-    List<Project> getUserProjectIds(int userId);
+
 }

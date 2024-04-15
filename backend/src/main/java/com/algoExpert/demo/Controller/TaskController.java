@@ -20,9 +20,9 @@ public class TaskController {
     private TaskService taskService;
 
     //  create task using table and member id
-    @PostMapping("/createTask/{member_id}/{table_id}")
-    public TaskContainer createTask(@PathVariable int member_id, @PathVariable int table_id) throws InvalidArgument {
-        return taskService.createTask(member_id, table_id);
+    @PostMapping("/createTask/{table_id}")
+    public TaskContainer createTask( @PathVariable int table_id) throws InvalidArgument {
+        return taskService.createTask(table_id);
     }
 
     //    get all tasks
@@ -32,7 +32,7 @@ public class TaskController {
     }
 
     @PutMapping("/editTask")
-    public TaskDto editTask(@RequestBody TaskDto taskDto) throws InvalidArgument {
+    public Task editTask(@RequestBody Task taskDto) throws InvalidArgument {
         return taskService.editTask(taskDto);
     }
 

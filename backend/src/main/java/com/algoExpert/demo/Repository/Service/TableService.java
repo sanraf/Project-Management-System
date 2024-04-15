@@ -13,13 +13,13 @@ import java.util.List;
 public interface TableService {
 
     //  create a new table
-    ProjectDto createTable(int project_id, int member_id) throws InvalidArgument;
+    ProjectDto createTable(int project_id) throws InvalidArgument;
 
     //  get all tables
     List<TaskContainer> getAllTables();
 
     // update table
-    TableDto editTable(TableDto newTableValue) throws InvalidArgument;
+    TaskContainer editTable(TaskContainer newTableValue) throws InvalidArgument;
 
     // delete table
     @Transactional
