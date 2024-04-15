@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.algoExpert.demo.AppUtils.AppConstants.*;
+
 @Service
 public class ProjectUserImpl implements ProjectUserService {
     @Autowired
@@ -27,9 +29,6 @@ public class ProjectUserImpl implements ProjectUserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private  ProjectUserImpl projectUser;
 
     @Override
     public User findProject(int project_id) throws InvalidArgument {
@@ -46,16 +45,16 @@ public class ProjectUserImpl implements ProjectUserService {
         List<Role> roleList = projectUser.getRoles();
         roleList.clear();
 //        //assign the role of the user that all users should have
-        roleList.add(Role.valueOf("USER"));
+        roleList.add(Role.valueOf(USER_ROLE));
 
         for (Member member : foundProject.getMemberList() ){
-            if(member.getProjectRole().equals("OWNER") && member.getUser_id().equals(projectUser.getUser_id()) ){
+            if(member.getProjectRole().equals(OWNER_ROLE) && member.getUser_id().equals(projectUser.getUser_id()) ){
                 //find if the member has a role of an onwer and assign owner role if you find
-                roleList.add(Role.valueOf("OWNER"));
+                roleList.add(Role.valueOf(OWNER_ROLE));
             }
-            else if(member.getUser_id().equals(projectUser.getUser_id()) && member.getProjectRole().equals("MEMBER")){
+            else if(member.getUser_id().equals(projectUser.getUser_id()) && member.getProjectRole().equals(MEMBER_ROLE)){
                 //assign role of a member if you find the id matching the user id who is loading the project
-                roleList.add(Role.valueOf("MEMBER"));
+                roleList.add(Role.valueOf(MEMBER_ROLE));
             }
         }
         projectUser.setRoles(roleList);
@@ -78,7 +77,7 @@ public class ProjectUserImpl implements ProjectUserService {
         // Find all members
         List<Member> memberList = memberRepository.findAll();
 
-        User systemUser = userRepository.findById(projectUser.loggedInUserId()).get();
+        User systemUser = userRepository.findById(loggedInUserId()).get();
 
         // Filter members by user_id and map them to project ids
         List<Integer> userProjectIds = memberList.stream()
