@@ -18,9 +18,9 @@ public class CommentController {
     private CommentService commentService;
 
 //  create new comment using member and task id
-    @PostMapping("/create/{member_id}/{task_id}")
-    private Task createComment(@RequestBody CommentDto commentDto, @PathVariable int member_id, @PathVariable int task_id)throws InvalidArgument {
-        return commentService.createComment(commentDto,member_id,task_id);
+    @PostMapping("/create/{task_id}")
+    private Task createComment(@RequestBody Comment comment,@PathVariable int task_id)throws InvalidArgument {
+        return commentService.createComment(comment,task_id);
     }
 
 //    get all comments

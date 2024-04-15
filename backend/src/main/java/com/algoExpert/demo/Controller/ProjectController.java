@@ -19,9 +19,9 @@ public class ProjectController {
     private ProjectService projectService;
 
 //  create project using user id
-    @PostMapping("/createProject/{user_id}")
-    public Integer createProject(@RequestBody Project project, @PathVariable int user_id) throws InvalidArgument{
-        return projectService.createProject(project,user_id);
+    @PostMapping("/createProject")
+    public Integer createProject(@RequestBody Project project) throws InvalidArgument{
+        return projectService.createProject(project);
     }
 
 //    get all projects

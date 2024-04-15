@@ -41,23 +41,23 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
+    @Autowired
+    ProjectUserImpl projectUser;
+
     //    create comment
     @Override
-    public Task createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument {
-        Comment comment = CommentMapper.mapToComment(commentDto);
-        Member findMember = memberRepository.findById(member_id).orElseThrow(() -> new InvalidArgument("Task with ID " + member_id + " not found"));
+    public Task createComment(Comment commentBody, int task_id) throws InvalidArgument {
         Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
-        User user = userRepository.findById(findMember.getUser_id()).get();
-        comment.setUsername(user.getUsername());
+        User user = userRepository.findById(projectUser.loggedInUserId()).get();
+        commentBody.setUsername(user.getFullname());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-        comment.setDate_created(simpleDateFormat.format(new Date()));
+        commentBody.setDate_created(simpleDateFormat.format(new Date()));
         List<Comment> commentList = task.getComments();
-        commentList.add(comment);
+        commentList.add(commentBody);
 
         task.setComments(commentList);
         return taskRepository.save(task);
-
     }
     /*public Task createComment(Comment comment,int member_id,int task_id)throws InvalidArgument {
         Member findMember = memberRepository.findById(member_id).orElseThrow(() ->

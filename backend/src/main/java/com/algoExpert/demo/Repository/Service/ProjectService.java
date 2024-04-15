@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface ProjectService {
 
     //  create project
-    Integer createProject(Project project, int user_id) throws InvalidArgument;
+    Integer createProject(Project project) throws InvalidArgument;
 
     //  get all projects
     List<Project> getAllProjects();
