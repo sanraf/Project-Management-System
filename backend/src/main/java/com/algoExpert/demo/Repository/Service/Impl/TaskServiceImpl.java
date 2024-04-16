@@ -1,25 +1,20 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
-import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
-import com.algoExpert.demo.AppNotification.EmailService;
-import com.algoExpert.demo.Dto.TaskDto;
+
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
-import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.*;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
