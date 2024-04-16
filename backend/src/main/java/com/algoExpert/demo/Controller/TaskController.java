@@ -1,7 +1,5 @@
 package com.algoExpert.demo.Controller;
 
-import com.algoExpert.demo.Dto.TaskDto;
-
 import com.algoExpert.demo.Entity.Task;
 
 import com.algoExpert.demo.Entity.TaskContainer;
@@ -9,8 +7,10 @@ import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.TaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -46,6 +46,16 @@ public class TaskController {
     @DeleteMapping("/deleteTaskById/{task_id}/{table_id}")
     public TaskContainer deleteTaskById(@PathVariable Integer task_id, @PathVariable Integer table_id) throws InvalidArgument {
         return taskService.deleteTaskById(task_id, table_id);
+    }
+
+    @GetMapping("/taskInvitation")
+    public Task getAllTaskById(@RequestParam("taskId") int taskId) {
+        return taskService.getTaskById(taskId);
+    }
+
+    @GetMapping("/taskDueDate/{taskId}")
+    public Task taskDueDate(@PathVariable int taskId) throws InvalidArgument, ParseException {
+        return taskService.taskDueDate(taskId);
     }
 
 

@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
 
 
             String projectLink = projectUrl + project_id;
-            emailService.sendEmailInvite("santoschrist1234@gmail.com",emailHtmlLayout.buildProjectInviteEmail(user.getFullname(),projectLink));
+            emailService.sendEmailInvite("depaci1149@abnovel.com",emailHtmlLayout.buildProjectInviteEmail(user.getFullname(),projectLink));
             System.out.println(projectLink);
 
             return memberRepository.save(newMember);

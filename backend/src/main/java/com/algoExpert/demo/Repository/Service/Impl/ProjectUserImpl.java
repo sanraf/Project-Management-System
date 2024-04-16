@@ -9,6 +9,8 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
 
 @Service
+@Slf4j
 public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private ProjectRepository projectRepository;

@@ -18,9 +18,9 @@ public class AssigneeController {
     private AssigneesService assigneesService;
 
     //    assign member to task using their IDs
-    @PostMapping("/saveAssignee/{member_id}/{task_id}")
-    private Task saveAssignee(@PathVariable int member_id, @PathVariable int task_id) throws InvalidArgument {
-        return assigneesService.assignTaskToMember(member_id, task_id);
+    @PostMapping("/saveAssignee/{member_id}/{task_id}/{project_id}")
+    private Task saveAssignee(@PathVariable int member_id, @PathVariable int task_id,@PathVariable int project_id) throws InvalidArgument {
+        return assigneesService.assignTaskToMember(member_id, task_id,project_id);
     }
 
 //    get all assignees of a task

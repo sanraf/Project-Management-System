@@ -1,5 +1,7 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+import com.algoExpert.demo.AppNotification.EmailService;
 import com.algoExpert.demo.Dto.TaskDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -10,8 +12,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +39,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private TaskMapper taskMapper;
 
     @Autowired
     private ProjectUserImpl projectUser;
@@ -124,6 +124,40 @@ public class TaskServiceImpl implements TaskService {
         tableRepository.save(table);
         return table;
     }
+
+    @Override
+    public Task taskDueDate(int taskId) throws InvalidArgument {
+        Task task = taskRepository.findById(taskId).orElseThrow();
+        String dueDate = task.getEnd_date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date parseDate = null;
+        try {
+            parseDate = dateFormat.parse(dueDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Date currentDate = new Date();
+        int i = parseDate.compareTo(currentDate);
+        if (i==0){
+
+            //TODO send notification here
+            System.err.println("task has reached due date");
+        }else {
+            System.err.println(parseDate);
+            System.err.println(currentDate);
+        }
+        return task;
+    }
+
+    @Override
+    public Task getTaskById(int taskId) {
+        return taskRepository.findById(taskId).orElseThrow();
+    }
+
+//    public void sendNotification(){
+//        Task task = taskRepository.findById()
+//    }
 
 }
 

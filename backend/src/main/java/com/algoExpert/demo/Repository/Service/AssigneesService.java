@@ -18,7 +18,7 @@ import java.util.List;
 public interface AssigneesService {
 
     //	 Assign a task to member
-    Task assignTaskToMember(int member_id, int task_id) throws InvalidArgument;
+    Task assignTaskToMember(int member_id, int task_id,int projectId) throws InvalidArgument;
 
     //  get all projects
     List<Assignee> getAllAssignees();
