@@ -10,6 +10,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +42,6 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
-    @Autowired
-    private ProjectUserImpl projectUser;
 
     @Autowired
     private  UserRepository userRepository;
@@ -53,12 +53,18 @@ public class TaskServiceImpl implements TaskService {
         TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
-        String username =  userRepository.findById(projectUser.loggedInUserId()).get().getFullname();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
         Task task = new Task(0, "task " + count, ""
-                ,username, "", "", "", "", null, null);
+                ,loggedUser.getUsername(), "", "", "", "", null, null);
 
         taskList.add(task);
         table.setTasks(taskList);
