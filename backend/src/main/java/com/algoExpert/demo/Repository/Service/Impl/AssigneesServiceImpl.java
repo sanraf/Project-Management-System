@@ -12,6 +12,8 @@ import com.algoExpert.demo.Repository.Service.AssigneesService;
 import com.algoExpert.demo.Repository.TaskRepository;
 import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +29,7 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     @Autowired
     private TaskRepository taskRepository;
-    @Autowired
-    private ProjectUserImpl projectUser;
+
 
     @Autowired
     private  UserRepository userRepository;
@@ -39,10 +40,15 @@ public class AssigneesServiceImpl implements AssigneesService {
         // check if member and task exist
         Task storedTask = taskRepository.findById(task_id).orElseThrow(() ->
                 new InvalidArgument("Task with ID " + task_id + " not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
 
-        User user = userRepository.findById(projectUser.loggedInUserId()).get();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
 
-        Assignee assignee = new Assignee(0, member_id, task_id, user.getUsername());
+        Assignee assignee = new Assignee(0, member_id, task_id, loggedUser.getUsername());
 
         List<Assignee> assigneeList= storedTask.getAssignees();
         assigneeList.add(assignee);

@@ -28,8 +28,6 @@ public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private  ProjectUserImpl projectUser;
 
     @Override
     public User findProject(int project_id) throws InvalidArgument {
@@ -78,7 +76,14 @@ public class ProjectUserImpl implements ProjectUserService {
         // Find all members
         List<Member> memberList = memberRepository.findAll();
 
-        User systemUser = userRepository.findById(projectUser.loggedInUserId()).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User projectUser = null;
+
+        if (authentication != null) {
+            projectUser = (User) authentication.getPrincipal();
+        }
+
+        User systemUser = userRepository.findById(projectUser.getUser_id()).get();
 
         // Filter members by user_id and map them to project ids
         List<Integer> userProjectIds = memberList.stream()
