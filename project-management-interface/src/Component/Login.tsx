@@ -33,8 +33,10 @@ function Login() {
                     console.error("Error adding task: ", error);
             }
         } else {
+            const editedUserDetails = {...userDetails}; 
+            editedUserDetails.roles = [];
             try {
-                const response = await axios.post(`http://localhost:8080/auth/registerUser`,userDetails);
+                const response = await axios.post(`http://localhost:8080/auth/registerUser`,editedUserDetails);
                 if (response.data) {
                     setShowRegister("none")
                 }
