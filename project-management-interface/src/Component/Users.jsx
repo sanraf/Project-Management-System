@@ -1,16 +1,60 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar';
+import axios from 'axios';
+import { Chart } from 'react-google-charts';
 
 
 function Users() {
+    const [userStats, setUserStats] = useState({admin_id: 0,number_of_owners: 0,number_of_members: 0
+    });
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const loggedAdmin = JSON.parse(sessionStorage.getItem("systemUser"));
+            if (loggedAdmin) {
+                try {
+                const response = await axios.get(`http://localhost:8080/admin/usersStats`, {
+                    headers: {
+                        Authorization: `Bearer ${loggedAdmin.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data) {
+                    setUserStats(response.data);
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+        }
+        fetchUserData();
+    
+        return() => {
+            
+        }
+    }, []);
+    const data = [
+        ["Type of User","Total numbers"],
+        ["Owners",userStats.number_of_owners],
+        ["Members",userStats.number_of_members]
+    ]
+    const options = {
+        legend: {
+            position: 'bottom', // Set legend position
+            alignment: 'right', // Align legend items to the center
+            margin: '10', // Set margin around legend
+        },
+    };
+    
+  
   return (
       <>
           <div className="page-row">
               <Sidebar />
               <div className="project-wrapper">
                   <Navbar />
-                  <div className="users_dashboard page_row">
+                  <div className="users_dashboard page-row">
                       <div className="admin-users">
                       <div className="">
                            <div className='admin_graph_titles'>
@@ -158,7 +202,17 @@ function Users() {
                           </div>
                           
                       </div>
-                  </div>
+                      </div>
+                      <div className="user_piechart">
+                          <h6>Total number of users per roles</h6>
+                          <Chart
+                            chartType="PieChart"
+                              data={data}
+                              options={options}
+                            width={"100%"}
+                            height={"400px"}
+                            />
+                      </div>
                   </div>
               </div>
               
