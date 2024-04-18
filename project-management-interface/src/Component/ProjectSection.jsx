@@ -60,21 +60,21 @@ function ProjectSection() {
         setloggedInUser(foundUser);
         
         const fetchProject = async () => {
-            if(projectId) {
-                try {
-                    const response = await axios.get(`http://localhost:8080/user/getSingleProject/${projectId}`, {
-                       headers: {
-                            Authorization: `Bearer ${foundUser.token}`, // Assuming token is stored in a variable
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    if(response.data) {
-                        setoneProject(response.data);
+          
+            try {
+                const response = await axios.get(`http://localhost:8080/user/getSingleProject/${projectId}`, {
+                    headers: {
+                        Authorization: `Bearer ${foundUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
                     }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                });
+                if(response.data) {
+                    setoneProject(response.data);
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
+        
         };
         if(projectId){
             fetchProject();
@@ -83,7 +83,7 @@ function ProjectSection() {
         return () => {
         }
     }, []);
-         
+ 
     const toogleDropDownBoxes=(contentType,height,rowIndex,indexType)=>{
         setDropDownBoxesHeight(prevState => ({
         ...prevState,
@@ -107,21 +107,7 @@ function ProjectSection() {
                     console.error('Error fetching data:', error);
             }
         }
-    }
-    const showSearchedMember=(e)=>{
-        const memberPresent = users.filter(name=>
-            name.includes(e.target.value)
-        )
-        memberPresent.length > 0 && e.target.value !== "" ?setmemeberFound(memberPresent):setmemeberFound([]);
-    }
-    const addMemberToProject=(newMember)=>{
-        setProjectMembers(prevItems =>[...prevItems,newMember])
-    }   
-    const rowUpdate = (columnName, columnValue, taskSent,tableId) => {
-       seteditedTask({})
-       const newTask = {...taskSent,[columnName]: columnValue}
-       seteditedTask(newTask)
-    }
+    } 
     const sendEditedRow = async (task, updatedValue,columnType) => {
         let taskToSend = {}
         
@@ -165,7 +151,6 @@ function ProjectSection() {
             }
         }
     }
-    
     async function deleteTask(task_id,table_id) {
         if (loggedInUser) {
             try {
@@ -248,6 +233,21 @@ function ProjectSection() {
         settaskComments(comments)
         toogleDropDownBoxes('commentBox',100,taskid,'commentTaskId')
     }
+    const searchforMembers = async (username) => {
+        if (loggedInUser && username.length() >= 4) {
+            try {
+            const response = await axios.post(`http://localhost:8080/users/`,{username}, {
+                headers: {
+                    Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(response.data) {
+                setmemeberFound(response.data);
+            }
+            } catch (error) {console.error('Error fetching data:', error);}
+        }
+    }
     const openAssignModel = (assignList,taskId) => {
         setassignees([])
         if (assignList.length > 0) {
@@ -300,7 +300,7 @@ function ProjectSection() {
                                 <div style={{height: dropDownBoxesHeight.inviteBox}} className="invite_members">
                                    <div className="member_invite_wrapper">
                                         <h5>Search members to add by name  </h5>
-                                        <form action=""> <input onChange={(e)=>showSearchedMember(e)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
+                                        <form action=""> <input onChange={(e)=>searchforMembers(e.target.value)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
                                         {memeberFound.map((memberName,i)=>
                                         <p key={i} onClick={()=>addMemberToProject(memberName)} >{memberName}</p>
                                         )}

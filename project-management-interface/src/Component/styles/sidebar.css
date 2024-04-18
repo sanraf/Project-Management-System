@@ -49,13 +49,13 @@
     margin-right: -5px;
     color: #fff;
 }
-#sidebar-subtitle {
-    font-size: var(--subtitle-font-size);
+.sidebar-subtitle {
+    font-size: 12px;
     text-transform: uppercase;
     color: #888;
     letter-spacing: 1px;
     display: block;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 .sidebar-links a{
     text-decoration: none;
@@ -67,10 +67,29 @@
 }
 .sidebar-links a i{
     color: var(--blue-color);
-    font-size: 18px;
+    font-size: 15px;
     margin-right: 12px;
     text-transform: capitalize;
 }
+.admin_dash{margin-top: 3rem;}
+.sidebar .sub-links{
+    font-size: 12px;
+    text-transform: capitalize;
+    position: relative;
+    margin-left: 2rem;
+    color: #888;
+    cursor: pointer;
+}
+.sidebar .sub-links:after{
+    position: absolute;
+    content: "";
+    height: 2px;
+    width: 10px;
+    background-color: #aaa;
+    left: -30px;
+    top: 5px;
+}
+
 #info{
     border: 1px solid var(--blue-color);
     padding: 3px;
