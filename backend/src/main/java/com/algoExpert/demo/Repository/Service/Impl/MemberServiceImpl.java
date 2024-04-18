@@ -73,6 +73,11 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findAll();
     }
 
+    @Override
+    public List<User> searchMemberToInvite(String fullnameLetters) {
+        return userRepository.findByFullname(fullnameLetters);
+    }
+
     //    get member id
     @Override
     public Integer findLoginMember(int user_id) {
