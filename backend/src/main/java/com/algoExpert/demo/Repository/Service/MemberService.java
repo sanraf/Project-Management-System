@@ -1,6 +1,7 @@
 package com.algoExpert.demo.Repository.Service;
 
 import com.algoExpert.demo.Entity.Member;
+import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public interface MemberService {
 
     //    get all members
     List<Member> getAllMembers();
+
+    //searchUsersFullnames
+    List<User>searchMemberToInvite(String fullnameLetters);
 
     //    get member id
     Integer findLoginMember(int user_id);
