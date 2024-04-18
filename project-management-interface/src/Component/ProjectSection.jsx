@@ -8,7 +8,7 @@ function ProjectSection() {
     const [hiddenColumns, sethiddenColumns] = useState({priority:"none"});
     const [projectMembers, setProjectMembers] = useState(["Jane Doe"]);
     const [users, setUsers] = useState(["Alex Smith"]);
-    const [memeberFound, setmemeberFound] = useState([]);
+    const [memberFound, setmemberFound] = useState([]);
     const [loginMemberId, setloginMemberId] = useState();
     const [loggedInUser, setloggedInUser] = useState();
     const [taskComments, settaskComments] = useState([{ comment_id: 0, username: "", date_created: "", commentBody: "" }]);
@@ -101,7 +101,7 @@ function ProjectSection() {
                     }
                 });
                 if(response.data.project_id) {
-                    window.location.reload
+                    window.location.reload()
                 }
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -234,19 +234,37 @@ function ProjectSection() {
         toogleDropDownBoxes('commentBox',100,taskid,'commentTaskId')
     }
     const searchforMembers = async (username) => {
-        if (loggedInUser && username.length() >= 4) {
+        if (username.length == 4 || loggedInUser && username.length == 8 ) {
             try {
-            const response = await axios.post(`http://localhost:8080/users/`,{username}, {
+                const response = await axios.post(`http://localhost:8080/member/searchMembers?fullnameLetters=${username}`,{},{
                 headers: {
                     Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
                     'Content-Type': 'application/json'
                 }
             });
             if(response.data) {
-                setmemeberFound(response.data);
+                setmemberFound(response.data);
             }
             } catch (error) {console.error('Error fetching data:', error);}
         }
+    }
+    const inviteMember =async (userId) => {
+         if (loggedInUser) {
+            try {
+                const response = await axios.post(`http://localhost:8080/member/inviteMember/${oneProject.project_id}/${userId}`,{}, {
+                    headers: {
+                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if(response.data.project_id) {
+                    window.location.reload();
+                }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+            }
+        }
+        
     }
     const openAssignModel = (assignList,taskId) => {
         setassignees([])
@@ -291,8 +309,8 @@ function ProjectSection() {
                         </div>
                         <div className="project_create_table_invite">
                             <div className="project_members">
-                                {projectMembers.map((name,i)=>
-                                   <span key={i}>{name.charAt(0)}</span>
+                                {oneProject.memberList.map((name,i)=>
+                                   <span key={i}>{name.username.charAt(0)}</span>
                                 )}
                             </div> 
                             <div  className="invite_btn">
@@ -301,9 +319,9 @@ function ProjectSection() {
                                    <div className="member_invite_wrapper">
                                         <h5>Search members to add by name  </h5>
                                         <form action=""> <input onChange={(e)=>searchforMembers(e.target.value)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
-                                        {memeberFound.map((memberName,i)=>
-                                        <p key={i} onClick={()=>addMemberToProject(memberName)} >{memberName}</p>
-                                        )}
+                                        {memberFound ? memberFound.map((memberName,i)=>
+                                        <p key={i} onClick={()=>inviteMember(memberName.user_id)} >{memberName.fullname}</p>
+                                        ):""}
                                         <h6>List of project members</h6>
                                         {
                                             projectMembers.map((names,index)=>
@@ -339,7 +357,7 @@ function ProjectSection() {
                             </div>
                             <div className="project_table">
                                 <div className="page-row col_name_row">
-                                    <div style={{height:dropDownBoxesHeight.addColumn}}  className="add-table-column">
+                                    <div style={{height: dropDownBoxesHeight.columnIndex == table_index? dropDownBoxesHeight.addColumn :0}}  className="add-table-column">
                                         <h6>Add extra table columns:</h6>
                                         <p onClick={()=>toogleHiddenColumns('priority')}>
                                             <i className="lni lni-sort-alpha-asc"></i>
@@ -354,7 +372,7 @@ function ProjectSection() {
                                     <span className='field_name col_name'>end-date</span>
                                     <span className='field_name col_name'>status</span>
                                     <span style={{display:hiddenColumns.priority}} className='field_name col_name'>Priority</span>
-                                    <div className='more  more-col' onClick={() => toogleDropDownBoxes("addColumn", 120, table_index, 'columnIndex')}> <i className="lni lni-circle-plus"></i></div>
+                                    <div className='more  more-col' onClick={() => toogleDropDownBoxes("addColumn", 120, table_index,'columnIndex')}> <i className="lni lni-circle-plus"></i></div>
                                 </div>
                             {
                             table.tasks.map((task,taskIndex)=>
