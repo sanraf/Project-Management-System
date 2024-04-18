@@ -19,9 +19,9 @@ public class TableController {
     private TableService tableService;
 
     //    create table
-    @PostMapping("/createTable/{project_id}/{member_id}")
-    public ProjectDto createTable(@PathVariable Integer project_id, @PathVariable int member_id) throws InvalidArgument {
-        return tableService.createTable(project_id, member_id);
+    @PostMapping("/createTable/{project_id}")
+    public ProjectDto createTable(@PathVariable Integer project_id) throws InvalidArgument {
+        return tableService.createTable(project_id);
     }
 
     //    get all tables
@@ -38,7 +38,7 @@ public class TableController {
 
     //    update table
     @PutMapping("/updateTable")
-    public TableDto updateTable(@RequestBody TableDto tableDto) throws InvalidArgument {
-        return tableService.editTable(tableDto);
+    public TaskContainer updateTable(@RequestBody TaskContainer updatedTable) throws InvalidArgument {
+        return tableService.editTable(updatedTable);
     }
 }

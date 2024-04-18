@@ -25,7 +25,7 @@ import java.util.Optional;
 public interface CommentService {
 
    //  create comment
-    Task createComment(CommentDto commentDto, int member_id, int task_id) throws InvalidArgument;
+    Task createComment(Comment comment, int task_id) throws InvalidArgument;
 
     //    get all comments
   List<Comment> getAllComments();

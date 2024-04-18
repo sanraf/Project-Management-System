@@ -10,6 +10,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,20 +42,29 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+
+    @Autowired
+    private  UserRepository userRepository;
+
     //    create new task
     @Override
-    public TaskContainer createTask(int member_id, int table_id) throws InvalidArgument {
+    public TaskContainer createTask(int table_id) throws InvalidArgument {
 
         TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
-        Member member = memberRepository.findById(member_id).orElseThrow(()->
-                new InvalidArgument("Member wth ID "+member_id+" not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
         Task task = new Task(0, "task " + count, ""
-                , member.getUsername(), "", "", "", "", null, null);
+                ,loggedUser.getUsername(), "", "", "", "", null, null);
 
         taskList.add(task);
         table.setTasks(taskList);
@@ -68,20 +79,19 @@ public class TaskServiceImpl implements TaskService {
 
     //    update task
     @Override
-    public TaskDto editTask(TaskDto newTaskDto) throws InvalidArgument {
-        Task task = taskRepository.findById(newTaskDto.getTask_id())
+    public Task editTask(Task newTask) throws InvalidArgument {
+
+        Task task = taskRepository.findById(newTask.getTask_id())
                 .map(existingTask -> {
-                    if (newTaskDto != null) {
-                        Optional.ofNullable(newTaskDto.getTitle()).ifPresent(existingTask::setTitle);
-                        Optional.ofNullable(newTaskDto.getDescription()).ifPresent(existingTask::setDescription);
-                        Optional.ofNullable(newTaskDto.getStart_date()).ifPresent(existingTask::setStart_date);
-                        Optional.ofNullable(newTaskDto.getEnd_date()).ifPresent(existingTask::setEnd_date);
-                        Optional.ofNullable(newTaskDto.getStatus()).ifPresent(existingTask::setStatus);
-                        Optional.ofNullable(newTaskDto.getPriority()).ifPresent(existingTask::setPriority);
-                    }
+                    existingTask.setTitle(newTask.getTitle());
+                    existingTask.setDescription(newTask.getDescription());
+                    existingTask.setStart_date(newTask.getStart_date());
+                    existingTask.setEnd_date(newTask.getEnd_date());
+                    existingTask.setStatus(newTask.getStatus());
+                    existingTask.setPriority(newTask.getPriority());
                     return taskRepository.save(existingTask);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTaskDto.getTask_id() + " not found"));
-        return TaskMapper.mapToTaskDto(task);
+                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTask.getTask_id() + " not found"));
+        return task;
     }
 
     //duplicate task

@@ -15,9 +15,10 @@ public interface AuthService {
     // get all users
     List<User> getUsers();
 
+    HttpResponse login (User user);
+
     //    delete user by id
     List<UserDto> deleteUser(int userId);
 
-    //    get User Project Ids
-    List<Project> getUserProjectIds(int userId);
+
 }
