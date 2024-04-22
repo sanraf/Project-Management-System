@@ -32,7 +32,7 @@ public class TableController {
 
     //    delete table
     @DeleteMapping("/deleteTable/{project_id}/{table_id}")
-    public List<TaskContainer> deleteTable(@PathVariable Integer project_id, Integer table_id) throws InvalidArgument {
+    public List<TaskContainer> deleteTable(@PathVariable Integer project_id,@PathVariable Integer table_id) throws InvalidArgument {
         return tableService.deleteTable(project_id, table_id);
     }
 
