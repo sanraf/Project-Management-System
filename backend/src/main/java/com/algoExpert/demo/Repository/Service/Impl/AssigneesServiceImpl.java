@@ -1,23 +1,23 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
-import com.algoExpert.demo.AppNotification.EmailService;
-import com.algoExpert.demo.Dto.AssigneeDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.*;
 import com.algoExpert.demo.Repository.Service.AssigneesService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.algoExpert.demo.AppUtils.AppConstants.ALREADY_ASSIGNED;
-import static com.algoExpert.demo.AppUtils.AppConstants.TASK_NOT_FOUND;
+import static com.algoExpert.demo.AppUtils.AppConstants.*;
 
 @Service
+@Slf4j
 public class AssigneesServiceImpl implements AssigneesService {
 
     @Autowired
@@ -32,7 +32,7 @@ public class AssigneesServiceImpl implements AssigneesService {
     @Autowired
     private  UserRepository userRepository;
     @Autowired
-    private EmailService emailService;
+    private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
     @Value("${task.invite.url}")
@@ -41,7 +41,7 @@ public class AssigneesServiceImpl implements AssigneesService {
     //	 Assign a task to member
     @Transactional
     @Override
-    public Task  assignTaskToMember(int member_id, int task_id,int projectId) throws InvalidArgument {
+    public Task assignTaskToMember(int member_id, int task_id) throws InvalidArgument {
         // check if member and task exist
         Task storedTask = taskRepository.findById(task_id).orElseThrow(() ->
                 new InvalidArgument(String.format(TASK_NOT_FOUND,task_id)));
@@ -53,7 +53,7 @@ public class AssigneesServiceImpl implements AssigneesService {
         Assignee assignee = new Assignee(0, member_id, storedTask.getTask_id(), user.getUsername());
         List<Assignee> assigneeList= storedTask.getAssignees();
         boolean assigneeExist = assigneeList
-                .stream().map(Assignee::getAssignee_id)
+                .stream().map(Assignee::getMember_id)
                 .anyMatch(id->id.equals(member_id));
 
         if (assigneeExist){
@@ -63,7 +63,7 @@ public class AssigneesServiceImpl implements AssigneesService {
         assigneeList.add(assignee);
         storedTask.setAssignees(assigneeList);
         Task saved = taskRepository.save(storedTask);
-        assignToTask(storedTask,user,projectId);
+        sendInvite(storedTask,user,storedTask.getProjectName());
         return saved ;
     }
 
@@ -75,13 +75,15 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     }
 
-    private void assignToTask(Task task,User user,int projectId){
-
-
-        String projectTitle = projectRepository.findById(projectId).orElseThrow().getTitle();
+    private void sendInvite(Task task, User user, String projectName){
         String link = taskInviteLink +task.getTask_id();
-        emailService.sendEmailInvite("santoschrist1234@gmail.com",emailHtmlLayout.buildTaskInviteEmail(user.getFullname(),task.getTitle(),projectTitle,link));
+        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildTaskInviteEmail(user.getFullName(),task.getTitle(),projectName,link));
+        log.info(user.getFullName()+" {} :",link);
 
+    }
+    @Override
+    public List<Assignee> getAssigneeBrTaskID(int taskId){
+        return assigneesRepository.findByTaskId(taskId);
     }
 
 }

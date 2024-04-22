@@ -21,6 +21,7 @@ public class TaskDto {
     private String end_date;
     private String status;
     private String priority;
+    private String projectName;
 
     private List<Comment> comments;
     private List<Assignee> assignees;

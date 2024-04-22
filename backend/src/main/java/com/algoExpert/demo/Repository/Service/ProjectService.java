@@ -11,6 +11,7 @@ import com.algoExpert.demo.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public interface ProjectService {
 
     //  create project
-    Integer createProject(Project project) throws InvalidArgument;
+    Integer createProject(Project project) throws InvalidArgument, AccessDeniedException;
 
     //  get all projects
     List<Project> getAllProjects();

@@ -1,6 +1,7 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 
+import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.*;
@@ -8,14 +9,14 @@ import com.algoExpert.demo.Repository.Service.TaskService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
+import java.util.*;
+
+@Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
     @Autowired
@@ -37,9 +38,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private ProjectUserImpl projectUser;
-
     @Autowired
     private  UserRepository userRepository;
+    @Autowired
+    private EmailHtmlLayout emailHtmlLayout;
 
     //    create new task
     @Override
@@ -48,16 +50,18 @@ public class TaskServiceImpl implements TaskService {
         TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
-        String username =  userRepository.findById(projectUser.loggedInUserId()).get().getFullname();
+        String projectName = table.getTasks()
+                .stream().map(Task::getProjectName).findFirst().orElseThrow();
+        String username =  userRepository.findById(projectUser.loggedInUserId()).orElseThrow().getFullName();
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
         Task task = new Task(0, "task " + count, ""
-                ,username, "", "", "", "", null, null);
+                ,username, "", "", "", "",projectName, null, null);
 
         taskList.add(task);
         table.setTasks(taskList);
-
+        System.err.println(projectName);
         return tableRepository.save(table);
     }
     //    get all tasks
@@ -68,19 +72,17 @@ public class TaskServiceImpl implements TaskService {
 
     //    update task
     @Override
-    public Task editTask(Task newTask) throws InvalidArgument {
-
-        Task task = taskRepository.findById(newTask.getTask_id())
-                .map(existingTask -> {
-                    existingTask.setTitle(newTask.getTitle());
-                    existingTask.setDescription(newTask.getDescription());
-                    existingTask.setStart_date(newTask.getStart_date());
-                    existingTask.setEnd_date(newTask.getEnd_date());
-                    existingTask.setStatus(newTask.getStatus());
-                    existingTask.setPriority(newTask.getPriority());
+    public Task editTask(Task newTask){
+        return   taskRepository.findById(newTask.getTask_id())
+                .map(existingTask ->{
+                    Optional.ofNullable(newTask.getTitle()).ifPresent(existingTask::setTitle);
+                    Optional.ofNullable(newTask.getDescription()).ifPresent(existingTask::setDescription);
+                    Optional.ofNullable(newTask.getStart_date()).ifPresent(existingTask::setStart_date);
+                    Optional.ofNullable(newTask.getEnd_date()).ifPresent(existingTask::setEnd_date);
+                    Optional.ofNullable(newTask.getStatus()).map(String::toUpperCase).ifPresent(existingTask::setStatus);
+                    Optional.ofNullable(newTask.getPriority()).map(String::toUpperCase).ifPresent(existingTask::setPriority);
                     return taskRepository.save(existingTask);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTask.getTask_id() + " not found"));
-        return task;
+                }).orElseThrow(() -> new IllegalArgumentException("Project with ID " + newTask.getTask_id() + " not found"));
     }
 
     //duplicate task
@@ -89,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
         TaskContainer table = tableRepository.findById(table_id).get();
 
         Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getUsername(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
-                task.getPriority(), null, null);
+                task.getPriority(),task.getProjectName(), null, null);
         List<Task> taskList = table.getTasks();
 
 
@@ -121,38 +123,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task taskDueDate(int taskId) throws InvalidArgument {
-        Task task = taskRepository.findById(taskId).orElseThrow();
-        String dueDate = task.getEnd_date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date parseDate = null;
-        try {
-            parseDate = dateFormat.parse(dueDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        Date currentDate = new Date();
-        int i = parseDate.compareTo(currentDate);
-        if (i==0){
-
-            //TODO send notification here
-            System.err.println("task has reached due date");
-        }else {
-            System.err.println(parseDate);
-            System.err.println(currentDate);
-        }
-        return task;
-    }
-
-    @Override
     public Task getTaskById(int taskId) {
         return taskRepository.findById(taskId).orElseThrow();
     }
 
-//    public void sendNotification(){
-//        Task task = taskRepository.findById()
-//    }
+    @Override
+    public List<Task> findTaskByDateAndStatus(String date, String status) {
+        return taskRepository.findTasksDueDate(date,status);
+    }
+
 
 }
 

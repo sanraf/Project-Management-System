@@ -16,7 +16,6 @@ public class TaskContainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int table_id;
     private String table_name;
-
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 

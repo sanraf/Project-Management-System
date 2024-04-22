@@ -60,7 +60,7 @@ public class Config {
                     }
                 }))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**","/confirm/**","/recover/**").permitAll()
                         .requestMatchers("/project/**").hasAnyRole(USER.name(), OWNER.name())
                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())

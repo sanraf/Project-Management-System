@@ -1,8 +1,8 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 
+import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
-import com.algoExpert.demo.AppNotification.EmailService;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
@@ -11,6 +11,8 @@ import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.MemberService;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
 
 @Service
+@Slf4j
 public class MemberServiceImpl implements MemberService {
     @Autowired
     private ProjectRepository projectRepository;
@@ -34,15 +37,18 @@ public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
 
     @Autowired
-    private EmailService emailService;
+    private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
     @Value("${project.invite.url}")
     String projectUrl;
+    public static final String OWNER = "OWNER";
+    public static final String MEMBER = "MEMBER";
 
 
 
     //    Invite member to project
+    @Transactional
     @Override
     public Member inviteMember(int project_id, int user_id) throws InvalidArgument {
         // check if user and project exist
@@ -70,16 +76,21 @@ public class MemberServiceImpl implements MemberService {
             Member newMember;
             // create a new member
 
-            String role = members.isEmpty() ? "OWNER" : "MEMBER";
+            String role = members.isEmpty() ? OWNER : MEMBER;
             newMember = new Member(0, user.getUser_id(), userProject.getProject_id(), user.getUsername(), role, null);
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
 
 
-            String projectLink = projectUrl + project_id;
-            emailService.sendEmailInvite("depaci1149@abnovel.com",emailHtmlLayout.buildProjectInviteEmail(user.getFullname(),projectLink));
-            System.out.println(projectLink);
+//
+            if (newMember.getProjectRole().equals(OWNER)){
+                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),""));
+                log.info("Project has been Created successfully {}{} :",projectUrl,userProject.getTitle());
+            }else {
+                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),projectUrl+project_id));
+                log.info("You have been invited to the project {}{} :",projectUrl,project_id);
+            }
 
             return memberRepository.save(newMember);
         }

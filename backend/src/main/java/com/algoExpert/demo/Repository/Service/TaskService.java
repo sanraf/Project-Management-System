@@ -3,13 +3,16 @@ package com.algoExpert.demo.Repository.Service;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public interface TaskService {
+
 
 
     //    create new task
@@ -27,10 +30,9 @@ public interface TaskService {
     //  delete task
     @Transactional
     TaskContainer deleteTaskById(Integer taskId, Integer table_id) throws InvalidArgument;
-
-    Task taskDueDate(int taskId) throws InvalidArgument;
-
     Task getTaskById(int taskId);
+
+    List<Task> findTaskByDateAndStatus(String date,String status);
 
 }
 

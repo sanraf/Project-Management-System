@@ -16,6 +16,7 @@ public class TaskMapper {
                 task.getEnd_date(),
                 task.getStatus(),
                 task.getPriority(),
+                task.getProjectName(),
                 task.getComments(),
                 task.getAssignees()
         );
@@ -31,6 +32,7 @@ public class TaskMapper {
                 taskDto.getEnd_date(),
                 taskDto.getStatus(),
                 taskDto.getPriority(),
+                taskDto.getProjectName(),
                 taskDto.getComments(),
                 taskDto.getAssignees()
         );

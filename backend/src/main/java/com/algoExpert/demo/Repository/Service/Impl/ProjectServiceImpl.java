@@ -8,14 +8,9 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.*;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
-import com.algoExpert.demo.role.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +54,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         // Save the project and retrieve the saved instance
         Project savedProject = projectRepository.save(project);
-
         // save member
         Member newMember = memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
@@ -71,30 +65,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         return savedProject.getProject_id();
     }
-
-/*
-* public Integer createProject(Project project, int user_id) throws InvalidArgument {
-//        find user by id
-        User user = userRepository.findById(user_id).orElseThrow(()->new InvalidArgument("User with ID " + user_id + " not found"));
-//        Project project = projectMapper.projectDtoToProject(projectDto);
-        project.setUser(user);
-        Project savedProjects = projectRepository.save(project);
-
-//        add owner to the project as a member
-        List<Member> members = savedProjects.getMembersList();
-
-        System.err.println(555555);
-        Member newMember = new Member(0, user.getUser_id(), savedProjects.getProject_id(), null);
-        members.add(newMember);
-        members.forEach(System.err::println);
-        project.setMembersList(members);
-
-//        create a default table
-        tableService.createTable(project.getProject_id(), user.getUser_id());
-
-        Project savedProject = projectRepository.save(savedProjects);
-        return savedProject.getProject_id();
-    }*/
 
     //  get all projects
     @Override
