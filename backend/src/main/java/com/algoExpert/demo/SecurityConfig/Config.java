@@ -91,6 +91,7 @@ public class Config {
                         .requestMatchers(GET, "/assignee/**").hasAnyAuthority(OWNER_READ.getPermission(),MEMBER_READ.getPermission())
                         .requestMatchers(POST, "/assignee/**").hasAnyAuthority(OWNER_CREATE.getPermission(),MEMBER_UPDATE.getPermission())
                         .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
+                        .requestMatchers("/admin/**").hasAnyRole(USER.name())
                         .anyRequest().authenticated()
                 )
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer

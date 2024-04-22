@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     @Autowired
     private AssigneesRepository assigneesRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -47,10 +52,17 @@ public class AssigneesServiceImpl implements AssigneesService {
                 new InvalidArgument(String.format(TASK_NOT_FOUND,task_id)));
 
 
+                new InvalidArgument("Task with ID " + task_id + " not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
 
-        User user = userRepository.findById(projectUser.loggedInUserId()).get();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
 
-        Assignee assignee = new Assignee(0, member_id, storedTask.getTask_id(), user.getUsername());
+        Assignee assignee = new Assignee(0, member_id, task_id, loggedUser.getUsername());
+
         List<Assignee> assigneeList= storedTask.getAssignees();
         boolean assigneeExist = assigneeList
                 .stream().map(Assignee::getMember_id)
@@ -66,7 +78,12 @@ public class AssigneesServiceImpl implements AssigneesService {
         sendInvite(storedTask,user,storedTask.getProjectName());
         return saved ;
     }
-
+    /*public AssigneeDto assignTaskToMember(int dtoMember_id, int dtoTask_id){
+		AssigneeDto assigneeDto = new AssigneeDto(0,dtoMember_id,dtoTask_id);
+		Assignee assignee = new Assignee(assigneeDto.getAssignee_id(), assigneeDto.getMember_id(), assigneeDto.getTask_id());
+		Assignee assigneeResult = assigneesRepository.save(assignee);
+		return assigneeMapper.assigneeToAssigneeDto(assigneeResult);
+	}*/
 
     //	get all assignees
     @Override

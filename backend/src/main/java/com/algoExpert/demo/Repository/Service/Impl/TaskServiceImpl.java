@@ -4,6 +4,7 @@ package com.algoExpert.demo.Repository.Service.Impl;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Mapper.TaskMapper;
 import com.algoExpert.demo.Repository.*;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import jakarta.persistence.EntityManager;
@@ -11,8 +12,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 
 import java.util.*;
 
@@ -37,7 +42,14 @@ public class TaskServiceImpl implements TaskService {
     private CommentRepository commentRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @Autowired
     private ProjectUserImpl projectUser;
+
     @Autowired
     private  UserRepository userRepository;
     @Autowired
@@ -53,6 +65,13 @@ public class TaskServiceImpl implements TaskService {
         String projectName = table.getTasks()
                 .stream().map(Task::getProjectName).findFirst().orElseThrow();
         String username =  userRepository.findById(projectUser.loggedInUserId()).orElseThrow().getFullName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
 
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;

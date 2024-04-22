@@ -12,6 +12,8 @@ import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +45,13 @@ public class TableServiceImpl implements TableService {
         Project project = projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
 
         List<TaskContainer> tables = project.getTables();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User projectUser = null;
+
+        if (authentication != null) {
+            projectUser = (User) authentication.getPrincipal();
+        }
+
 //        int count = project.getTables().size();
         TaskContainer table = new TaskContainer(0, "Table", null);
         Task task = new Task(0, "task", "description",project.getUser().getFullName(), "","", "", "", project.getTitle(), null,null);
@@ -58,6 +67,53 @@ public class TableServiceImpl implements TableService {
         return ProjectMapper.mapToProjectDto(projectResult);
     }
 
+    /*
+    public Project createTable(int project_id, int member_id) throws InvalidArgument {
+        // Retrieve the project by ID
+        Project project = projectRepository.findById(project_id)
+                .orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
+
+        // Retrieve the member by ID
+        Member member = memberRepository.findById(member_id).orElseThrow(()->
+                new InvalidArgument("Member wth ID "+member_id+" not found"));
+
+        // check if member part of the project
+        List<Member> members =  project.getMemberList();
+        boolean memberExist = members.stream()
+                .map(Member::getMember_id)
+                .anyMatch(id->id==member_id);
+
+        // create table if member exist
+        if(memberExist){
+            // initialize tableList if it doesn't exist
+            List<Table> tables = project.getTables();
+            if (tables == null) {
+                tables = new ArrayList<>();
+                project.setTables(tables);
+            }
+
+            // Create a new table and task
+            int count = tables.size();
+            Table table = new Table(0, "Table " + (count+1), null);
+            Task task = new Task(0, "task", "description", member_id, "", ""
+                    , "", "", null);
+
+            // Add the table to the project's tables list
+            tables.add(table);
+
+            // Set the tasks list for the table
+            List<Task> taskList = new ArrayList<>();
+            taskList.add(task);
+            table.setTasks(taskList);
+
+            // Save the updated project and return it
+            return projectRepository.save(project);
+        }
+        else{
+            throw new InvalidArgument("Member ID " + member_id + " is not a member");
+        }
+    }
+     */
 
     //  get all table
     @Override

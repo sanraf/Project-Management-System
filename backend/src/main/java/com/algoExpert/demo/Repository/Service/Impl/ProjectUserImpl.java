@@ -33,8 +33,11 @@ public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private  ProjectUserImpl projectUser;
+
     @Override
-    public User findProject(int project_id) throws InvalidArgument {
+    public Project findProject(int project_id) throws InvalidArgument {
         Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +64,8 @@ public class ProjectUserImpl implements ProjectUserService {
             }
         }
         projectUser.setRoles(roleList);
-        return userRepository.save(projectUser);
+        userRepository.save(projectUser);
+        return foundProject;
     }
     @Override
     public Integer loggedInUserId() {
@@ -80,7 +84,14 @@ public class ProjectUserImpl implements ProjectUserService {
         // Find all members
         List<Member> memberList = memberRepository.findAll();
 
-        User systemUser = userRepository.findById(loggedInUserId()).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User projectUser = null;
+
+        if (authentication != null) {
+            projectUser = (User) authentication.getPrincipal();
+        }
+
+        User systemUser = userRepository.findById(projectUser.getUser_id()).get();
 
         // Filter members by user_id and map them to project ids
         List<Integer> userProjectIds = memberList.stream()
