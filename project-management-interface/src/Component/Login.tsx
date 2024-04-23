@@ -19,6 +19,7 @@ function Login() {
         if (showRegister == "none") {
             const basicAuth = 'Basic ' + btoa(userDetails.email + ':' + userDetails.password); // Creating Basic Authorization header
             try {
+                
                 const response = await axios.post(`http://localhost:8080/auth/login`,userDetails);
                 if (response.data.statusCode == "401") {
                     console.log(response.data.status)
@@ -33,7 +34,8 @@ function Login() {
                     console.error("Error adding task: ", error);
             }
         } else {
-            const editedUserDetails = {...userDetails}; 
+            const editedUserDetails = { ...userDetails }; 
+            editedUserDetails.dateRegistered = new Date();
             editedUserDetails.roles = [];
             try {
                 const response = await axios.post(`http://localhost:8080/auth/registerUser`,editedUserDetails);
