@@ -30,7 +30,7 @@ public class ProjectUserImpl implements ProjectUserService {
 
 
     @Override
-    public User findProject(int project_id) throws InvalidArgument {
+    public Project findProject(int project_id) throws InvalidArgument {
         Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -57,7 +57,8 @@ public class ProjectUserImpl implements ProjectUserService {
             }
         }
         projectUser.setRoles(roleList);
-        return userRepository.save(projectUser);
+        userRepository.save(projectUser);
+        return foundProject;
     }
     @Override
     public Integer loggedInUserId() {

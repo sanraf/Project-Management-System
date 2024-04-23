@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface ProjectUserService {
-    User findProject(int project_id) throws InvalidArgument;
+    Project findProject(int project_id) throws InvalidArgument;
     Integer loggedInUserId();
     List<Project> getUserProjectIds();
 }
