@@ -2,6 +2,7 @@ package com.algoExpert.demo.SecurityConfig;
 
 
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
+import com.algoExpert.demo.Jwt.JwtAuthFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Collections;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import static com.algoExpert.demo.role.Permission.*;
 import static com.algoExpert.demo.role.Role.*;
 import static org.springframework.http.HttpMethod.*;
