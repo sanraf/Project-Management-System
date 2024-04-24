@@ -68,13 +68,16 @@
 }
 .person_filter_box{
     position: absolute;
-    transition: all 2s;
+    transition: all 500ms;
     top: 40px;
     left: 0;
     background-color: #fff;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     width: 250px;
     z-index: 3;
+    overflow: hidden;   
+}
+.filter_person_wrapper{
     padding: 10px 20px;
 }
 .person_filter_box h6{
@@ -105,12 +108,13 @@
 .member_letter{
     position: relative;
     z-index: 2;
-  
 }
 .project_create_table_invite{
     display: flex;
     align-items: center;
+    color: #fff;
 }
+.project_create_table_invite i{margin-right: 5px;}
 .invite_btn{
     margin-left: 10px;
     position: relative;
@@ -130,14 +134,18 @@
 }
 .invite_members{
     position: absolute;
-    transition: all 2s;
+    transition: all 500ms;
     right: 0;
     width:300px;
     top: 45px;
-    padding: 20px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     z-index: 6;
     background-color: #fff;
+    overflow: hidden;
+
+}
+.member_invite_wrapper{
+    padding: 20px;
 }
 .invite_members h5, .invite_members h6{
     font-size: 14px;
@@ -180,7 +188,6 @@
     color: #fff;
     text-transform: capitalize;
     cursor: pointer;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -195,27 +202,63 @@
     margin-right: 6px;
     font-size: 16px;
 }
-.table_section{
-
+.edit-table{
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
 }
 #table_title{
     font-size: 14px;
     color: var(--title-color);
     font-weight: var(--header-font-weight);
     text-transform: capitalize;
+    display: inline-block;
+    border: none;
+    width: auto;
+    padding-right: 3px;
+}
+.edit-table .lni-chevron-down{
+    margin-left: 15px;
+    color: #aaa;
+    cursor: pointer;
+    padding:3px 4px;
+} 
+.edit-table-hidden-box{
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    z-index: 4;
+    overflow: hidden;
+    transition: all 500ms;
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.edit_table_icon{
+    padding:15px 20px 0 20px;
+    cursor: pointer;
+}
+.edit_table_icon i{margin-right: 10px;}
+.edit_table_icon i,.edit_table_icon span{
+    font-size: var(--subheader-font-size);
+    color: #aaa;
 }
 .project_table{
     width: 100%;
     border: var(--box-border);
     border-radius: 10px;
+    border-top: 0;
 }
 .project_table .page-row{
     justify-content: space-between;
-    border-bottom: var(--box-border);
+    border-top: var(--box-border);
 }
-.project_table .page-row:last-child{
-    border-bottom: none;
+.col_name_row{
+    position: relative;
+    border-radius: 10px;
 }
+
 .field_name{
     text-align: center;
     width: 16%;
@@ -225,27 +268,82 @@
     border-right: var(--box-border);
     text-transform: capitalize;
     line-height: 40px;
-    padding: 0 10px;
+    padding: 0 15px;
+}
+.col-description{
+    width: 20%;
 }
 .field_name input{
     width: 100%;
+    position: relative;
+    z-index: 1;
     border: none;
-    height: 100%;
+    color: #444;
 }
-.col_name_row{
+.row_description{
+    display: flex;
+    align-items: center;
+    padding: none;
+    width: 20%;
     position: relative;
 }
-
+.row_description::after{
+    content: "";
+    position: absolute;
+    width:0.5px;
+    background-color: #ccc;
+    height: 100%;
+    right: 40px;
+    top:0
+}
+.row_description i{
+    padding-left: 10px;
+    margin-left: 10px;
+    color: #444;
+    cursor: pointer;
+}
+.assignee .task_assign_letter{
+    border-radius: 100%;
+    height: 25px;
+    width: 25px;
+    font-size: 12px;
+    line-height: 25px;
+    text-transform: uppercase;
+    display: inline-block;
+    color: var(--blue-color);
+    border: 2px solid #fff;
+    background-color: var(--light-background-color);
+    margin-left: -8px;
+}
+.assignee{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.assignee .task_assign_letter:first-child{margin-left: 0;}
+.assignee span{margin-right: 4px;} 
+.assignee i{
+    font-size: 13px;
+    color: var(--blue-color);
+    cursor: pointer;
+}
 .status{position: relative;cursor: pointer;}
-.status_feilds{
+.status_dropdown{
     position: absolute;
     left: 0;
+    z-index: 3;
     top: 40px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     width: 100%;
-    display: none;
+    overflow: hidden;
+    transition: all 500ms;
+    background-color: #fff;
 }
-.status_feilds span{
+.status_dropdown_content{
+    background-color: #fff;
+    margin: 20px 10px;
+}
+.status_dropdown span{
     display: block;
 }
 #Done{
@@ -273,8 +371,9 @@
 }
 .table-task{
     font-size: var(--subheader-font-size);
-    color: #aaa;
+    color: #444;
 }
+.table-task input:focus{border: 0;}
 .task-title{
     text-align: center;
     position: relative;
@@ -287,33 +386,34 @@
     top: 10px;
     cursor: pointer;
 }
-.table_task_row{position: relative;}
-
+.task-title input{
+    margin-left: 35px;
+    width: 70%;
+}
 .edit_task_box, .add-table-column{
     position: absolute;
-    z-index: 3;
+    z-index: 10;
     background-color: #fff;
-    padding:10px 20px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    transition: all 1s;
+    overflow: hidden;
+    transition: all 500ms;
 }
 .edit_task_box{
-    left: -160px;
-    width: 100px;
+    left: -100px;
+    width: 150px;
 }
  .add-table-column{
     right: 0;
-    top: 40px;
-    width: 150px;
-  
+    top: 45px;
+    width: 230px;
  }
  .add-table-column h6{
     font-size: 13px;
     font-weight: 400;
     color: var(--title-color);
-    margin-bottom: 7px;
+    margin: 25px 25px 25px 15px;
  }
-.edit_task_box p,  .add-table-column p{cursor: pointer;}
+.edit_task_box p, .add-table-column p{cursor: pointer; margin: 15px 25px;}
 .edit_task_box span,  .add-table-column span{
     font-size: 13px;
     color: #bbb;
@@ -330,5 +430,4 @@
     top: 4px;
     right: -11px;
     transform: rotate(45deg);
- 
 }

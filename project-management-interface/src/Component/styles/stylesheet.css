@@ -5,6 +5,10 @@
 @import url("guide.css");
 @import url("createproject.css");
 @import url("projectsection.css");
+@import url("comments.css");
+@import url("assign.css");
+@import url("login.css");
+@import url("users.css");
 
 :root{
 --subheader-font-size:13px;
@@ -17,7 +21,15 @@
 --box-border:1px solid #ddd;
 --light-background-color:#eeeef9;
 --round-border-radius: 20px;
---page-font-size:23px;
+
+/* --border-color: #ddd;
+--container-color: white; 
+  --page-font-size:23px;
+  */
+}
+body{
+    margin: 0;
+    padding: 0;
 }
 .container{
     width: 94%;
@@ -33,6 +45,24 @@
     top: 0;
     height: 100%;
     background-color: #eee;
-    position: absolute;
+    position: fixed;
     padding:0 20px;
+}
+.comments_size{
+    font-size: 14px;
+    color: var(--subheader-font-size);
+    font-weight: 500;
+}
+.admin_graph_titles{
+    color: #333;
+    margin-bottom: 2rem;
+}
+.admin_graph_titles h2{
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+.admin_graph_titles p{
+    font-size: 12px;
+    color: #999;
 }
