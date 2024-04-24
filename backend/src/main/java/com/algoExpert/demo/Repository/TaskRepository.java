@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-    @Query("SELECT t FROM Task t WHERE t.end_date = ?1 AND status!= ?2")
-    List<Task> findTasksDueDate(String tomorrow, String status);
+    @Query("SELECT t FROM Task t WHERE t.end_date = ?1 AND t.status!= ?2")
+    List<Task> findTasksDueDate(String dueDay, String status);
 
 }

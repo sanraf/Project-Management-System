@@ -10,6 +10,8 @@ import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Jwt.JwtService;
 import com.algoExpert.demo.Repository.Service.TaskService;
+import com.algoExpert.demo.Repository.Service.UserNotificationService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,40 +34,39 @@ public class AuthController {
     private DeadlineTaskReminder taskReminder;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserNotificationService userNotificationService;
+
 
     @Autowired
     private JwtService jwtService;
-//    create user
+
+    //    create user
     @PostMapping("/registerUser")
     public User registerUser(@RequestBody RegistrationRequest request) throws InvalidArgument {
         return authService.registerUser(request);
     }
 
     @PostMapping("/login")
-    public HttpResponse userLogin(@RequestBody User userCredentials){
+    public HttpResponse userLogin(@RequestBody User userCredentials) {
         return authService.login(userCredentials);
     }
 
 
     //    get all users of the system
     @GetMapping("/getAllUsers")
-    public List<User> getAll(){
+    public List<User> getAll() {
         return authService.getUsers();
     }
 
     @PostMapping("/authenticate")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest){
+    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(authRequest.username());
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
-    }
-
-    @GetMapping("/reminder")
-    public List<Task> registerUser() throws InvalidArgument {
-       return   taskService.findTaskByDateAndStatus("2024-04-21","COMPLETE");
     }
 
 }

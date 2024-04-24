@@ -19,7 +19,6 @@ public class AppEmailService implements AppEmailBuilder {
     private final JavaMailSender javaMailSender;
 
     @Override
-    @Async
     public void sendEmailInvite(String to, String message) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -37,7 +36,6 @@ public class AppEmailService implements AppEmailBuilder {
     }
 
     @Override
-    @Async
     public void sendTaskReminderEmail(String to, String body,String dueDay) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -54,7 +52,6 @@ public class AppEmailService implements AppEmailBuilder {
     }
 
     @Override
-    @Async
     public void sendEmailAccountConfirmation(String to, String body) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

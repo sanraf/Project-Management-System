@@ -15,7 +15,7 @@ public class UserController {
     @Autowired
     private ProjectUserService projectUserService;
     @GetMapping("/getSingleProject")
-    public User getSingleProject(@RequestParam("project_id") int project_id) throws InvalidArgument {
+    public Project getSingleProject(@RequestParam("project_id") int project_id) throws InvalidArgument {
         return projectUserService.findProject(project_id);
     }
     @GetMapping("/fetchUserProject")

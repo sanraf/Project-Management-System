@@ -18,6 +18,7 @@ public class UserNotification {
     private String notifMsg;
     private String notifTime;
     private String fullName;
+    private int taskId;
     @ManyToOne()
     @JoinColumn(name = "user_id",referencedColumnName = "user_id")
     private User user;

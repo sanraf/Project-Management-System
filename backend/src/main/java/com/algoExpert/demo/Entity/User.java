@@ -37,9 +37,10 @@ public class User implements UserDetails {
     @NotEmpty(message = "Password cannot be empty")
     private String password;
 
-
     private boolean locked = false;
+
     private boolean enabled = false;
+
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 

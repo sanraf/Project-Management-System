@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository  extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String username);
-    @Query("SELECT u FROM User u WHERE u.fullname LIKE %:fullnameLetters%")
-    List<User> findByFullname(@Param("fullnameLetters") String fullnameLetters);
+    @Query("SELECT u FROM User u WHERE u.fullName LIKE %:fullNameLetters%")
+    List<User> findByFullName(@Param("fullNameLetters") String fullNameLetters);
 
 }

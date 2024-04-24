@@ -24,7 +24,6 @@ public class Assignee {
 	private Integer member_id;
 	private Integer task_id;
 	private String username;
-
 	public Assignee(String username) {
 		this.username = username;
 	}

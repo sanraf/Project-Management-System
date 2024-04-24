@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
@@ -36,7 +35,7 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
     private EmailHtmlLayout emailHtmlLayout;
     @Value("${confirm.account.url}")
     String confirmLink;
-    private static final Long END_TIME = 2L;
+    private static final Long EXPIRING_TIME = 2L;
 
     @Override
     public String activateAccount(String userToken) throws InvalidArgument {
@@ -54,8 +53,8 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
            log.info("renewedToken {}{} :",confirmLink,renewToken);
            String link = confirmLink + renewToken;
 
-           appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
-                   emailHtmlLayout.buildAccConfirmationEmail(user.getUsername(),link));
+//           appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
+//                   emailHtmlLayout.buildAccConfirmationEmail(user.getUsername(),link));
            return "Token expired";
        }
 
@@ -93,7 +92,7 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
         AccountConfirmation confirmation = AccountConfirmation.builder()
                 .token(token)
                 .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(END_TIME))
+                .expiresAt(LocalDateTime.now().plusMinutes(EXPIRING_TIME))
                 .user(user).build();
         saveToken(confirmation);
         return confirmation.getToken();

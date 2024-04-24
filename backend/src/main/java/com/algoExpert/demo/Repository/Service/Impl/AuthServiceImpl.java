@@ -102,8 +102,8 @@ public class AuthServiceImpl implements AuthService {
                 log.info("delete method called: {}{}", link,user.getUser_id());
                 //todo apply send notification method here
                 log.info("Renewed token is generated: {}{}", link, confirmation.getToken());
-                appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
-                        emailHtmlLayout.buildAccConfirmationEmail(user.getUsername(),link+confirmation.getToken()));
+//                appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
+//                        emailHtmlLayout.buildAccConfirmationEmail(user.getFullName(),link+confirmation.getToken()));
                 return user;
             }
         } else {
@@ -119,8 +119,8 @@ public class AuthServiceImpl implements AuthService {
             //todo apply send notification method here
             log.info("New Token: {}{}", link, token);
 
-            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
-                    emailHtmlLayout.buildAccConfirmationEmail(user.getUsername(),link+token));
+//            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
+//                    emailHtmlLayout.buildAccConfirmationEmail(user.getFullName(),link+token));
             return savedUser;
         }
     }

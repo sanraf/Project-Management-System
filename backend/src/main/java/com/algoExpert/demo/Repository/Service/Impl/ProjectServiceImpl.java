@@ -8,6 +8,7 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.*;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectUserImpl projectUser;
 
     //  create project
+    @Transactional
     @Override
     public Integer createProject(Project project) throws InvalidArgument {
         // Find user by id
@@ -55,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
         // Save the project and retrieve the saved instance
         Project savedProject = projectRepository.save(project);
         // save member
-        Member newMember = memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
+         memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
         // Create a default table using new member id
         tableService.createTable(savedProject.getProject_id());

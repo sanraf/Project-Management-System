@@ -51,8 +51,6 @@ public class AssigneesServiceImpl implements AssigneesService {
         Task storedTask = taskRepository.findById(task_id).orElseThrow(() ->
                 new InvalidArgument(String.format(TASK_NOT_FOUND,task_id)));
 
-
-                new InvalidArgument("Task with ID " + task_id + " not found"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = null;
 
@@ -61,7 +59,12 @@ public class AssigneesServiceImpl implements AssigneesService {
             loggedUser = (User) authentication.getPrincipal();
         }
 
-        Assignee assignee = new Assignee(0, member_id, task_id, loggedUser.getUsername());
+
+        String userName = memberRepository.findById(member_id)
+                .orElseThrow(()->new InvalidArgument(String.format(MEMBER_NOT_FOUND,member_id)))
+                .getUsername();
+
+        Assignee assignee = new Assignee(0, member_id, task_id, userName);
 
         List<Assignee> assigneeList= storedTask.getAssignees();
         boolean assigneeExist = assigneeList
@@ -75,15 +78,10 @@ public class AssigneesServiceImpl implements AssigneesService {
         assigneeList.add(assignee);
         storedTask.setAssignees(assigneeList);
         Task saved = taskRepository.save(storedTask);
-        sendInvite(storedTask,user,storedTask.getProjectName());
+        sendInvite(storedTask,loggedUser,storedTask.getProjectName());
         return saved ;
     }
-    /*public AssigneeDto assignTaskToMember(int dtoMember_id, int dtoTask_id){
-		AssigneeDto assigneeDto = new AssigneeDto(0,dtoMember_id,dtoTask_id);
-		Assignee assignee = new Assignee(assigneeDto.getAssignee_id(), assigneeDto.getMember_id(), assigneeDto.getTask_id());
-		Assignee assigneeResult = assigneesRepository.save(assignee);
-		return assigneeMapper.assigneeToAssigneeDto(assigneeResult);
-	}*/
+
 
     //	get all assignees
     @Override
@@ -94,7 +92,7 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     private void sendInvite(Task task, User user, String projectName){
         String link = taskInviteLink +task.getTask_id();
-        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildTaskInviteEmail(user.getFullName(),task.getTitle(),projectName,link));
+//        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildTaskInviteEmail(user.getFullName(),task.getTitle(),projectName,link));
         log.info(user.getFullName()+" {} :",link);
 
     }

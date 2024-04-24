@@ -36,7 +36,6 @@ import static org.springframework.http.HttpMethod.DELETE;
 @Configuration
 @EnableWebSecurity
 public class Config {
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired

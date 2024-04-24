@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     //    Invite member to project
-    @Transactional
+//    @Transactional
     @Override
     public Member inviteMember(int project_id, int user_id) throws InvalidArgument {
         // check if user and project exist
@@ -85,10 +85,10 @@ public class MemberServiceImpl implements MemberService {
 
 //
             if (newMember.getProjectRole().equals(OWNER)){
-                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),""));
+//                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),""));
                 log.info("Project has been Created successfully {}{} :",projectUrl,userProject.getTitle());
             }else {
-                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),projectUrl+project_id));
+//                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),projectUrl+project_id));
                 log.info("You have been invited to the project {}{} :",projectUrl,project_id);
             }
 
@@ -107,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<User> searchMemberToInvite(String fullnameLetters) {
-        return userRepository.findByFullname(fullnameLetters);
+        return userRepository.findByFullName(fullnameLetters);
     }
 
     //    get member id

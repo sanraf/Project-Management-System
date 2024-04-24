@@ -1,5 +1,6 @@
 package com.algoExpert.demo.ExceptionHandler;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -59,6 +60,13 @@ public class Validation {
     public Map<String,String> deniedException(BadCredentialsException badCredentialsException){
         Map<String,String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", badCredentialsException.getMessage());
+        return errorMap;
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ExpiredJwtException.class)
+    public Map<String,String> jwtException(ExpiredJwtException jwtException){
+        Map<String,String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", jwtException.getMessage());
         return errorMap;
     }
 }

@@ -38,7 +38,7 @@ public class ProjectUserImpl implements ProjectUserService {
 
     @Override
     public Project findProject(int project_id) throws InvalidArgument {
-        Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
+        Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument(String.format(PROJECT_NOT_FOUND,project_id)));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User projectUser = null;
