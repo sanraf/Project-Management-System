@@ -42,7 +42,10 @@ public class AuthServiceImpl implements AuthService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RefreshTokenSevice refreshTokenSevice;
 
 //    @Autowired
 //    UserMapper userMapper;
@@ -69,9 +72,12 @@ public class AuthServiceImpl implements AuthService {
             Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
             User logegdUser = null;
             String jwtToken = "";
+            String refreshToken = "";
+
             if(auth != null  && auth.isAuthenticated()){
                 logegdUser = (User)auth.getPrincipal();
                 jwtToken = jwtService.generateToken(user.getEmail());
+                refreshToken = refreshTokenSevice.createRefreshToken(user.getEmail()).getToken();
             }
             return HttpResponse.builder()
                     .timeStamp(LocalTime.now().toString())
@@ -99,7 +105,6 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
     }
-
 
 
     // get all users

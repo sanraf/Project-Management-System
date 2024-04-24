@@ -21,13 +21,13 @@ public class RefreshTokenSevice {
 
 //    method to create refresh token
     public RefreshToken createRefreshToken(String username){
-RefreshToken refreshToken=  RefreshToken.builder()
+        RefreshToken refreshToken =  RefreshToken.builder()
                .user(userRepository.findByEmail(username).get())
                .token(UUID.randomUUID().toString())
                .expiryDate(Instant.now().plusMillis(600000))
                .build();
 
-    return refreshTokenRepository.save(refreshToken);
+        return refreshTokenRepository.save(refreshToken);
     }
 
     public Optional<RefreshToken>  findByToken(String token){
