@@ -9,5 +9,6 @@ import java.util.List;
 @Service
 public interface AdminService {
   Admin getUsersStats();
+  List<Object[]>newUsers();
 
 }

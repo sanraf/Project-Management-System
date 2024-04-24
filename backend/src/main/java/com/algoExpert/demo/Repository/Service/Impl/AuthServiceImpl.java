@@ -5,9 +5,13 @@ import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.HttpResponse;
+import com.algoExpert.demo.Entity.Member;
+import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtService;
+import com.algoExpert.demo.Repository.MemberRepository;
+import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
@@ -47,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
     @Autowired
     private AccountConfirmationServiceImpl confirmationService;
 
@@ -60,6 +65,10 @@ public class AuthServiceImpl implements AuthService {
     private AccountConfirmationRepository confirmationRepository ;
     @Value("${confirm.account.url}")
     String confirmLink;
+
+
+    @Autowired
+    private RefreshTokenSevice refreshTokenSevice;
 
 //    @Autowired
 //    UserMapper userMapper;
@@ -131,9 +140,12 @@ public class AuthServiceImpl implements AuthService {
             Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
             User logegdUser = null;
             String jwtToken = "";
+            String refreshToken = "";
+
             if(auth != null  && auth.isAuthenticated()){
                 logegdUser = (User)auth.getPrincipal();
                 jwtToken = jwtService.generateToken(user.getEmail());
+                refreshToken = refreshTokenSevice.createRefreshToken(user.getEmail()).getToken();
             }
             return HttpResponse.builder()
                     .timeStamp(LocalTime.now().toString())
