@@ -1,16 +1,18 @@
 package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.AppNotification.DeadlineTaskReminder;
-import com.algoExpert.demo.Dto.AuthRequest;
+import com.algoExpert.demo.Dto.RefreshTokenRequest;
 import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.RefreshToken;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtResponse;
+import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Jwt.JwtService;
+import com.algoExpert.demo.Repository.Service.Impl.RefreshTokenSevice;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import com.algoExpert.demo.Repository.Service.UserNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class AuthController {
 
 
     @Autowired
-    private RefreshTokenSevice  tokenSevice;
+    private RefreshTokenSevice tokenSevice;
 //    create user
     @PostMapping("/registerUser")
     public User registerUser(@RequestBody RegistrationRequest request) throws InvalidArgument, InvalidArgument {
@@ -64,15 +66,12 @@ public class AuthController {
 //    }
 //
     @PostMapping("/authenticate")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
     public JwtResponse authenticateAndGetToken(@ RequestBody AuthRequest authRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.username());
-            RefreshToken refreshToken = tokenSevice.createRefreshToken(authRequest.getUsername());
+            RefreshToken refreshToken = tokenSevice.createRefreshToken(authRequest.username());
             return   JwtResponse.builder()
-                    .jwtToken(jwtService.generateToken(authRequest.getUsername()))
+                    .jwtToken(jwtService.generateToken(authRequest.username()))
                     .refreshToken(refreshToken.getToken()).build();
         } else {
             throw new UsernameNotFoundException("invalid user request !");
