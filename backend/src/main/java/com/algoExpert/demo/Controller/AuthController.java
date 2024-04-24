@@ -1,11 +1,15 @@
 package com.algoExpert.demo.Controller;
 
 import com.algoExpert.demo.Dto.AuthRequest;
+import com.algoExpert.demo.Dto.RefreshTokenRequest;
 import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.Project;
+import com.algoExpert.demo.Entity.RefreshToken;
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.Jwt.JwtResponse;
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Jwt.JwtService;
+import com.algoExpert.demo.Repository.Service.Impl.RefreshTokenSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +31,10 @@ public class AuthController {
 
     @Autowired
     private JwtService jwtService;
+
+
+    @Autowired
+    private RefreshTokenSevice  tokenSevice;
 //    create user
     @PostMapping("/registerUser")
     public User registerUser(@RequestBody User user){
@@ -39,20 +47,34 @@ public class AuthController {
     }
 
 
-    //    get all users of the system
-//    @GetMapping("/getAllUsers")
-//    public List<User> getAll(){
-//        return authService.getUsers();
-//    }
-//
     @PostMapping("/authenticate")
-    public String authenticateAndGetToken(@ RequestBody AuthRequest authRequest){
+    public JwtResponse authenticateAndGetToken(@ RequestBody AuthRequest authRequest){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getUsername());
+            RefreshToken refreshToken = tokenSevice.createRefreshToken(authRequest.getUsername());
+            return   JwtResponse.builder()
+                    .jwtToken(jwtService.generateToken(authRequest.getUsername()))
+                    .refreshToken(refreshToken.getToken()).build();
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
+    }
+
+//    refresh token method
+    @PostMapping("/refreshToken")
+    public JwtResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+
+        return  tokenSevice.findByToken(refreshTokenRequest.getToken())
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String accessToken = jwtService.generateToken(user.getUsername());
+                    return  JwtResponse.builder()
+                            .jwtToken(accessToken)
+                            .refreshToken(refreshTokenRequest.getToken()).build();
+                }).orElseThrow(() ->new RuntimeException(
+                        "Refresh token is not in database"
+                ));
+
     }
 
 }

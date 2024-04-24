@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -17,5 +19,10 @@ public class AdminController {
     @GetMapping("/usersStats")
     public Admin findUsersStats(){
         return adminService.getUsersStats();
+    }
+
+    @GetMapping("/numberOfNewUsers")
+    public List<Object[]> newUsers(){
+        return  adminService.newUsers();
     }
 }
