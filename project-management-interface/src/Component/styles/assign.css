@@ -1,0 +1,86 @@
+.assign_section{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    transition: 500ms;
+    font-family: "Roboto", sans-serif;
+}
+.assign_section::before{
+    background-color: #000;
+    opacity: .1;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -6;
+}
+.assign_container{
+    width: 50%;
+    height: 60%;
+    background-color: #fff;
+    padding: 30px;
+    position: relative;
+    overflow-y: scroll;
+}
+.assign_container .lni-close{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
+.assign_container h6{
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 1rem;
+}
+.task_member_name,.task_project_names_details, .assignee_details{
+    display: flex;
+    align-items: center;
+}
+.task_member_name{justify-content: space-between;cursor: pointer;}
+.assign_container .assignee_letters{
+    border-radius: 50%;
+    padding:  8px 10px;
+    background-color: var(--blue-color);
+    color: #fff;
+    margin-right: 10px;
+}
+#assignee_username, #assignee_email{
+    display: block;
+    font-size: 11px;
+    line-height: 18px;
+}
+.project_members_list{margin-top: 3rem;}
+.project_members_names {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 6px;
+    justify-content: space-between;
+}
+.project_members_names:hover{
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+.invite_to_task, .remove_from_task{color: var(--blue-color);}
+.task_project_names_details .lni-user{
+    background-color: var(--blue-color);
+    padding: 8px;
+    border-radius: 100%;
+    font-size: 11px;
+    color: #fff;
+}
+.project_members_names p{
+    font-size: 11px;
+    margin-left: 1rem;
+}
+.project_members_names p span{display: block;}
+.project_members_names p span:last-child{color: #aaa;}

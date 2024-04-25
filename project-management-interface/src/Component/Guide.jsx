@@ -1,17 +1,16 @@
-import React from 'react';
+
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-
+import React, { useState, useEffect } from 'react';
 
 function Guide() {
   return (
     <>
       <div className="page-row">
-        <Sidebar />
+        <Sidebar/>
         <div className="project-wrapper">
-          <Navbar />
+        <Navbar/>
           <div className="guide-section">
-          {/* <div className="guide__section"> */}
             <div className="container">
               <div className="Header_section">
                 <span>our guide page</span>
@@ -51,8 +50,6 @@ function Guide() {
                 <a href='createproject'>Create Project</a>
               </div>
             </div>
-            
-            {/* </div> */}
           </div>
         </div>
       </div>

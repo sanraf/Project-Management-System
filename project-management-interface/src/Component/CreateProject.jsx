@@ -9,12 +9,21 @@ function CreateProject() {
 
   const createProject = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(`http://localhost:8080/project/createProject/${1}`, project);
-      sessionStorage.setItem("projectId",response.data);
-      window.location.href = "project";
-    } catch (error) {
-      console.error("Error creating project: ", error);
+    const currentUser = JSON.parse(sessionStorage.getItem("systemUser"));
+    if (currentUser) {
+      try {
+      const response = await axios.post(`http://localhost:8080/project/createProject`, project, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`, // Assuming token is stored in a variable
+          'Content-Type': 'application/json'
+        },
+      });
+        sessionStorage.setItem("projectId",response.data);
+        window.location.href = "project";
+        console.log(response.data)
+      } catch (error) {
+        console.error("Error creating project: ", error);
+      }
     }
   };
   const handleInputChange = (e) => {
@@ -49,7 +58,6 @@ function CreateProject() {
                     <button onClick={createProject }>Create Project</button>
                   </div>
                 </form>
-                
               </div>
           </div>
         </div>
