@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,16 +27,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
-    @NotBlank(message = "username required")
-    @Column(unique = true)
-    private String fullname;
+
+    @NotBlank(message = "fullName required")
+    private String fullName;
 
     @Column(unique = true)
-    @Email(message = "invalid user email")
+    @Email(message = "Invalid user email")
     private String email;
 
     @NotEmpty(message = "Password cannot be empty")
     private String password;
+
+    private boolean locked = false;
+
+    private boolean enabled = false;
 
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -45,10 +50,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role  : roles ){
+        for (Role role : roles) {
             authorities.addAll(role.getAuthorities());
         }
-        return  authorities;
+        return authorities;
     }
 
 
@@ -69,7 +74,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -79,6 +84,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

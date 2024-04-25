@@ -16,7 +16,7 @@ public class MemberController {
     private MemberService memberService;
 
 //    invite member to a project
-    @PostMapping("/inviteMember/{project_id}/{user_id}")
+    @GetMapping("/inviteMember/{project_id}/{user_id}")
     public Member inviteMember(@PathVariable int project_id, @PathVariable int user_id)throws InvalidArgument {
         return memberService.inviteMember(project_id,user_id);
     }

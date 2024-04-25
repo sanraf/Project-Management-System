@@ -23,12 +23,13 @@ public class Task {
     private String end_date;
     private String status;
     private String priority;
+    private String projectName;
 
     //    relationships
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Assignee> assignees;
 
 

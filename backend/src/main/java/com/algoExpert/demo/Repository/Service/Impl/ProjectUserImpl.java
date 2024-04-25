@@ -9,6 +9,8 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +19,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.algoExpert.demo.AppUtils.AppConstants.*;
+
 @Service
+@Slf4j
 public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private ProjectRepository projectRepository;
@@ -28,10 +33,12 @@ public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private  ProjectUserImpl projectUser;
 
     @Override
     public Project findProject(int project_id) throws InvalidArgument {
-        Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument("Project with ID " + project_id + " not found"));
+        Project foundProject= projectRepository.findById(project_id).orElseThrow(() -> new InvalidArgument(String.format(PROJECT_NOT_FOUND,project_id)));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User projectUser = null;
@@ -44,16 +51,16 @@ public class ProjectUserImpl implements ProjectUserService {
         List<Role> roleList = projectUser.getRoles();
         roleList.clear();
 //        //assign the role of the user that all users should have
-        roleList.add(Role.valueOf("USER"));
+        roleList.add(Role.valueOf(USER_ROLE));
 
         for (Member member : foundProject.getMemberList() ){
-            if(member.getProjectRole().equals("OWNER") && member.getUser_id().equals(projectUser.getUser_id()) ){
+            if(member.getProjectRole().equals(OWNER_ROLE) && member.getUser_id().equals(projectUser.getUser_id()) ){
                 //find if the member has a role of an onwer and assign owner role if you find
-                roleList.add(Role.valueOf("OWNER"));
+                roleList.add(Role.valueOf(OWNER_ROLE));
             }
-            else if(member.getUser_id().equals(projectUser.getUser_id()) && member.getProjectRole().equals("MEMBER")){
+            else if(member.getUser_id().equals(projectUser.getUser_id()) && member.getProjectRole().equals(MEMBER_ROLE)){
                 //assign role of a member if you find the id matching the user id who is loading the project
-                roleList.add(Role.valueOf("MEMBER"));
+                roleList.add(Role.valueOf(MEMBER_ROLE));
             }
         }
         projectUser.setRoles(roleList);

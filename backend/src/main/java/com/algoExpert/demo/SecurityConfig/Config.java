@@ -19,10 +19,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Collections;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.sql.DataSource;
+
 import static com.algoExpert.demo.role.Permission.*;
 import static com.algoExpert.demo.role.Role.*;
 import static org.springframework.http.HttpMethod.*;
@@ -31,10 +36,10 @@ import static org.springframework.http.HttpMethod.DELETE;
 @Configuration
 @EnableWebSecurity
 public class Config {
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private JwtAuthFilter authFilter;
 
@@ -54,7 +59,7 @@ public class Config {
                     }
                 }))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**","/confirm/**","/recover/**").permitAll()
                         .requestMatchers("/project/**").hasAnyRole(USER.name(), OWNER.name())
                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
@@ -88,6 +93,9 @@ public class Config {
                         .requestMatchers("/admin/**").hasAnyRole(USER.name())
                         .anyRequest().authenticated()
                 )
+                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+                        .tokenRepository(persistentTokenRepository())
+                        .alwaysRemember(true).tokenValiditySeconds(60*60*30))
                 .oauth2Login(Customizer.withDefaults())
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -115,5 +123,13 @@ public class Config {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
+    }
+
 
 }
