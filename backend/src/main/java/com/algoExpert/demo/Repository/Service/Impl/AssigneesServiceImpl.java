@@ -92,7 +92,7 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     private void sendInvite(Task task, User user, String projectName){
         String link = taskInviteLink +task.getTask_id();
-//        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildTaskInviteEmail(user.getFullName(),task.getTitle(),projectName,link));
+        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.assignTaskHtml(user.getFullName(),task.getTitle(),projectName,link));
         log.info(user.getFullName()+" {} :",link);
 
     }

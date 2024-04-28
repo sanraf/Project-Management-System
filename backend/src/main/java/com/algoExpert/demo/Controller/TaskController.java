@@ -56,6 +56,9 @@ public class TaskController {
         return taskService.getTaskById(taskId);
     }
 
-
+    @GetMapping("/taskDueDate")
+    public Task taskDueDate(@RequestParam("taskId") int taskId) {
+        return taskService.getTaskById(taskId);
+    }
 
 }

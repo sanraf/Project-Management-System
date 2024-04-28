@@ -101,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
                     Optional.ofNullable(newTask.getStatus()).map(String::toUpperCase).ifPresent(existingTask::setStatus);
                     Optional.ofNullable(newTask.getPriority()).map(String::toUpperCase).ifPresent(existingTask::setPriority);
                     return taskRepository.save(existingTask);
-                }).orElseThrow(() -> new IllegalArgumentException("Project with ID " + newTask.getTask_id() + " not found"));
+                }).orElseThrow(() -> new IllegalArgumentException("task with ID " + newTask.getTask_id() + " not found"));
     }
 
     //duplicate task

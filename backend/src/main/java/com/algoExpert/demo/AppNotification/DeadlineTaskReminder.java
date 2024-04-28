@@ -61,9 +61,8 @@ public class DeadlineTaskReminder {
                 boolean isDuplicate = notificationService.isDuplicate(userId, task.getTask_id());
 
                 if (!isDuplicate){
-//                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL,
-//                            emailHtmlLayout.buildTaskDueDateReminderEmail(getUserFullName(assignee.getUsername()),
-//                                    task.getTitle(),task.getProjectName(),"Today",getTaskLink(task.getTask_id())),"Today");
+                    String body = emailHtmlLayout.taskDeadlineHtml(getUserFullName(assignee.getUsername()), task.getTitle(), task.getProjectName(), "Today", getTaskLink(task.getTask_id()));
+                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL,body,"Today");
 
                     System.err.println(assignee.getUsername()+" Task Reminder: today is the due date for Task # "+task.getProjectName());
                     User user = userRepository.findByEmail(assignee.getUsername()).orElseThrow();
@@ -92,9 +91,8 @@ public class DeadlineTaskReminder {
                 int userId = userId(assignee.getUsername());
                 boolean isDuplicate = notificationService.isDuplicate(userId, task.getTask_id());
                 if (!isDuplicate){
-//                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL,
-//                            emailHtmlLayout.buildTaskDueDateReminderEmail(getUserFullName(assignee.getUsername()),
-//                                    task.getTitle(),task.getProjectName(),"Tomorrow",getTaskLink(task.getTask_id())),"Tomorrow");
+                    String body = emailHtmlLayout.taskDeadlineHtml(getUserFullName(assignee.getUsername()), task.getTitle(), task.getProjectName(), "Tomorrow", getTaskLink(task.getTask_id()));
+                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL, body,"Tomorrow");
 
                     System.err.println(assignee.getUsername()+" Task Reminder: Tomorrow is the due date for Task # "+task.getProjectName());
                     User user = userRepository.findByEmail(assignee.getUsername()).orElseThrow();

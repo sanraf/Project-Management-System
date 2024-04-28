@@ -15,5 +15,5 @@ public class AppConstants {
     public final static String USER_ROLE= "USER";
     public final static String MEMBER_ROLE= "MEMBER";
     public final static String OWNER_ROLE= "OWNER";
-    public final static String TEMP_USER_EMAIL= "cesemin719@funvane.com";
+    public final static String TEMP_USER_EMAIL= "santoschrist1234@gmail.com";
 }

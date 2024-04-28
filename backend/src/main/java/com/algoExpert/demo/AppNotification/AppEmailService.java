@@ -2,14 +2,16 @@ package com.algoExpert.demo.AppNotification;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.nio.charset.StandardCharsets;
+
 
 @Service
 @Slf4j
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class AppEmailService implements AppEmailBuilder {
 
     private final JavaMailSender javaMailSender;
+    private final SpringTemplateEngine templateEngine;
 
     @Override
     public void sendEmailInvite(String to, String message) {
@@ -52,13 +55,15 @@ public class AppEmailService implements AppEmailBuilder {
     }
 
     @Override
-    public void sendEmailAccountConfirmation(String to, String body) {
+    public void sendEmailAccountConfirmation(String to, String htmlBody) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
-            messageHelper.setText(body,true);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true, StandardCharsets.UTF_8.name());
+            messageHelper.setText(htmlBody,true);
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
+            messageHelper.addInline("logo", new ClassPathResource("/static/images/logo.png"));
+            messageHelper.addInline("login-image1", new ClassPathResource("/static/images/login-image1.png"));
             messageHelper.setSubject("Your account has been create");
             javaMailSender.send(mimeMessage);
         }catch (MessagingException e){
@@ -66,4 +71,6 @@ public class AppEmailService implements AppEmailBuilder {
             throw new IllegalStateException("failed to send message");
         }
     }
+
+
 }

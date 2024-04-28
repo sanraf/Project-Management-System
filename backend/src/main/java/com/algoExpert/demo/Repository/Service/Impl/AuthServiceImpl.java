@@ -2,6 +2,7 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.HttpResponse;
@@ -18,6 +19,7 @@ import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
 import com.algoExpert.demo.UserAccount.AccountInfo.Repository.AccountConfirmationRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl.AccountConfirmationServiceImpl;
 import com.algoExpert.demo.role.Role;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -88,9 +91,27 @@ public class AuthServiceImpl implements AuthService {
          user.setRoles(roleList);
          return userRepository.save(user);
     }
+
+    /**
+     * Register a new user or verifies unactivated account or user.
+     *  <p>
+     * This method takes fullName,userName and password through request parameter to generate a new user.
+     * Initially it validates if the user exist and is enabled,if true,then <b><i>username already exist message</i></b> is displayed from InvalidArgument Exception.
+     * Or else if the user is present but not enabled,an email will be sent to a user to verify the account to be enabled to the system.
+     * And if the user is not present,a new user will be created and email to verify the account will be sent to the user.
+     * @apiNote This method is the implementation of AuthService interface.
+     * <strong>@Transactional</strong> ensures data persistence since the user needs to be saved into a database
+     * while the email is also been sent, <strong><b>it's all or nothing</b></strong>
+     * @see RegistrationRequest
+     * @see AuthService
+     * @author Santos Rafaelo
+     * @param request
+     * @return User
+     * @throws InvalidArgument if the user already registered in the system
+     */
     @Transactional
     @Override
-    public User registerUser(RegistrationRequest request) throws InvalidArgument {
+    public User registerUser(RegistrationRequest request) throws InvalidArgument, MessagingException, IOException {
         Optional<User> existingUser = userRepository.findByEmail(request.email());
         String link = confirmLink;
 
@@ -112,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
                 //todo apply send notification method here
                 log.info("Renewed token is generated: {}{}", link, confirmation.getToken());
                 appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
-                        emailHtmlLayout.buildAccConfirmationEmail(user.getFullName(),link+confirmation.getToken()));
+                        emailHtmlLayout.confirmAccountHtml(user.getFullName(),link+token));
                 return user;
             }
         } else {
@@ -127,9 +148,9 @@ public class AuthServiceImpl implements AuthService {
             String token = confirmationService.createToken(user);
             //todo apply send notification method here
             log.info("New Token: {}{}", link, token);
+            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
+                        emailHtmlLayout.confirmAccountHtml(user.getFullName(),link+token));
 
-//            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
-//                    emailHtmlLayout.buildAccConfirmationEmail(user.getFullName(),link+token));
             return savedUser;
         }
     }
@@ -170,6 +191,44 @@ public class AuthServiceImpl implements AuthService {
                     .message("Login failed: " + e.getMessage())
                     .status(HttpStatus.UNAUTHORIZED)
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .build();
+        }
+    }
+
+    @Override
+    public HttpResponse login1(AuthRequest  request) {
+        try {
+            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+            User logegdUser = null;
+            String jwtToken = "";
+            String refreshToken = "";
+
+            if(auth != null  && auth.isAuthenticated()){
+                logegdUser = (User)auth.getPrincipal();
+                jwtToken = jwtService.generateToken(request.username());
+                refreshToken = refreshTokenSevice.createRefreshToken(request.username()).getToken();
+            }
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .status(HttpStatus.OK)
+                    .message("Login Successful")
+                    .email(logegdUser.getEmail())
+                    .token(jwtToken)
+                    .fullname(logegdUser.getFullName())
+                    .userId(logegdUser.getUser_id())
+                    .statusCode(HttpStatus.OK.value())
+                    .build();
+        } catch (BadCredentialsException e) {
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .message("Incorrect username or password")
+
+                    .build();
+        } catch (Exception e) {
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .message("Login failed: " + e.getMessage())
+
                     .build();
         }
     }

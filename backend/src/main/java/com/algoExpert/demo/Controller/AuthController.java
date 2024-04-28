@@ -15,13 +15,17 @@ import com.algoExpert.demo.Jwt.JwtService;
 import com.algoExpert.demo.Repository.Service.Impl.RefreshTokenSevice;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import com.algoExpert.demo.Repository.Service.UserNotificationService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -49,13 +53,22 @@ public class AuthController {
     private RefreshTokenSevice tokenSevice;
 //    create user
     @PostMapping("/registerUser")
-    public User registerUser(@RequestBody RegistrationRequest request) throws InvalidArgument, InvalidArgument {
+    public User registerUser(@RequestBody RegistrationRequest request) throws InvalidArgument, InvalidArgument, MessagingException, IOException {
         return authService.registerUser(request);
     }
 
     @PostMapping("/login")
     public HttpResponse userLogin(@RequestBody User userCredentials){
         return authService.login(userCredentials);
+    }
+
+//    @PostMapping("/login")
+//    public HttpResponse userLogin1(@RequestBody AuthRequest userCredentials){
+//        return authService.login(userCredentials);
+//    }
+    @PostMapping("/login1")
+    public HttpResponse userL(@RequestBody AuthRequest userCredentials){
+        return authService.login1(userCredentials);
     }
 
 
@@ -92,6 +105,15 @@ public class AuthController {
                 }).orElseThrow(() ->new RuntimeException(
                         "Refresh token is not in database"
                 ));
+
+    }
+
+    @GetMapping("/redirect")
+    public ModelAndView redirectToLoginPage() {
+        String s = "heeloo";
+        ModelAndView modelAndView = new ModelAndView("redirect");
+        modelAndView.addObject("m",s);
+        return modelAndView;
 
     }
 
