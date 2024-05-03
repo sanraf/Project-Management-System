@@ -1,12 +1,15 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import loginImageOne from "../assets/login-image2.png";
 import loginImageTwo from "../assets/login-image1.png";
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
+
 
 function Login() {
     const [showRegister, setShowRegister] = useState("none");
-    const { register, handleSubmit, setValue } = useForm({
+    const {register, handleSubmit, setValue } = useForm({
         shouldUseNativeValidation:true,
         defaultValues:{
          fullname: "",  
@@ -14,27 +17,29 @@ function Login() {
          password:"",
       }
     });
-    
-    const login = async(userDetails) => {
-        if (showRegister == "none") {
-            const basicAuth = 'Basic ' + btoa(userDetails.email + ':' + userDetails.password); // Creating Basic Authorization header
+
+    const login = async (userDetails) => {
+        if(showRegister == "none" ) {
             try {
-                
-                const response = await axios.post(`http://localhost:8080/auth/login`,userDetails);
+                const response = await axios.post("http://localhost:8080/auth/loginUser",userDetails);
                 if (response.data.statusCode == "401") {
                     console.log(response.data.status)
                     setShowRegister("block")
                 } else {
-                    const userDetails = { email: response.data.email,token:response.data.token, fullname: response.data.fullname,user_id:response.data.userId}
-                    sessionStorage.setItem("systemUser",JSON.stringify(userDetails))
-                    window.location.href = "help"
-                    console.log(userDetails)
+                    const userDetails = { email: response.data.email,fullname: response.data.fullname}
+                    sessionStorage.setItem("systemUser", JSON.stringify(userDetails))
+                    Cookies.set('jwtToken', response.data.token, {
+                        path: '/',
+                    });
+                    Cookies.set('refreshToken', response.data.refreshToken,{
+                        path: '/',
+                    });
                 }
                 } catch (error) {
                     console.error("Error adding task: ", error);
             }
         } else {
-            const editedUserDetails = { ...userDetails }; 
+            const editedUserDetails = {...userDetails}; 
             editedUserDetails.dateRegistered = new Date();
             editedUserDetails.roles = [];
             try {
@@ -44,13 +49,13 @@ function Login() {
                 }
                 } catch (error) {
                     console.error("Error adding task: ", error);
-                }
+            }
         }
     }
 
     return (
       <>
-          <div className="login_page">
+        <div className="login_page">
               <div className="page-row">
                   <div className="user_login">
                       <div className="user_login_details">
@@ -63,7 +68,7 @@ function Login() {
                                 <h5 >Please Login</h5>
                                 <p>Thank you for choosing us, if registered please login</p>
                             </div>
-                          <a href="">Register on this page</a>
+                          <span  onClick={()=>setShowRegister("block")}>Register on this page</span>
                             <form action="" onSubmit={handleSubmit(login)} >
                               <div style={{display:showRegister}}>
                                 <h6>Full name</h6>
@@ -76,12 +81,15 @@ function Login() {
                               <div style={{display:showRegister}}>
                                 <h6>Re-enter password</h6>
                                 <input id='password' type="text" placeholder='password' />
-                               </div>
-                              <button type='submit'>{showRegister == "block " ? "Register" : "Login" }</button>
+                                </div>
+                                {
+                                    showRegister == "block" ? <button type='submit'>Register</button> :
+                                    <button  type='submit'>Login</button>
+                                }
                             </form>
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
-                                 <i className="lni lni-github-original"></i>
+                                <i className="lni lni-github-original"></i>
                                 <i className="lni lni-google"></i>
                             </div>
                       </div>
@@ -100,7 +108,7 @@ function Login() {
                       </div>
                   </div>
               </div>
-          </div>
+        </div>
       </>
   )
 }

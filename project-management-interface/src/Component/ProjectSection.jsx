@@ -1,4 +1,6 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 import axios from 'axios';
 import Comment from './Comment';
 import Assign from './Assign';
@@ -60,13 +62,9 @@ function ProjectSection() {
         setloggedInUser(foundUser);
         
         const fetchProject = async () => {
-          
             try {
                 const response = await axios.get(`http://localhost:8080/user/getSingleProject/${projectId}`, {
-                    headers: {
-                        Authorization: `Bearer ${foundUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
+                    withCredentials:true
                 });
                 if(response.data) {
                     setoneProject(response.data);
@@ -83,6 +81,7 @@ function ProjectSection() {
         return () => {
         }
     }, []);
+    
  
     const toogleDropDownBoxes=(contentType,height,rowIndex,indexType)=>{
         setDropDownBoxesHeight(prevState => ({
@@ -272,166 +271,171 @@ function ProjectSection() {
             setassignees(assignList)
         }
         toogleDropDownBoxes("assigneeHieght",100,taskId,'assigneeId')
-    }
-   
+    }   
   return (
-    <>
-        <div className="project-section">
-              <Assign closeMode={toogleDropDownBoxes} authToken={loggedInUser?loggedInUser.token:""} taskMembers={assignees} projectPeople={oneProject.memberList} assignModel={dropDownBoxesHeight} />  
-              <div className="container">
-                <Comment  closeComment={toogleDropDownBoxes} dropDownValue={dropDownBoxesHeight} commentList={taskComments} />
-                <h6 className='page-section-header'>{oneProject.title}</h6>
-                <div className="filter_project_section">
-                    <div className="page-row project_filter_row">
-                        <div className="table-filters">
-                            <div className="page-row">
-                                <form action="" className='table_filter_col'>
-                                    <i className="lni lni-search"></i>
-                                    <input placeholder='Search' type="text"/>
-                                </form>
-                                <div className="peron_filter table_filter_col">
-                                    <i className="lni lni-users"></i>
-                                    <p onClick={()=>toogleDropDownBoxes("filterBox",100,0,"")}>Filter by person</p>
-                                    <div style={{height:dropDownBoxesHeight.filterBox}} className="person_filter_box">
-                                        <div className="filter_person_wrapper">
-                                            <h6>Select member to filter with:</h6>
-                                            {projectMembers.map((name,i)=>
-                                            <p key={i}>{name}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="filter_sort table_filter_col">
-                                    <i className="lni lni-sort-alpha-asc"></i>
-                                    <p>Sort</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="project_create_table_invite">
-                            <div className="project_members">
-                                {oneProject.memberList.map((name,i)=>
-                                   <span key={i}>{name.username.charAt(0)}</span>
-                                )}
-                            </div> 
-                            <div  className="invite_btn">
-                                <p onClick={()=>toogleDropDownBoxes("inviteBox", 250,0,"")}>invite <i className="lni lni-circle-plus"></i></p>
-                                <div style={{height: dropDownBoxesHeight.inviteBox}} className="invite_members">
-                                   <div className="member_invite_wrapper">
-                                        <h5>Search members to add by name  </h5>
-                                        <form action=""> <input onChange={(e)=>searchforMembers(e.target.value)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
-                                        {memberFound ? memberFound.map((memberName,i)=>
-                                        <p key={i} onClick={()=>inviteMember(memberName.user_id)} >{memberName.fullname}</p>
-                                        ):""}
-                                        <h6>List of project members</h6>
-                                        {
-                                            projectMembers.map((names,index)=>
-                                            <p key={index}>{names}</p>
-                                            )
-                                        }
-                                   </div>
-                                </div>
-                            </div>   
-                            <button onClick={()=>createTable(oneProject.project_id)}>
-                                <i className="lni lni-layers"></i>
-                                <span>create table</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                {
-                  oneProject.tables.map((table,table_index)=>
-                        <div key={table.table_id} className="table_section">
-                            <div className='edit-table'>
-                                <input id='table_title' onBlur={(e)=>updateTableName(e.target.value, table)} defaultValue={table.table_name} contentEditable/>
-                                <i className="lni lni-chevron-down" onClick={()=>toogleDropDownBoxes("table", 90,table_index,'tableIndex')}></i>
-                                <div style={{height: table_index == dropDownBoxesHeight.tableIndex ? dropDownBoxesHeight.table :0}} className="edit-table-hidden-box">
-                                    <div className='edit_table_icon' onClick={()=>deleteTable(oneProject.project_id, table.table_id)}>
-                                        <i className="lni lni-trash-can"></i>
-                                        <span>Delete table</span>
-                                    </div>
-                                    <div className='edit_table_icon'>
-                                        <i className="lni lni-circle-plus"></i>
-                                        <span onClick={()=>Adding_Task(table.table_id)}>Add task</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="project_table">
-                                <div className="page-row col_name_row">
-                                    <div style={{height: dropDownBoxesHeight.columnIndex == table_index? dropDownBoxesHeight.addColumn :0}}  className="add-table-column">
-                                        <h6>Add extra table columns:</h6>
-                                        <p onClick={()=>toogleHiddenColumns('priority')}>
-                                            <i className="lni lni-sort-alpha-asc"></i>
-                                            <span>Priority</span>
-                                        </p>
-                                    </div>
-                                    <span className='field_name col_name'>Title</span>
-                                    <span className='field_name col_name col-description'>Description</span>
-                                    <span className='field_name col_name'>Owner</span>
-                                    <span className='field_name col_name'>Assignee</span>
-                                    <span className='field_name col_name'>start-date</span>
-                                    <span className='field_name col_name'>end-date</span>
-                                    <span className='field_name col_name'>status</span>
-                                    <span style={{display:hiddenColumns.priority}} className='field_name col_name'>Priority</span>
-                                    <div className='more  more-col' onClick={() => toogleDropDownBoxes("addColumn", 120, table_index,'columnIndex')}> <i className="lni lni-circle-plus"></i></div>
-                                </div>
-                            {
-                            table.tasks.map((task,taskIndex)=>
-                              <div key={task.task_id}>
-                                  <div  className="page-row table_task_row">
-                                    <div style={{height:dropDownBoxesHeight.rowId == task.task_id ? dropDownBoxesHeight.editRow : 0 }} className="edit_task_box">
-                                        <div className="box-arrow"></div>
-                                        <p onClick={() => deleteTask(task.task_id,table.table_id)}>
-                                            <i className="lni lni-trash-can"></i>
-                                            <span>Delete</span>
-                                        </p>
-                                        <p onClick={()=>duplicateTask(table.table_id,task)}>
-                                            <i className="lni lni-clipboard"></i>
-                                            <span>Duplicate</span>
-                                        </p>
-                                    </div>
-                                    <div className='field_name text_task table-task task-title'>
-                                        <i onClick={()=>toogleDropDownBoxes('editRow', 90, task.task_id,"rowId" )} className="more-task lni lni-more"></i> 
-                                            <input onBlur={(e)=>sendEditedRow(task, e.target.value,'')}  onChange={(e) => rowUpdate('title', e.target.
-                                                value, task,table.table_id)} defaultValue={task.title} />
-                                    </div>
-                                    <div className='field_name table-task text_task row_description'>
-                                        <input defaultValue={task.description} onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e) => rowUpdate('description', e.target.
-                                            value, task, table.table_id)} />
-                                            <i onClick={()=>loadComments(task.comments, task.task_id)} className="lni lni-comments-alt-2"></i>
-                                    </div>
-                                    <div className='field_name table-task text_task'>{task.owner}</div>
-                                    <div className='assignee field_name table-task text_task'>
-                                            {task.assignees.length > 0 ? 
-                                                task.assignees.map((taskAssignee,i) => 
-                                                    <span key={i} className='task_assign_letter' >{taskAssignee.username.charAt(0)}</span>
-                                                ) : <span>invite</span>}    
-                                            <i className="lni lni-circle-plus" onClick={()=>openAssignModel(task.assignees,task.task_id)}></i>
-                                    </div>
-                                        <div className='field_name table-task'><input onBlur={(e) => sendEditedRow(task, e.target.value, '')}
-                                            onChange={(e) => rowUpdate('start_date', e.target.
-                                                value, task, table.table_id)}  defaultValue={task.start_date} type="date" /></div>
-                                    <div  className='field_name table-task'><input defaultValue={task.end_date} type="date" onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e)=>rowUpdate('end_date',e.target.value,task,table.table_id)} /></div>
-                                    <div onClick={()=>toogleDropDownBoxes("statusBox", 160, task.task_id,'statusIndex')} id={task.status} className='status field_name table-task'>
-                                        {task.status}
-                                        <div style={{height:dropDownBoxesHeight.statusIndex == task.task_id ? dropDownBoxesHeight.statusBox : 0}} className="status_dropdown">
-                                            <div className="status_dropdown_content">
-                                                <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='Done'>Done</span>
-                                                <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='ToDo'>ToDo</span>
-                                                <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='InProgress'>InProgress</span>
+      <>
+        <div className="page-row">
+            <Sidebar />
+            <div className="project-wrapper">
+                <Navbar/>  
+                <div className="project-section">
+                    <Assign closeMode={toogleDropDownBoxes} authToken={loggedInUser?loggedInUser.token:""} taskMembers={assignees} projectPeople={oneProject.memberList} assignModel={dropDownBoxesHeight} />  
+                    <div className="container">
+                        <Comment  closeComment={toogleDropDownBoxes} dropDownValue={dropDownBoxesHeight} commentList={taskComments} />
+                        <h6 className='page-section-header'>{oneProject.title}</h6>
+                        <div className="filter_project_section">
+                            <div className="page-row project_filter_row">
+                                <div className="table-filters">
+                                    <div className="page-row">
+                                        <form action="" className='table_filter_col'>
+                                            <i className="lni lni-search"></i>
+                                            <input placeholder='Search' type="text"/>
+                                        </form>
+                                        <div className="peron_filter table_filter_col">
+                                            <i className="lni lni-users"></i>
+                                            <p onClick={()=>toogleDropDownBoxes("filterBox",100,0,"")}>Filter by person</p>
+                                            <div style={{height:dropDownBoxesHeight.filterBox}} className="person_filter_box">
+                                                <div className="filter_person_wrapper">
+                                                    <h6>Select member to filter with:</h6>
+                                                    {oneProject.memberList.map((name,i)=>
+                                                    <p key={i}>{name.username}</p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
+                                        <div className="filter_sort table_filter_col">
+                                            <i className="lni lni-sort-alpha-asc"></i>
+                                            <p>Sort</p>
                                         </div>
-                                    <div style={{display:hiddenColumns.priority}} className='field_name table-task text_task'>{task.priority}</div>
-                                    <div className='more'></div>
-                                </div>       
-                              </div>                     
-                            )
+                                    </div>
+                                </div>
+                                <div className="project_create_table_invite">
+                                    <div className="project_members">
+                                        {oneProject.memberList.map((name,i)=>
+                                        <span key={i}>{name.username.charAt(0)}</span>
+                                        )}
+                                    </div> 
+                                    <div  className="invite_btn">
+                                        <p onClick={()=>toogleDropDownBoxes("inviteBox", 250,0,"")}>invite <i className="lni lni-circle-plus"></i></p>
+                                        <div style={{height: dropDownBoxesHeight.inviteBox}} className="invite_members">
+                                        <div className="member_invite_wrapper">
+                                                <h5>Search members to add by name  </h5>
+                                                <form action=""> <input onChange={(e)=>searchforMembers(e.target.value)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
+                                                {memberFound ? memberFound.map((memberName,i)=>
+                                                <p key={i} onClick={()=>inviteMember(memberName.user_id)} >{memberName.fullname}</p>
+                                                ):""}
+                                                <h6>List of project members</h6>
+                                                {
+                                                    projectMembers.map((names,index)=>
+                                                    <p key={index}>{names}</p>
+                                                    )
+                                                }
+                                        </div>
+                                        </div>
+                                    </div>   
+                                    <button onClick={()=>createTable(oneProject.project_id)}>
+                                        <i className="lni lni-layers"></i>
+                                        <span>create table</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {
+                        oneProject.tables.map((table,table_index)=>
+                                <div key={table.table_id} className="table_section">
+                                    <div className='edit-table'>
+                                        <input id='table_title' onBlur={(e)=>updateTableName(e.target.value, table)} defaultValue={table.table_name} contentEditable/>
+                                        <i className="lni lni-chevron-down" onClick={()=>toogleDropDownBoxes("table", 90,table_index,'tableIndex')}></i>
+                                        <div style={{height: table_index == dropDownBoxesHeight.tableIndex ? dropDownBoxesHeight.table :0}} className="edit-table-hidden-box">
+                                            <div className='edit_table_icon' onClick={()=>deleteTable(oneProject.project_id, table.table_id)}>
+                                                <i className="lni lni-trash-can"></i>
+                                                <span>Delete table</span>
+                                            </div>
+                                            <div className='edit_table_icon'>
+                                                <i className="lni lni-circle-plus"></i>
+                                                <span onClick={()=>Adding_Task(table.table_id)}>Add task</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="project_table">
+                                        <div className="page-row col_name_row">
+                                            <div style={{height: dropDownBoxesHeight.columnIndex == table_index? dropDownBoxesHeight.addColumn :0}}  className="add-table-column">
+                                                <h6>Add extra table columns:</h6>
+                                                <p onClick={()=>toogleHiddenColumns('priority')}>
+                                                    <i className="lni lni-sort-alpha-asc"></i>
+                                                    <span>Priority</span>
+                                                </p>
+                                            </div>
+                                            <span className='field_name col_name'>Title</span>
+                                            <span className='field_name col_name col-description'>Description</span>
+                                            <span className='field_name col_name'>Owner</span>
+                                            <span className='field_name col_name'>Assignee</span>
+                                            <span className='field_name col_name'>start-date</span>
+                                            <span className='field_name col_name'>end-date</span>
+                                            <span className='field_name col_name'>status</span>
+                                            <span style={{display:hiddenColumns.priority}} className='field_name col_name'>Priority</span>
+                                            <div className='more  more-col' onClick={() => toogleDropDownBoxes("addColumn", 120, table_index,'columnIndex')}> <i className="lni lni-circle-plus"></i></div>
+                                        </div>
+                                    {
+                                    table.tasks.map((task,taskIndex)=>
+                                    <div key={task.task_id}>
+                                        <div  className="page-row table_task_row">
+                                            <div style={{height:dropDownBoxesHeight.rowId == task.task_id ? dropDownBoxesHeight.editRow : 0 }} className="edit_task_box">
+                                                <div className="box-arrow"></div>
+                                                <p onClick={() => deleteTask(task.task_id,table.table_id)}>
+                                                    <i className="lni lni-trash-can"></i>
+                                                    <span>Delete</span>
+                                                </p>
+                                                <p onClick={()=>duplicateTask(table.table_id,task)}>
+                                                    <i className="lni lni-clipboard"></i>
+                                                    <span>Duplicate</span>
+                                                </p>
+                                            </div>
+                                            <div className='field_name text_task table-task task-title'>
+                                                <i onClick={()=>toogleDropDownBoxes('editRow', 90, task.task_id,"rowId" )} className="more-task lni lni-more"></i> 
+                                                    <input onBlur={(e)=>sendEditedRow(task, e.target.value,'')}  onChange={(e) => rowUpdate('title', e.target.
+                                                        value, task,table.table_id)} defaultValue={task.title} />
+                                            </div>
+                                            <div className='field_name table-task text_task row_description'>
+                                                <input defaultValue={task.description} onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e) => rowUpdate('description', e.target.
+                                                    value, task, table.table_id)} />
+                                                    <i onClick={()=>loadComments(task.comments, task.task_id)} className="lni lni-comments-alt-2"></i>
+                                            </div>
+                                            <div className='field_name table-task text_task'>{task.owner}</div>
+                                            <div className='assignee field_name table-task text_task'>
+                                                    {task.assignees.length > 0 ? 
+                                                        task.assignees.map((taskAssignee,i) => 
+                                                            <span key={i} className='task_assign_letter' >{taskAssignee.username.charAt(0)}</span>
+                                                        ) : <span>invite</span>}    
+                                                    <i className="lni lni-circle-plus" onClick={()=>openAssignModel(task.assignees,task.task_id)}></i>
+                                            </div>
+                                                <div className='field_name table-task'><input onBlur={(e) => sendEditedRow(task, e.target.value, '')}
+                                                    onChange={(e) => rowUpdate('start_date', e.target.
+                                                        value, task, table.table_id)}  defaultValue={task.start_date} type="date" /></div>
+                                            <div  className='field_name table-task'><input defaultValue={task.end_date} type="date" onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e)=>rowUpdate('end_date',e.target.value,task,table.table_id)} /></div>
+                                            <div onClick={()=>toogleDropDownBoxes("statusBox", 160, task.task_id,'statusIndex')} id={task.status} className='status field_name table-task'>
+                                                {task.status}
+                                                <div style={{height:dropDownBoxesHeight.statusIndex == task.task_id ? dropDownBoxesHeight.statusBox : 0}} className="status_dropdown">
+                                                    <div className="status_dropdown_content">
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='Done'>Done</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='ToDo'>ToDo</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='InProgress'>InProgress</span>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            <div style={{display:hiddenColumns.priority}} className='field_name table-task text_task'>{task.priority}</div>
+                                            <div className='more'></div>
+                                        </div>       
+                                    </div>                     
+                                    )
+                                }
+                            </div>
+                        </div>
+                        ) 
                         }
                     </div>
                 </div>
-                  ) 
-                }
-            </div>
+            </div>  
         </div>
     </>
   )
