@@ -4,7 +4,10 @@ import com.algoExpert.demo.Dto.ProjectDto;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.Service.Impl.ProjectUserImpl;
 import com.algoExpert.demo.Repository.Service.ProjectService;
+import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private UserRepository userRepository;
 
 //  create project using user id
     @PostMapping("/createProject")
@@ -41,10 +46,10 @@ public class ProjectController {
         return projectService.editProject(project);
     }
 
-//    @GetMapping("/fetchUserProject/{user_id}")
-//    public List<Project> d(@PathVariable int user_id) throws InvalidArgument {
-//        return projectService.getProjectByUserId(user_id);
-//    }
+    @GetMapping("/fetchUserProject/{user_id}")
+    public User d(@PathVariable int user_id) throws InvalidArgument {
+        return userRepository.findById(user_id).orElseThrow();
+    }
 
 
 

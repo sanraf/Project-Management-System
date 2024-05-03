@@ -2,7 +2,6 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.CommentDto;
 import com.algoExpert.demo.Entity.Comment;
-import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Task;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -49,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     public Task createComment(Comment commentBody, int task_id) throws InvalidArgument {
         Task task = taskRepository.findById(task_id).orElseThrow(() -> new InvalidArgument("Task with ID " + task_id + " not found"));
         User user = userRepository.findById(projectUser.loggedInUserId()).get();
-        commentBody.setUsername(user.getFullname());
+        commentBody.setUsername(user.getFullName());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
         commentBody.setDate_created(simpleDateFormat.format(new Date()));
@@ -59,25 +58,6 @@ public class CommentServiceImpl implements CommentService {
         task.setComments(commentList);
         return taskRepository.save(task);
     }
-    /*public Task createComment(Comment comment,int member_id,int task_id)throws InvalidArgument {
-        Member findMember = memberRepository.findById(member_id).orElseThrow(() ->
-                new InvalidArgument("Task with ID " + member_id + " not found"));
-
-        Task task = taskRepository.findById(task_id).orElseThrow(() ->
-                new InvalidArgument("Task with ID " + task_id + " not found"));
-
-        User user = userRepository.findById(findMember.getUser_id()).get();
-        comment.setUsername(user.getUsername());
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-        comment.setDate_created(simpleDateFormat.format(new Date()));
-        List<Comment> commentList = task.getComments();
-        commentList.add(comment);
-
-        task.setComments(commentList);
-
-        return taskRepository.save(task);
-    }*/
 
     //    get all comments
     @Override

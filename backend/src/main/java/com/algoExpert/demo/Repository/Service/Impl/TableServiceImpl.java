@@ -1,7 +1,6 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.ProjectDto;
-import com.algoExpert.demo.Dto.TableDto;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.ProjectMapper;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TableServiceImpl implements TableService {
@@ -56,7 +54,7 @@ public class TableServiceImpl implements TableService {
 
 //        int count = project.getTables().size();
         TaskContainer table = new TaskContainer(0, "Table", null);
-        Task task = new Task(0, "task", "description",projectUser.getUsername(), "", "", "", "", null,null);
+        Task task = new Task(0, "task", "description",project.getUser().getFullName(), "","", "", "", project.getTitle(), null,null);
 
 
         tables.add(table);

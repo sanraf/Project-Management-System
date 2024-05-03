@@ -23,6 +23,8 @@ public interface AssigneesService {
     //  get all projects
     List<Assignee> getAllAssignees();
 
+    public List<Assignee> getAssigneeBrTaskID(int taskId);
+
 //	get all assignees
 
 }

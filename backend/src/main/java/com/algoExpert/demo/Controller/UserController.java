@@ -5,10 +5,8 @@ import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,9 +15,10 @@ import java.util.List;
 public class UserController {
     @Autowired
     private ProjectUserService projectUserService;
-    @GetMapping("/getSingleProject/{project_id}")
-    public Project getSingleProject(@PathVariable int project_id) throws InvalidArgument {
-        return projectUserService.findProject(project_id);
+    @GetMapping("/getSingleProject")
+    public ResponseEntity<String> getSingleProject(@RequestParam("project_id") int project_id) throws InvalidArgument {
+        projectUserService.findProject(project_id);
+        return ResponseEntity.ok("http://localhost:5173/");
     }
     @GetMapping("/fetchUserProject")
     public List<Project> getUserProject(){

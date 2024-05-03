@@ -1,7 +1,6 @@
 package com.algoExpert.demo.Controller;
 
-import com.algoExpert.demo.Dto.TaskDto;
-
+import com.algoExpert.demo.AppNotification.DeadlineTaskReminder;
 import com.algoExpert.demo.Entity.Task;
 
 import com.algoExpert.demo.Entity.TaskContainer;
@@ -11,6 +10,7 @@ import com.algoExpert.demo.Repository.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -18,6 +18,9 @@ import java.util.List;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private DeadlineTaskReminder taskReminder;
 
     //  create task using table and member id
     @PostMapping("/createTask/{table_id}")
@@ -48,7 +51,14 @@ public class TaskController {
         return taskService.deleteTaskById(task_id, table_id);
     }
 
+    @GetMapping("/taskInvitation")
+    public Task getAllTaskById(@RequestParam("taskId") int taskId) {
+        return taskService.getTaskById(taskId);
+    }
 
-
+    @GetMapping("/taskDueDate")
+    public Task taskDueDate(@RequestParam("taskId") int taskId) {
+        return taskService.getTaskById(taskId);
+    }
 
 }

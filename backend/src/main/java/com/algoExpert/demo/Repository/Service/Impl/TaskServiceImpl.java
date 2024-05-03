@@ -1,6 +1,7 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
-import com.algoExpert.demo.Dto.TaskDto;
+
+import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.TaskMapper;
@@ -9,6 +10,7 @@ import com.algoExpert.demo.Repository.Service.TaskService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.*;
+
+@Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
     @Autowired
@@ -42,9 +47,13 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+    @Autowired
+    private ProjectUserImpl projectUser;
 
     @Autowired
     private  UserRepository userRepository;
+    @Autowired
+    private EmailHtmlLayout emailHtmlLayout;
 
     //    create new task
     @Override
@@ -53,6 +62,9 @@ public class TaskServiceImpl implements TaskService {
         TaskContainer table = tableRepository.findById(table_id).orElseThrow(() ->
                 new InvalidArgument("TaskTable with ID " + table_id + " not found"));
 
+        String projectName = table.getTasks()
+                .stream().map(Task::getProjectName).findFirst().orElseThrow();
+        String username =  userRepository.findById(projectUser.loggedInUserId()).orElseThrow().getFullName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = null;
 
@@ -64,11 +76,11 @@ public class TaskServiceImpl implements TaskService {
         List<Task> taskList = table.getTasks();
         int count = taskList.size() + 1;
         Task task = new Task(0, "task " + count, ""
-                ,loggedUser.getUsername(), "", "", "", "", null, null);
+                ,username, "", "", "", "",projectName, null, null);
 
         taskList.add(task);
         table.setTasks(taskList);
-
+        System.err.println(projectName);
         return tableRepository.save(table);
     }
     //    get all tasks
@@ -79,19 +91,17 @@ public class TaskServiceImpl implements TaskService {
 
     //    update task
     @Override
-    public Task editTask(Task newTask) throws InvalidArgument {
-
-        Task task = taskRepository.findById(newTask.getTask_id())
-                .map(existingTask -> {
-                    existingTask.setTitle(newTask.getTitle());
-                    existingTask.setDescription(newTask.getDescription());
-                    existingTask.setStart_date(newTask.getStart_date());
-                    existingTask.setEnd_date(newTask.getEnd_date());
-                    existingTask.setStatus(newTask.getStatus());
-                    existingTask.setPriority(newTask.getPriority());
+    public Task editTask(Task newTask){
+        return   taskRepository.findById(newTask.getTask_id())
+                .map(existingTask ->{
+                    Optional.ofNullable(newTask.getTitle()).ifPresent(existingTask::setTitle);
+                    Optional.ofNullable(newTask.getDescription()).ifPresent(existingTask::setDescription);
+                    Optional.ofNullable(newTask.getStart_date()).ifPresent(existingTask::setStart_date);
+                    Optional.ofNullable(newTask.getEnd_date()).ifPresent(existingTask::setEnd_date);
+                    Optional.ofNullable(newTask.getStatus()).map(String::toUpperCase).ifPresent(existingTask::setStatus);
+                    Optional.ofNullable(newTask.getPriority()).map(String::toUpperCase).ifPresent(existingTask::setPriority);
                     return taskRepository.save(existingTask);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newTask.getTask_id() + " not found"));
-        return task;
+                }).orElseThrow(() -> new IllegalArgumentException("task with ID " + newTask.getTask_id() + " not found"));
     }
 
     //duplicate task
@@ -100,7 +110,7 @@ public class TaskServiceImpl implements TaskService {
         TaskContainer table = tableRepository.findById(table_id).get();
 
         Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getUsername(), task.getStart_date(), task.getEnd_date(), task.getStatus(),
-                task.getPriority(), null, null);
+                task.getPriority(),task.getProjectName(), null, null);
         List<Task> taskList = table.getTasks();
 
 
@@ -130,6 +140,17 @@ public class TaskServiceImpl implements TaskService {
         tableRepository.save(table);
         return table;
     }
+
+    @Override
+    public Task getTaskById(int taskId) {
+        return taskRepository.findById(taskId).orElseThrow();
+    }
+
+    @Override
+    public List<Task> findTaskByDateAndStatus(String date, String status) {
+        return taskRepository.findTasksDueDate(date,status);
+    }
+
 
 }
 
