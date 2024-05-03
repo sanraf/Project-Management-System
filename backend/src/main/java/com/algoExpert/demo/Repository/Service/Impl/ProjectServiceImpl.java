@@ -56,14 +56,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         // Save the project and retrieve the saved instance
         Project savedProject = projectRepository.save(project);
-        // save member
-         memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
         // Create a default table using new member id
         tableService.createTable(savedProject.getProject_id());
 
         // Save the updated project with the added member
         savedProject = projectRepository.save(savedProject);
+        memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
 
         return savedProject.getProject_id();
     }

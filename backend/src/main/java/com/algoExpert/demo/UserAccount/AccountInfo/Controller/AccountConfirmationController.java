@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 
@@ -22,9 +23,16 @@ public class AccountConfirmationController {
     @Autowired
     private AccountConfirmationRepository confirmationRepository;
 
+//    @GetMapping("/account")
+//    private String confirmAccount(@RequestParam("token") String token) throws InvalidArgument {
+//        return confirmationService.activateAccount(token);
+//    }
     @GetMapping("/account")
-    private String confirmAccount(@RequestParam("token") String token) throws InvalidArgument {
-        return confirmationService.activateAccount(token);
+    private ModelAndView confirmAccount(@RequestParam("token") String token) throws InvalidArgument {
+        String message = confirmationService.activateAccount(token);
+        ModelAndView modelAndView = new ModelAndView("redirect-to-login");
+        modelAndView.addObject("pMsg",message);
+        return modelAndView;
     }
     @GetMapping("/get")
     public AccountConfirmation findAccountByUserId() {

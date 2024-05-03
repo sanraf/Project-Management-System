@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -43,7 +44,8 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
 
         User user = confirmation.getUser();
        if(user.isEnabled()){
-           return "account already activated";
+           log.info("renewedToken {}{} :",confirmLink,confirmation.getToken());
+           return "Account Already Activated,Click The Button Below To Login.";
        }
 
        if (isTokenExpired(confirmation.getExpiresAt())){
@@ -55,14 +57,15 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
 
 //           appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,
 //                   emailHtmlLayout.buildAccConfirmationEmail(user.getUsername(),link));
-           return "Token expired";
+           return "Token Expired Please Check Your Email To Confirm!";
        }
 
        user.setEnabled(true);
+       user.setDateRegistered(LocalDate.now());
         userRepository.save(user);
         confirmation.setConfirmAt(LocalDateTime.now());
         saveToken(confirmation);
-        return "account activated successful";
+        return "Account Activated Successful,Click The Button Below To Login.";
     }
 
     @Override
