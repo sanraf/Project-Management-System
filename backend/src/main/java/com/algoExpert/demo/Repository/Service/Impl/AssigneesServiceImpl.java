@@ -60,11 +60,11 @@ public class AssigneesServiceImpl implements AssigneesService {
         }
 
 
-        String userName = memberRepository.findById(member_id)
+        String email = memberRepository.findById(member_id)
                 .orElseThrow(()->new InvalidArgument(String.format(MEMBER_NOT_FOUND,member_id)))
                 .getUsername();
 
-        Assignee assignee = new Assignee(0, member_id, task_id, userName);
+        Assignee assignee = new Assignee(0, member_id, task_id, email);
 
         List<Assignee> assigneeList= storedTask.getAssignees();
         boolean assigneeExist = assigneeList
@@ -78,7 +78,7 @@ public class AssigneesServiceImpl implements AssigneesService {
         assigneeList.add(assignee);
         storedTask.setAssignees(assigneeList);
         Task saved = taskRepository.save(storedTask);
-        sendInvite(storedTask,loggedUser,storedTask.getProjectName());
+        sendInvite(storedTask,loggedUser,storedTask.getProjectName(),email);
         return saved ;
     }
 
@@ -95,7 +95,7 @@ public class AssigneesServiceImpl implements AssigneesService {
      * @param user
      * @param projectName
      */
-    private void sendInvite(Task task, User user, String projectName){
+    private void  sendInvite(Task task, User user, String projectName,String email){
         String link = taskInviteLink +task.getTask_id();
         String subject = "PMS Task Assignment";
         String deadline = "";
@@ -105,7 +105,7 @@ public class AssigneesServiceImpl implements AssigneesService {
         //todo change TEMP_USER_EMAIL to email by passing it as an argument in sendInvite(Task task, User user, String projectName,String email) email= user.getEmail()
 
         String assignTaskHtml = emailHtmlLayout.assignTaskHtml(user.getFullName(), task.getTitle(), projectName, link,deadline);
-        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,assignTaskHtml,subject);
+        appEmailBuilder.sendEmailInvite(email,assignTaskHtml,subject);
         log.info(user.getFullName()+" {} :",link);
 
     }
