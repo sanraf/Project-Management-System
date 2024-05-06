@@ -41,8 +41,6 @@ public class Config {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
-    private DataSource dataSource;
-    @Autowired
     private JwtAuthFilter authFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -94,9 +92,6 @@ public class Config {
                         .requestMatchers("/admin/**").hasAnyRole(USER.name())
                         .anyRequest().authenticated()
                 )
-                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
-                        .tokenRepository(persistentTokenRepository())
-                        .alwaysRemember(true).tokenValiditySeconds(60*60*30))
                 .oauth2Login(Customizer.withDefaults())
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -125,12 +120,12 @@ public class Config {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        return tokenRepository;
-    }
+//    @Bean
+//    public PersistentTokenRepository persistentTokenRepository(){
+//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+//        tokenRepository.setDataSource(dataSource);
+//        return tokenRepository;
+//    }
 
 
 }

@@ -5,6 +5,4 @@ import lombok.Data;
 
 
 public record RegistrationRequest(String fullName,String email,String password) {
-
-
 }

@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 import static com.algoExpert.demo.AppUtils.AppConstants.TOKEN_NOT_FOUND;
 
 @Service
