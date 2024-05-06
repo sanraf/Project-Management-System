@@ -144,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
 
                 //todo change TEMP_USER_EMAIL to request.email()
                 String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
-                appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+                appEmailBuilder.sendEmailAccountConfirmation(request.email(),htmlBody);
 
 
                 return user;
@@ -164,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
 
 
             String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
-            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+            appEmailBuilder.sendEmailAccountConfirmation(user.getEmail(),htmlBody);
 
 
             return savedUser;

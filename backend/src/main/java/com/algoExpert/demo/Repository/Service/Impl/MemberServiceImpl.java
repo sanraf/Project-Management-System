@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
     private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
-    @Value("${project.invite.url}")
+    @Value("${project.invite.homepage.url}")
     StringBuilder projectUrl;
        public static final String MEMBER = "MEMBER";
 
@@ -85,16 +85,15 @@ public class MemberServiceImpl implements MemberService {
 
             StringBuilder link = new StringBuilder(projectUrl);
 
-
                 String subject = "PMS Project Invitation";
                 String projectHtml = emailHtmlLayout.inviteToProjectHtml(user.getFullName()
                         , userProject.getTitle()
-                        ,link.append(project_id).toString()
+                        ,link.toString()
                         ,userProject.getUser().getFullName());
                 //todo change TEMP_USER_EMAIL to user.getEmail()
-                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,projectHtml,subject);
+                appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
 
-                log.info("You have been invited to the project {}{} :",projectUrl,project_id);
+                log.info("You have been invited to the project {} :",projectUrl);
 
             return memberRepository.save(newMember);
         }

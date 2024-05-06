@@ -50,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
     private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
-    @Value("${project.invite.url}")
+    @Value("${project.invite.homepage.url}")
     StringBuilder projectUrl;
     @Autowired
     ProjectUserService projectUser;
@@ -95,9 +95,9 @@ public class ProjectServiceImpl implements ProjectService {
         String subject = "PMS Project Created Successful";
         String projectHtml = emailHtmlLayout.createProjectHtml(user.getFullName()
                 , savedProject.getTitle()
-                ,link.append(savedProject.getProject_id()).toString());
+                ,link.toString());
         //todo change TEMP_USER_EMAIL to user.getEmail()
-        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,projectHtml,subject);
+        appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
 
         return savedProject.getProject_id();
     }
