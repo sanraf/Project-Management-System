@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class Validation implements AccessDeniedHandler {
+public class Validation {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public Map<String,String> handleValidation(ConstraintViolationException argumentException){
@@ -76,10 +77,11 @@ public class Validation implements AccessDeniedHandler {
         return errorMap;
     }
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response
-            , AccessDeniedException accessDeniedException)
-            throws IOException, ServletException {
-        response.sendRedirect("/");
+    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
+    @ExceptionHandler(MailSendException.class)
+    public Map<String,String> mailSendException(MailSendException mailSendException){
+        Map<String,String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", mailSendException.getMessage());
+        return errorMap;
     }
 }

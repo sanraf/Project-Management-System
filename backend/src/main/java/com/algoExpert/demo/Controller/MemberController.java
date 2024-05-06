@@ -4,9 +4,11 @@ import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.Service.MemberService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,7 +19,7 @@ public class MemberController {
 
 //    invite member to a project
     @GetMapping("/inviteMember/{project_id}/{user_id}")
-    public Member inviteMember(@PathVariable int project_id, @PathVariable int user_id)throws InvalidArgument {
+    public Member inviteMember(@PathVariable int project_id, @PathVariable int user_id) throws InvalidArgument, MessagingException, IOException {
         return memberService.inviteMember(project_id,user_id);
     }
 //    get all members of a project
