@@ -85,6 +85,7 @@ public class MemberServiceImpl implements MemberService {
 
             StringBuilder link = new StringBuilder(projectUrl);
 
+
                 String subject = "PMS Project Invitation";
                 String projectHtml = emailHtmlLayout.inviteToProjectHtml(user.getFullName()
                         , userProject.getTitle()
@@ -92,6 +93,7 @@ public class MemberServiceImpl implements MemberService {
                         ,userProject.getUser().getFullName());
                 //todo change TEMP_USER_EMAIL to user.getEmail()
                 appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,projectHtml,subject);
+
                 log.info("You have been invited to the project {}{} :",projectUrl,project_id);
 
             return memberRepository.save(newMember);

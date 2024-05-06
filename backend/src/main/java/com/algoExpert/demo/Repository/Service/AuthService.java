@@ -1,5 +1,6 @@
 package com.algoExpert.demo.Repository.Service;
 
+import com.algoExpert.demo.Jwt.JwtResponse;
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
@@ -24,8 +25,7 @@ public interface AuthService {
     User registerUser(RegistrationRequest request) throws InvalidArgument, AccessDeniedException, MessagingException, IOException;
     // get all users
     List<User> getUsers();
-    HttpResponse login (User user);
-    HttpResponse login1 (AuthRequest request);
+    HttpResponse loginUser (AuthRequest request);
     //    delete user by id
     List<UserDto> deleteUser(int userId);
 

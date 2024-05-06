@@ -3,6 +3,7 @@ package com.algoExpert.demo.Jwt;
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,22 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
+        Cookie[] cookies = request.getCookies();
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             username = jwtService.extractUsername(token);
+        }
+        else if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("jwtToken")) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+            if (token != null) {
+                username = jwtService.extractUsername(token);
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -47,4 +61,6 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+
 }

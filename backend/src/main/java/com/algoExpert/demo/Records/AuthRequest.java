@@ -5,4 +5,4 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-public record AuthRequest(String username,String password) { }
+public record AuthRequest(String email,String password) { }

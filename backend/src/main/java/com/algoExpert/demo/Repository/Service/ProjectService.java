@@ -29,11 +29,8 @@ public interface ProjectService {
     List<Project> getAllProjects();
 
     //get one project
-
-
     @Transactional
     List<Project> deleteProjectById(Integer projectId) throws InvalidArgument;
 
     Project editProject(Project Project) throws InvalidArgument;
-
 }

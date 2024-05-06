@@ -2,7 +2,11 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+
+import com.algoExpert.demo.Jwt.JwtResponse;
+
 import com.algoExpert.demo.AppUtils.ImageConvertor;
+
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
@@ -10,6 +14,11 @@ import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtService;
+
+import com.algoExpert.demo.Repository.MemberRepository;
+import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.RefreshTokenRepository;
+
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
@@ -66,7 +75,6 @@ public class AuthServiceImpl implements AuthService {
     private AccountConfirmationRepository confirmationRepository ;
     @Value("${confirm.account.url}")
     String confirmLink;
-
 
     @Autowired
     private RefreshTokenSevice refreshTokenSevice;
@@ -132,9 +140,12 @@ public class AuthServiceImpl implements AuthService {
 
                 log.info("delete method called: {}{}", link,user.getUser_id());
                 log.info("Renewed token is generated: {}{}", link, confirmation.getToken());
+
+
                 //todo change TEMP_USER_EMAIL to request.email()
                 String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
                 appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+
 
                 return user;
             }
@@ -151,25 +162,27 @@ public class AuthServiceImpl implements AuthService {
             //todo change TEMP_USER_EMAIL to user.getEmail()
             log.info("New Token: {}{}", link, token);
 
+
             String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
             appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+
 
             return savedUser;
         }
     }
 
     @Override
-    public HttpResponse login(User user) {
+    public HttpResponse loginUser(AuthRequest request) {
         try {
-            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
             User logegdUser = null;
             String jwtToken = "";
             String refreshToken = "";
 
             if(auth != null  && auth.isAuthenticated()){
                 logegdUser = (User)auth.getPrincipal();
-                jwtToken = jwtService.generateToken(user.getEmail());
-                refreshToken = refreshTokenSevice.createRefreshToken(user.getEmail()).getToken();
+                jwtToken = jwtService.generateToken(request.email());
+                refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
             }
             return HttpResponse.builder()
                     .timeStamp(LocalTime.now().toString())
@@ -177,16 +190,14 @@ public class AuthServiceImpl implements AuthService {
                     .message("Login Successful")
                     .email(logegdUser.getEmail())
                     .token(jwtToken)
+                    .refreshToken(refreshToken)
                     .fullname(logegdUser.getFullName())
-                    .userId(logegdUser.getUser_id())
                     .statusCode(HttpStatus.OK.value())
                     .build();
         } catch (BadCredentialsException e) {
             return HttpResponse.builder()
                     .timeStamp(LocalTime.now().toString())
                     .message("Incorrect username or password")
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .build();
         } catch (Exception e) {
             return HttpResponse.builder()
@@ -197,46 +208,6 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
     }
-
-    @Override
-    public HttpResponse login1(AuthRequest  request) {
-        try {
-            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-            User logegdUser = null;
-            String jwtToken = "";
-            String refreshToken = "";
-
-            if(auth != null  && auth.isAuthenticated()){
-                logegdUser = (User)auth.getPrincipal();
-                jwtToken = jwtService.generateToken(request.username());
-                refreshToken = refreshTokenSevice.createRefreshToken(request.username()).getToken();
-            }
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .status(HttpStatus.OK)
-                    .message("Login Successful")
-                    .email(logegdUser.getEmail())
-                    .token(jwtToken)
-                    .fullname(logegdUser.getFullName())
-                    .userId(logegdUser.getUser_id())
-                    .statusCode(HttpStatus.OK.value())
-                    .build();
-        } catch (BadCredentialsException e) {
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .message("Incorrect username or password")
-
-                    .build();
-        } catch (Exception e) {
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .message("Login failed: " + e.getMessage())
-
-                    .build();
-        }
-    }
-
-
 
     // get all users
     @Override
