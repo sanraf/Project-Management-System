@@ -2,23 +2,28 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+
 import com.algoExpert.demo.Jwt.JwtResponse;
+
+import com.algoExpert.demo.AppUtils.ImageConvertor;
+
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
 import com.algoExpert.demo.Entity.HttpResponse;
-import com.algoExpert.demo.Entity.Member;
-import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtService;
+
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.RefreshTokenRepository;
+
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
 import com.algoExpert.demo.UserAccount.AccountInfo.Repository.AccountConfirmationRepository;
+import com.algoExpert.demo.UserAccount.AccountInfo.Service.AccountConfirmationService;
 import com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl.AccountConfirmationServiceImpl;
 import com.algoExpert.demo.role.Role;
 import jakarta.mail.MessagingException;
@@ -58,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    private AccountConfirmationServiceImpl confirmationService;
+    private AccountConfirmationService confirmationService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -73,6 +78,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private RefreshTokenSevice refreshTokenSevice;
+    @Autowired
+    private ImageConvertor imageConvertor;
 
 //    @Autowired
 //    UserMapper userMapper;
@@ -114,7 +121,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User registerUser(RegistrationRequest request) throws InvalidArgument, MessagingException, IOException {
         Optional<User> existingUser = userRepository.findByEmail(request.email());
-        String link = confirmLink;
+        StringBuilder link = new StringBuilder(confirmLink);
+
 
         if (existingUser.isPresent()) {
             User user = existingUser.get();
@@ -131,10 +139,14 @@ public class AuthServiceImpl implements AuthService {
                 confirmationService.saveToken(confirmation);
 
                 log.info("delete method called: {}{}", link,user.getUser_id());
-                //todo apply send notification method here
                 log.info("Renewed token is generated: {}{}", link, confirmation.getToken());
-                appEmailBuilder.sendEmailAccountConfirmation(request.email(),
-                        emailHtmlLayout.confirmAccountHtml(user.getFullName(),link+token));
+
+
+                //todo change TEMP_USER_EMAIL to request.email()
+                String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
+                appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+
+
                 return user;
             }
         } else {
@@ -147,10 +159,13 @@ public class AuthServiceImpl implements AuthService {
                     .build();
             User savedUser = userRepository.save(user);
             String token = confirmationService.createToken(user);
-            //todo apply send notification method here
+            //todo change TEMP_USER_EMAIL to user.getEmail()
             log.info("New Token: {}{}", link, token);
-            appEmailBuilder.sendEmailAccountConfirmation(request.email(),
-                        emailHtmlLayout.confirmAccountHtml(user.getFullName(),link+token));
+
+
+            String htmlBody = emailHtmlLayout.confirmAccountHtml(user.getFullName(),link.append(token).toString());
+            appEmailBuilder.sendEmailAccountConfirmation(TEMP_USER_EMAIL,htmlBody);
+
 
             return savedUser;
         }

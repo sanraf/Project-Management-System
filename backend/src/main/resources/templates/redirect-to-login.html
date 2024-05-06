@@ -61,7 +61,7 @@
 
         }
         .content p {
-            font-size: 1.4em;
+            font-size: 1em;
             color: #fff;
             margin-bottom: 20px;
         }
@@ -89,13 +89,13 @@
         <div class="container">
             <div class="content-wrapper">
                 <div class="logo-div">
-                    <img src="/static/images/logo.png" alt="logo">
+                    <img src="../static/images/logo.png" th:src="|data:image/png;base64,${logo}|" alt="logo"/>
                 </div>
 
                 <div class="content">
                     <h1 >Hello Welcome to PMS</h1>
                     <p th:text="${pMsg}"> Click the button below to login.</p>
-                    <img src="/static/images/login-image2.png" alt="image">
+                    <img src="/static/images/login-image2.png" th:src="|data:image/png;base64,${projectLogo}|"alt="image">
                     <button onclick="redirectToLoginPage()">Go to Login Page</button>
                 </div>
 
@@ -112,86 +112,4 @@
         </body>
 </html>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Project Created</title>
-    <style>
-        /* Reset CSS */
-        body, html {
-            margin: 0;
-            padding: 0;
-        }
 
-        /* Container styles */
-        .container {
-            width: 100%;
-            max-width: 600px; /* Adjust according to your preference */
-            margin: 0 auto;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Header styles */
-        .header {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* Logo styles */
-        .logo {
-            max-width: 200px; /* Adjust according to your logo dimensions */
-            height: auto;
-        }
-
-        /* Content styles */
-        .content {
-            padding: 20px;
-            background-color: #339AF0;
-            border-radius: 5px;
-            color: #fff;
-        }
-
-        /* Project image styles */
-        .project-image {
-            max-width: 50%;
-            height: auto;
-            margin-top: 20px;
-        }
-
-        /* Footer styles */
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-<table class="container">
-    <tr>
-        <td class="header" colspan="2">
-            <img src="http://localhost:8080/static/images/login-image2.png" alt="Project Image" class="project-image">
-
-            <h1>New Project Created</h1>
-        </td>
-    </tr>
-    <tr>
-        <td class="content" colspan="2">
-            <p>Dear [Username],</p>
-            <p>Congratulations! Your new project has been successfully created. Here's a brief overview:</p>
-            <!-- Insert project details here -->
-            <img src="/static/images/login-image2.png" alt="Project Image" class="project-image">
-            <p>If you have any questions or need further assistance, feel free to contact us.</p>
-            <p>Best regards,<br>Project Team</p>
-        </td>
-    </tr>
-    <tr>
-        <td class="footer" colspan="2">
-            <p>This is an automated message. Please do not reply.</p>
-        </td>
-    </tr>
-</table>
-</body>
-</html>

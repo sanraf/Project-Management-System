@@ -21,6 +21,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private ProjectUserService projectUserService;
+
     @Autowired
     private JwtService jwtService;
 
@@ -31,6 +32,7 @@ public class UserController {
     public Project getSingleProject(@PathVariable int project_id){
         return projectUserService.findProject(project_id);
     }
+  
     @GetMapping("/fetchUserProject")
     public List<Project> getUserProject(){
         return projectUserService.getUserProjectIds();

@@ -37,6 +37,7 @@
 
         .header h2{
             padding: 10px;
+            border-radius: 5px;
             color: #fff;
             background-color:#339AF0;
         }
@@ -44,12 +45,13 @@
             text-align: start;
             padding: 20px;
             background-color: #cdcdcd;
+            border-radius: 5px;
             color: #333;
         }
         .button {
             display: inline-block;
-            color: #2200cc;
-            text-decoration: underline;
+            color: #fffff;
+            text-decoration: none;
             padding: 12px 20px;
             font-size: 16px;
         }
@@ -65,7 +67,8 @@
     <tr>
         <td class="header">
 
-
+<!--            <img src="cid:logo.png" class="logo" alt="Logo">-->
+            <img src="/static/images/logo.png" th:src="|data:image/png;base64,${logo}|"alt=" " class="logo">
             <h2>Welcome to [Platform Title]!</h2>
         </td>
     </tr>
@@ -75,7 +78,7 @@
             <p>Dear [User Name],</p>
             <p>Thank you for creating an account on [Platform Title]. We're excited to have you on board!</p>
             <p>To get started, please confirm your email address by clicking the button below:</p>
-            <a href="http://localhost:5173/" class="button">Confirm Email</a>
+            <a href="[Confirmation Link]" class="button">Confirm Email</a>
         </td>
     </tr>
     <tr>

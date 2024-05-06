@@ -11,6 +11,7 @@ import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.MemberService;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,9 +43,8 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
     @Value("${project.invite.url}")
-    String projectUrl;
-    public static final String OWNER = "OWNER";
-    public static final String MEMBER = "MEMBER";
+    StringBuilder projectUrl;
+       public static final String MEMBER = "MEMBER";
 
 
 
@@ -59,11 +60,8 @@ public class MemberServiceImpl implements MemberService {
                 new InvalidArgument(String.format(PROJECT_NOT_FOUND,project_id)));
 
 
-        // Initialize the members list if it's null
         List<Member> members = userProject.getMemberList();
-        if (members == null) {
-            members = new ArrayList<>();
-        }
+
 
         // check if member exist
         boolean memberExist = members.stream()
@@ -73,24 +71,30 @@ public class MemberServiceImpl implements MemberService {
         if (memberExist) {
             throw new InvalidArgument(String.format(ALREADY_A_MEMBER,user_id));
         } else {
-            Member newMember;
-            // create a new member
 
-            String role = members.isEmpty() ? OWNER : MEMBER;
-            newMember = new Member(0, user.getUser_id(), userProject.getProject_id(), user.getUsername(), role, null);
+            Member newMember = Member.builder()
+                    .user_id(user.getUser_id())
+                    .project_id(project_id)
+                    .username(user.getUsername())
+                    .projectRole(MEMBER)
+                    .build();
+
             members.add(newMember);
             userProject.setMemberList(members);
             projectRepository.save(userProject);
 
+            StringBuilder link = new StringBuilder(projectUrl);
 
-//
-            if (newMember.getProjectRole().equals(OWNER)){
-                appEmailBuilder.sendEmailInvite(userProject.getUser().getEmail(),emailHtmlLayout.createProjectHtml(user.getFullName(),userProject.getTitle()));
-                log.info("Project has been Created successfully {}{} :",projectUrl,project_id);
-            }else {
-//                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),projectUrl+project_id));
+
+                String subject = "PMS Project Invitation";
+                String projectHtml = emailHtmlLayout.inviteToProjectHtml(user.getFullName()
+                        , userProject.getTitle()
+                        ,link.append(project_id).toString()
+                        ,userProject.getUser().getFullName());
+                //todo change TEMP_USER_EMAIL to user.getEmail()
+                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,projectHtml,subject);
+
                 log.info("You have been invited to the project {}{} :",projectUrl,project_id);
-            }
 
             return memberRepository.save(newMember);
         }
@@ -144,13 +148,6 @@ public class MemberServiceImpl implements MemberService {
             System.err.println(credentials);
             System.err.println(principal);
 
-            // In most cases, you'll want to cast the principal to your UserDetails implementation
-            // UserDetails userDetails = (UserDetails) principal;
-
-            // You can also retrieve other details like authorities
-            // Collection<? extends GrantedAuthority> authorities = authenticationToken.getAuthorities();
-
-            // Now you have access to the authentication token details
         }
         return (User) authentication.getPrincipal();
     }

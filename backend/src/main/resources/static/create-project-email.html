@@ -18,6 +18,8 @@
             margin: 0 auto;
             padding: 20px;
             font-family: Arial, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
         }
 
 
@@ -29,7 +31,6 @@
 
         .header h2{
             padding: 10px;
-            border-radius: 5px;
             color: #fff;
             background-color:#339AF0;
         }
@@ -50,7 +51,6 @@
         .content {
             padding: 20px;
             background-color: #339AF0;
-            border-radius: 5px;
             color: #fff;
         }
 
@@ -61,7 +61,13 @@
             margin-top: 20px;
         }
 
-
+      .button {
+;
+            color: #2200cc;
+            text-decoration: underline;
+           font-weight: 600;
+            font-size: 16px;
+        }
         .footer {
             margin-top: 20px;
             text-align: center;
@@ -73,7 +79,7 @@
 <table class="container">
     <tr>
         <td class="header" colspan="2">
-            <img src="/static/images/logo.png" alt="Project Logo" class="logo">
+<!--            <img src="/static/images/logo.png" alt="Project Logo" class="logo">-->
             <h2>New Project Created</h2>
         </td>
     </tr>
@@ -83,7 +89,8 @@
             <p>Congratulations! Your new project has been successfully created. Here's a brief overview:</p>
 
             <h4>Project Name :[projectName]</h4>
-            <img src="/static/images/login-image2.png" alt="Project Image" class="project-image">
+            <a href="[Confirmation Link]" class="button">Confirm Email</a>
+<!--            <img src="/static/images/login-image2.png" alt="Project Image" class="project-image">-->
             <p>If you have any questions or need further assistance, feel free to contact us.</p>
             <p>Best regards,<br>Project Team</p>
         </td>

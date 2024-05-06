@@ -38,7 +38,7 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
     private static final Long EXPIRING_TIME = 2L;
 
     @Override
-    public String activateAccount(String userToken) throws InvalidArgument {
+    public String activateAccount(String userToken)  {
       AccountConfirmation confirmation = confirmationRepository.findByToken(userToken).orElseThrow(()-> new InvalidArgument(String.format(TOKEN_NOT_FOUND,userToken)));
 
         User user = confirmation.getUser();
