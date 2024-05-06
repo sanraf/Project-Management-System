@@ -50,9 +50,10 @@ public class ProjectUserImpl implements ProjectUserService {
         //clear the roles of the user who is loading the project
         List<Role> roleList = projectUser.getRoles();
         roleList.clear();
+        log.info("clear roles:{} ",roleList);
 //        //assign the role of the user that all users should have
         roleList.add(Role.valueOf(USER_ROLE));
-
+        log.info("add roles:{} ",roleList);
         for (Member member : foundProject.getMemberList() ){
             if(member.getProjectRole().equals(OWNER_ROLE) && member.getUser_id().equals(projectUser.getUser_id()) ){
                 //find if the member has a role of an onwer and assign owner role if you find

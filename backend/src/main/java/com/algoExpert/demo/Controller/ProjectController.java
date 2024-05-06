@@ -8,9 +8,11 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.Impl.ProjectUserImpl;
 import com.algoExpert.demo.Repository.Service.ProjectService;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,7 +27,7 @@ public class ProjectController {
 
 //  create project using user id
     @PostMapping("/createProject")
-    public Integer createProject(@RequestBody Project project) throws InvalidArgument{
+    public Integer createProject(@RequestBody Project project) throws InvalidArgument, MessagingException, IOException {
         return projectService.createProject(project);
     }
 

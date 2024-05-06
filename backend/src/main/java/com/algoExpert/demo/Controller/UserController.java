@@ -16,9 +16,8 @@ public class UserController {
     @Autowired
     private ProjectUserService projectUserService;
     @GetMapping("/getSingleProject")
-    public ResponseEntity<String> getSingleProject(@RequestParam("project_id") int project_id) throws InvalidArgument {
-        projectUserService.findProject(project_id);
-        return ResponseEntity.ok("http://localhost:5173/");
+    public Project getSingleProject(@RequestParam("project_id") int project_id) throws InvalidArgument {
+        return projectUserService.findProject(project_id);
     }
     @GetMapping("/fetchUserProject")
     public List<Project> getUserProject(){

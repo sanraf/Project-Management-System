@@ -1,5 +1,7 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.AppNotification.AppEmailBuilder;
+import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.ProjectMapper;
@@ -8,12 +10,18 @@ import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.*;
 import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -38,20 +46,24 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private MemberService memberService;
-
     @Autowired
-    ProjectMapper projectMapper;
-
+    private AppEmailBuilder appEmailBuilder;
     @Autowired
-    ProjectUserImpl projectUser;
-
+    private EmailHtmlLayout emailHtmlLayout;
+    @Value("${project.invite.url}")
+    StringBuilder projectUrl;
+    @Autowired
+    ProjectUserService projectUser;
+    private static final String OWNER = "OWNER";
     //  create project
     @Transactional
     @Override
-    public Integer createProject(Project project) throws InvalidArgument {
+    public Integer createProject(Project project) throws InvalidArgument, MessagingException, IOException {
         // Find user by id
         User user = userRepository.findById(projectUser.loggedInUserId())
                 .orElseThrow(() -> new InvalidArgument("User with ID " + projectUser.loggedInUserId() + " not found"));
+
+
         project.setUser(user);
 
         // Save the project and retrieve the saved instance
@@ -60,9 +72,32 @@ public class ProjectServiceImpl implements ProjectService {
         // Create a default table using new member id
         tableService.createTable(savedProject.getProject_id());
 
+        List<Member> members = savedProject.getMemberList();
+        if (members == null) {
+            members = new ArrayList<>();
+        }
+
+        Member newMember = Member.builder()
+                .user_id(user.getUser_id())
+                .project_id(savedProject.getProject_id())
+                .username(user.getUsername())
+                .projectRole(OWNER)
+                .build();
+
+        members.add(newMember);
+        savedProject.setMemberList(members);
+        projectRepository.save(savedProject);
+        StringBuilder link = new StringBuilder(projectUrl);
         // Save the updated project with the added member
         savedProject = projectRepository.save(savedProject);
-        memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
+//        memberService.inviteMember(savedProject.getProject_id(),user.getUser_id());
+
+        String subject = "PMS Project Created Successful";
+        String projectHtml = emailHtmlLayout.createProjectHtml(user.getFullName()
+                , savedProject.getTitle()
+                ,link.append(savedProject.getProject_id()).toString());
+        //todo change TEMP_USER_EMAIL to user.getEmail()
+        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,projectHtml,subject);
 
         return savedProject.getProject_id();
     }

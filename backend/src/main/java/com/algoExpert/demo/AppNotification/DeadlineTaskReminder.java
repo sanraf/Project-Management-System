@@ -88,6 +88,7 @@ public class DeadlineTaskReminder {
 //            System.err.println("ID "+task.getTask_id()+" from tomorrow's date");
             for (Assignee assignee:assignees){
                 //todo check if the notification exist
+
                 int userId = userId(assignee.getUsername());
                 boolean isDuplicate = notificationService.isDuplicate(userId, task.getTask_id());
                 if (!isDuplicate){

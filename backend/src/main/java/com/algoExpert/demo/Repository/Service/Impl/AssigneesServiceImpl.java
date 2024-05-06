@@ -90,9 +90,22 @@ public class AssigneesServiceImpl implements AssigneesService {
 
     }
 
+    /**
+     * @param task
+     * @param user
+     * @param projectName
+     */
     private void sendInvite(Task task, User user, String projectName){
         String link = taskInviteLink +task.getTask_id();
-        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.assignTaskHtml(user.getFullName(),task.getTitle(),projectName,link));
+        String subject = "PMS Task Assignment";
+        String deadline = "";
+
+        if (task.getEnd_date().isEmpty()) deadline = "Not Specified";
+        else deadline = task.getEnd_date();
+        //todo change TEMP_USER_EMAIL to email by passing it as an argument in sendInvite(Task task, User user, String projectName,String email) email= user.getEmail()
+
+        String assignTaskHtml = emailHtmlLayout.assignTaskHtml(user.getFullName(), task.getTitle(), projectName, link,deadline);
+        appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,assignTaskHtml,subject);
         log.info(user.getFullName()+" {} :",link);
 
     }

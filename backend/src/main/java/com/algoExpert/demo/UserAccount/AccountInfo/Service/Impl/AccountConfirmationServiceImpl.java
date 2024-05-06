@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 import static com.algoExpert.demo.AppUtils.AppConstants.TOKEN_NOT_FOUND;
 
 @Service
@@ -39,7 +37,7 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
     private static final Long EXPIRING_TIME = 2L;
 
     @Override
-    public String activateAccount(String userToken) throws InvalidArgument {
+    public String activateAccount(String userToken)  {
       AccountConfirmation confirmation = confirmationRepository.findByToken(userToken).orElseThrow(()-> new InvalidArgument(String.format(TOKEN_NOT_FOUND,userToken)));
 
         User user = confirmation.getUser();

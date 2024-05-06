@@ -4,12 +4,11 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-
+;
 import java.nio.charset.StandardCharsets;
 
 
@@ -19,38 +18,41 @@ import java.nio.charset.StandardCharsets;
 public class AppEmailService implements AppEmailBuilder {
 
     private final JavaMailSender javaMailSender;
-    private final SpringTemplateEngine templateEngine;
 
     @Override
-    public void sendEmailInvite(String to, String message) {
+    public void sendEmailInvite(String to, String htmlBody,String subject) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
-            messageHelper.setText(message,true);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,StandardCharsets.UTF_8.name());
+            messageHelper.setText(htmlBody,true);
+            messageHelper.setReplyTo("no-reply@pmsteam.com");
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
-            messageHelper.setSubject("You've been invited to the project");
-            messageHelper.setFrom("santo");
+            messageHelper.setSubject(subject);
+            messageHelper.setFrom("no-reply@example.com");
             javaMailSender.send(mimeMessage);
-        }catch (MessagingException e){
-            log.error("failed to send message ", e);
-            throw new IllegalStateException("failed to send message");
+        }catch (MailSendException e) {
+            log.error("Failed to send email: {}", e.getMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void sendTaskReminderEmail(String to, String body,String dueDay) {
+    public void sendTaskReminderEmail(String to, String htmlBody,String dueDay) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,"utf-8");
-            messageHelper.setText(body,true);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,StandardCharsets.UTF_8.name());
+            messageHelper.setText(htmlBody,true);
+            messageHelper.setReplyTo("no-reply@pmsteam.com");
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
             messageHelper.setSubject("Task due date reminder "+dueDay);
             javaMailSender.send(mimeMessage);
-        }catch (MessagingException e){
-            log.error("failed to send message ", e);
-            throw new IllegalStateException("failed to send message");
+        }catch (MailSendException e) {
+            log.error("Failed to send email: {}", e.getMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 
@@ -60,15 +62,15 @@ public class AppEmailService implements AppEmailBuilder {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true, StandardCharsets.UTF_8.name());
             messageHelper.setText(htmlBody,true);
+            messageHelper.setReplyTo("no-reply@pmsteam.com");
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
-            messageHelper.addInline("logo", new ClassPathResource("/static/images/logo.png"));
-            messageHelper.addInline("login-image1", new ClassPathResource("/static/images/login-image1.png"));
             messageHelper.setSubject("Your account has been create");
             javaMailSender.send(mimeMessage);
-        }catch (MessagingException e){
-            log.error("failed to send message ", e);
-            throw new IllegalStateException("failed to send message");
+        }catch (MailSendException e) {
+            log.error("Failed to send email: {}", e.getMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 
