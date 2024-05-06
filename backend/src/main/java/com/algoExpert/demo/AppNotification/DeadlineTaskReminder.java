@@ -41,7 +41,7 @@ public class DeadlineTaskReminder {
     @Value("${task.reminder.url}")
     String taskUrl;
     public static final String STATUS = "DONE";
-    @Scheduled(fixedRate = 5000)
+//    @Scheduled(fixedRate = 5000)
     private void runReminder() throws InvalidArgument {
         todayDueDate();
         tomorrowDueDate();

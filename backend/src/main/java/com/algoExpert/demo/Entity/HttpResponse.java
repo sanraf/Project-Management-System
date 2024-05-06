@@ -17,6 +17,7 @@ public class HttpResponse {
     protected String reason;
     protected String message;
     protected String token;
+    protected String refreshToken;
     protected String email;
     protected int userId;
     protected String fullname;

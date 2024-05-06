@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService {
 
 //
             if (newMember.getProjectRole().equals(OWNER)){
-                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.createProjectHtml(user.getFullName(),userProject.getTitle()));
+                appEmailBuilder.sendEmailInvite(userProject.getUser().getEmail(),emailHtmlLayout.createProjectHtml(user.getFullName(),userProject.getTitle()));
                 log.info("Project has been Created successfully {}{} :",projectUrl,project_id);
             }else {
 //                appEmailBuilder.sendEmailInvite(TEMP_USER_EMAIL,emailHtmlLayout.buildProjectInviteEmail(user.getFullName(),projectUrl+project_id));

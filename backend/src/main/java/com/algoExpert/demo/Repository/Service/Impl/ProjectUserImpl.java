@@ -2,10 +2,14 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
+import com.algoExpert.demo.Entity.RefreshToken;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.Jwt.JwtResponse;
+import com.algoExpert.demo.Jwt.JwtService;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
+import com.algoExpert.demo.Repository.RefreshTokenRepository;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
@@ -35,6 +39,16 @@ public class ProjectUserImpl implements ProjectUserService {
 
     @Autowired
     private  ProjectUserImpl projectUser;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private RefreshTokenSevice refreshTokenSevice;
+
 
     @Override
     public Project findProject(int project_id) throws InvalidArgument {
@@ -66,6 +80,21 @@ public class ProjectUserImpl implements ProjectUserService {
         projectUser.setRoles(roleList);
         userRepository.save(projectUser);
         return foundProject;
+    }
+
+    @Override
+    public JwtResponse refreshJwtToken(String refreshTokenRequest){
+        return  refreshTokenRepository.findByToken(refreshTokenRequest)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String accessToken = jwtService.generateToken(user.getUsername());
+                    String refreshToken = refreshTokenSevice.createRefreshToken(user.getUsername()).getToken();
+                    return  JwtResponse.builder()
+                            .jwtToken(accessToken)
+                            .refreshToken(refreshToken).build();
+                }).orElseThrow(() ->new RuntimeException(
+                        "Refresh token is not in database"
+                ));
     }
     @Override
     public Integer loggedInUserId() {

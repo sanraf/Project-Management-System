@@ -53,60 +53,16 @@ public class AuthController {
     private RefreshTokenSevice tokenSevice;
 //    create user
     @PostMapping("/registerUser")
-    public User registerUser(@RequestBody RegistrationRequest request) throws InvalidArgument, InvalidArgument, MessagingException, IOException {
+    public User registerUser(@RequestBody RegistrationRequest request) throws  InvalidArgument, MessagingException, IOException {
         return authService.registerUser(request);
     }
 
-    @PostMapping("/login")
-    public HttpResponse userLogin(@RequestBody User userCredentials){
-        return authService.login(userCredentials);
-    }
-
-//    @PostMapping("/login")
-//    public HttpResponse userLogin1(@RequestBody AuthRequest userCredentials){
-//        return authService.login(userCredentials);
-//    }
-    @PostMapping("/login1")
-    public HttpResponse userL(@RequestBody AuthRequest userCredentials){
-        return authService.login1(userCredentials);
-    }
-
-
-    //    get all users of the system
-//    @GetMapping("/getAllUsers")
-//    public List<User> getAll(){
-//        return authService.getUsers();
-//    }
-//
-    @PostMapping("/authenticate")
-    public JwtResponse authenticateAndGetToken(@ RequestBody AuthRequest authRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
-        if (authentication.isAuthenticated()) {
-            RefreshToken refreshToken = tokenSevice.createRefreshToken(authRequest.username());
-            return   JwtResponse.builder()
-                    .jwtToken(jwtService.generateToken(authRequest.username()))
-                    .refreshToken(refreshToken.getToken()).build();
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
-        }
+    @PostMapping("/loginUser")
+    public HttpResponse userLogin(@RequestBody AuthRequest userCredentials){
+        return authService.loginUser(userCredentials);
     }
 
 //    refresh token method
-    @PostMapping("/refreshToken")
-    public JwtResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
-
-        return  tokenSevice.findByToken(refreshTokenRequest.getToken())
-                .map(RefreshToken::getUser)
-                .map(user -> {
-                    String accessToken = jwtService.generateToken(user.getUsername());
-                    return  JwtResponse.builder()
-                            .jwtToken(accessToken)
-                            .refreshToken(refreshTokenRequest.getToken()).build();
-                }).orElseThrow(() ->new RuntimeException(
-                        "Refresh token is not in database"
-                ));
-
-    }
 
     @GetMapping("/redirect")
     public ModelAndView redirectToLoginPage() {
