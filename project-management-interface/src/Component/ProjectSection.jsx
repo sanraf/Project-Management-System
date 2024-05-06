@@ -8,7 +8,7 @@ import Assign from './Assign';
 function ProjectSection() {
     const [editedTask, seteditedTask] = useState({});
     const [hiddenColumns, sethiddenColumns] = useState({priority:"none"});
-    const [projectMembers, setProjectMembers] = useState(["Jane Doe"]);
+    const [projectMembers, setProjectMembers] = useState([{}]);
     const [users, setUsers] = useState(["Alex Smith"]);
     const [memberFound, setmemberFound] = useState([]);
     const [loginMemberId, setloginMemberId] = useState();
@@ -248,22 +248,16 @@ function ProjectSection() {
         }
     }
     const inviteMember =async (userId) => {
-         if (loggedInUser) {
-            try {
-                const response = await axios.post(`http://localhost:8080/member/inviteMember/${oneProject.project_id}/${userId}`,{}, {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data.project_id) {
-                    window.location.reload();
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.get(`http://localhost:8080/member/inviteMember/${oneProject.project_id}/${userId}`,{
+                withCredentials:true
+            });
+            if(response.data.project_id) {
+                window.location.reload();
             }
+            } catch (error) {
+                console.error('Error fetching data:', error);
         }
-        
     }
     const openAssignModel = (assignList,taskId) => {
         setassignees([])
@@ -322,7 +316,7 @@ function ProjectSection() {
                                                 <h5>Search members to add by name  </h5>
                                                 <form action=""> <input onChange={(e)=>searchforMembers(e.target.value)} type="text" placeholder='Please search member' /><input type="submit" value="search"/></form>
                                                 {memberFound ? memberFound.map((memberName,i)=>
-                                                <p key={i} onClick={()=>inviteMember(memberName.user_id)} >{memberName.fullname}</p>
+                                                <p key={i} onClick={()=>inviteMember(memberName.user_id)} >{memberName.fullName}</p>
                                                 ):""}
                                                 <h6>List of project members</h6>
                                                 {

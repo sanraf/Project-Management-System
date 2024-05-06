@@ -9,46 +9,57 @@ import Cookies from 'js-cookie';
 
 function Login() {
     const [showRegister, setShowRegister] = useState("none");
+    const [emailMessage, setemailMessage] = useState("none");
+    const [passwordMessage, setpasswordMessage] = useState("none");
+
     const {register, handleSubmit, setValue } = useForm({
         shouldUseNativeValidation:true,
         defaultValues:{
-         fullname: "",  
+         fullName: "",  
          email:"",
-         password:"",
+            password: "",
+         re_password:""
       }
     });
 
     const login = async (userDetails) => {
-        if(showRegister == "none" ) {
+        if (showRegister == "none") {
+            delete userDetails.fullName;
+            delete userDetails.re_password;
             try {
                 const response = await axios.post("http://localhost:8080/auth/loginUser",userDetails);
-                if (response.data.statusCode == "401") {
-                    console.log(response.data.status)
-                    setShowRegister("block")
-                } else {
-                    const userDetails = { email: response.data.email,fullname: response.data.fullname}
+                if (response.data.status == "OK") {
+                    const userDetails = { email: response.data.email,fullName: response.data.fullname}
                     sessionStorage.setItem("systemUser", JSON.stringify(userDetails))
                     Cookies.set('jwtToken', response.data.token, {
-                        path: '/',
+                        path: '/', expires: 365 
                     });
                     Cookies.set('refreshToken', response.data.refreshToken,{
-                        path: '/',
+                        path: '/',expires: 365 
                     });
+                    window.location.href = "/help";
+                } else {
+                    console.log(response.data)
+                    setShowRegister("block")
                 }
                 } catch (error) {
-                    console.error("Error adding task: ", error);
+                console.error("Error logging in: ", error);
             }
         } else {
-            const editedUserDetails = {...userDetails}; 
-            editedUserDetails.dateRegistered = new Date();
-            editedUserDetails.roles = [];
-            try {
-                const response = await axios.post(`http://localhost:8080/auth/registerUser`,editedUserDetails);
-                if (response.data) {
+            if (userDetails.password === userDetails.re_password) {
+                setpasswordMessage("none");
+                delete userDetails.re_password;
+                try {
+                const response = await axios.post(`http://localhost:8080/auth/registerUser`,userDetails);
+                if(response.data) {
                     setShowRegister("none")
+                    setemailMessage("block")
                 }
                 } catch (error) {
                     console.error("Error adding task: ", error);
+                }
+            } else {
+                setpasswordMessage("block");
             }
         }
     }
@@ -72,21 +83,23 @@ function Login() {
                             <form action="" onSubmit={handleSubmit(login)} >
                               <div style={{display:showRegister}}>
                                 <h6>Full name</h6>
-                                <input  {...register("fullname",{required: showRegister == "block" ? true:false})} id='fullname' name ='fullname' type="text" placeholder='fullname' />
+                                <input  {...register("fullName",{required: showRegister == "block" ? true:false})} id='fullname' name ='fullName' type="text" placeholder='fullname' />
                               </div>
                               <h6>Email</h6>
                                 <input {...register("email",{required:"please enter email"})} type="text" id='email' name="email"  placeholder='email' />
                                <h6>Password</h6>
                               <input  {...register("password",{required:"please enter password"})} id='password' type="text" name="password" placeholder='password' />
-                              <div style={{display:showRegister}}>
-                                <h6>Re-enter password</h6>
-                                <input id='password' type="text" placeholder='password' />
+                               <div style={{display:showRegister}}>
+                                    <h6>Re-enter password</h6>
+                                     <p style={{display:passwordMessage}} id="wrong_password">Attention: Passwords do not match, please ensure they match to proceed</p>
+                                    <input {...register("re_password", { required: showRegister == "block" ? true : false })} name='re_password' id='password' type="text" placeholder='password' />
                                 </div>
                                 {
                                     showRegister == "block" ? <button type='submit'>Register</button> :
                                     <button  type='submit'>Login</button>
                                 }
                             </form>
+                            <h6 style={{display:emailMessage}} id='confirm_message'>Thank you for registering please confirm via email before logging in </h6>
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
                                 <i className="lni lni-github-original"></i>

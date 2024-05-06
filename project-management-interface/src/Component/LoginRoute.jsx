@@ -3,28 +3,19 @@ import { Outlet, Navigate, useHref } from "react-router-dom";
 import { refreshToken } from "./RefreshToken";
 
 function LoginRoute() {
-    const [user, setUser] = useState();
-  
-    useEffect(() => {
-        const fetchData = async () => {
-        try {
-            setUser(await refreshToken())
-        } catch (error) {
-        console.error('Error fetching data:', error)
+    const fetchData = async () => {
+      try {
+        const userFound = await refreshToken();
+        console.log(userFound)
+          if (userFound) {
+            window.location.href = "/help"
         }
-        }
-        fetchData();
-        return () => {}
-    }, [user]);
-    
-    if(!user) {
-        return <p>loading...</p>;
+      } catch (error) {
+          console.error('Error fetching data:', error)
+          window.location.href = "/login"
+      }
     }
-        
-  return(
-    user ? <Navigate to={"/help"} /> :<Navigate to={"/"} />
-  );
-
+    fetchData();
   
 }
 
