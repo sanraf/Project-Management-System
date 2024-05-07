@@ -2,24 +2,22 @@
 import React,{useEffect,useState} from 'react'
 import logo from "../assets/logo.png";
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-function Sidebar(props) {
+function Sidebar() {
   const [project, setProject] = useState([]);
   
   useEffect(() => { 
     const fetchData = async () => {
-      const systemUser = JSON.parse(sessionStorage.getItem("systemUser"));
-      if (systemUser) {
-        try {
-          const response = await axios.get(`http://localhost:8080/user/fetchUserProject`, {
-            headers: {
-              Authorization: `Bearer ${systemUser.token}`, // Assuming token is stored in a variable
-              'Content-Type': 'application/json'}
-            });
-            setProject(response.data);
-          } catch (error) {
-            console.error('Error fetching data:', error);
+      try {
+        const response = await axios.get(`http://localhost:8080/user/fetchUserProject`, {
+          withCredentials:true
+        });
+        if(response.data) {
+          console.log(response.data)
         }
+        } catch (error) {
+          console.error('Error fetching data:', error);
       }
     };
     fetchData();
