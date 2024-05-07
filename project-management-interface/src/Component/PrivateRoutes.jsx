@@ -1,6 +1,5 @@
 import { Outlet, Navigate, useHref } from "react-router-dom";
 import React,{useEffect,useState} from "react";
-import { useAuth } from "./AuthProvider";
 import axios from 'axios';
 import { refreshToken } from "./RefreshToken";
 

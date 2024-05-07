@@ -6,7 +6,6 @@ function LoginRoute() {
     const fetchData = async () => {
       try {
         const userFound = await refreshToken();
-        console.log(userFound)
           if (userFound) {
             window.location.href = "/help"
         }
@@ -16,7 +15,6 @@ function LoginRoute() {
       }
     }
     fetchData();
-  
 }
 
 export default LoginRoute
