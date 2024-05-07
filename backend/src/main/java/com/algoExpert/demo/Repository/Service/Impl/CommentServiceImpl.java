@@ -1,17 +1,12 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.Dto.CommentDto;
-import com.algoExpert.demo.Entity.Comment;
-import com.algoExpert.demo.Entity.Task;
-import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Mapper.CommentMapper;
 import com.algoExpert.demo.Mapper.TaskMapper;
-import com.algoExpert.demo.Repository.CommentRepository;
-import com.algoExpert.demo.Repository.MemberRepository;
+import com.algoExpert.demo.Repository.*;
 import com.algoExpert.demo.Repository.Service.CommentService;
-import com.algoExpert.demo.Repository.TaskRepository;
-import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
+
     @Autowired
     ProjectUserImpl projectUser;
 
@@ -56,6 +52,30 @@ public class CommentServiceImpl implements CommentService {
         commentList.add(commentBody);
 
         task.setComments(commentList);
+
+        List<Assignee>  assigneeList = task.getAssignees();
+
+        for (Assignee assigned : assigneeList){
+           Optional<User> assigneeUser = userRepository.findByEmail(assigned.getUsername());
+
+           if(assigneeUser.isPresent()){
+               //create notification message
+              User foundAssignedUser = assigneeUser.get();
+              UserNotification userNotificationCreated = UserNotification.builder()
+                       .notifMsg("Comment has been added to task:" + task.getTitle())
+                       .notifTime(commentBody.getDate_created())
+                       .fullName(user.getFullName()).build();
+               //access the notification list of user  from database
+               List<UserNotification> userNotificationList =  foundAssignedUser.getUserNotificationList();
+               //set the updated notification of user in databse
+               userNotificationList.add(userNotificationCreated);
+               foundAssignedUser.setUserNotificationList(userNotificationList);
+
+               userRepository.save(foundAssignedUser);
+           }
+        }
+
+
         return taskRepository.save(task);
     }
 
