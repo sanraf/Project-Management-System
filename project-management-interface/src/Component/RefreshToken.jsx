@@ -18,5 +18,6 @@ export const refreshToken = async () => {
         }
         } catch (error) {
           console.error('Error fetching data:', error);
+          window.location.href ="/login"
       }
 } 
