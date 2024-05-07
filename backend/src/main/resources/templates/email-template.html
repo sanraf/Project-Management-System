@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+        .header {
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: flex-start;
+            align-self: flex-start;
+            max-width: 50px; /* Adjust according to your logo dimensions */
+            height: auto;
+            margin-bottom: 20px;
+
+        }
+
+        .header h2{
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            background-color:#339AF0;
+        }
+        .content {
+            text-align: start;
+            padding: 20px;
+            background-color: #cdcdcd;
+            border-radius: 5px;
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            color: #fffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<table class="container">
+    <tr>
+        <td class="header">
+
+<!--            <img src="cid:logo.png" class="logo" alt="Logo">-->
+            <img src="/static/images/logo.png" th:src="|data:image/png;base64,${logo}|"alt=" " class="logo">
+            <h2>Welcome to [Platform Title]!</h2>
+        </td>
+    </tr>
+    <tr>
+        <td class="content">
+
+            <p>Dear [User Name],</p>
+            <p>Thank you for creating an account on [Platform Title]. We're excited to have you on board!</p>
+            <p>To get started, please confirm your email address by clicking the button below:</p>
+            <a href="[Confirmation Link]" class="button">Confirm Email</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="footer" colspan="2">
+            <p>This is an automated message. Please do not reply.</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

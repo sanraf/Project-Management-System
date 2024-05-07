@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Assignment Notification</title>
+    <style>
+
+        body, html {
+            margin: 0;
+            padding: 0;
+
+        }
+
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            border: 2px solid #cdcdcd;
+        }
+
+
+        .header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h2{
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            background-color:#339AF0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: flex-start;
+            align-self: flex-start;
+            max-width: 50px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+
+        .content {
+            padding: 20px;
+            background-color: #cdcdcd;
+            border-radius: 5px;
+            color: #333;
+        }
+
+
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<table class="container">
+    <tr>
+        <td class="header" colspan="2">
+            <img src="/static/images/logo.png" alt="Project Logo" class="logo">
+
+            <h2>Task Assignment Notification</h2>
+        </td>
+    </tr>
+    <tr>
+        <td class="content" colspan="2">
+            <p>Dear [Recipient],</p>
+            <p>You have been assigned the following task:</p>
+            <table>
+                <tr>
+                    <td><strong>Task Title:</strong></td>
+                    <td>[Task Title]</td>
+                </tr>
+                <tr>
+                    <td><strong>Project Title:</strong></td>
+                    <td>[Project Title]</td>
+                </tr>
+            </table>
+            <p>Please review the task details and proceed accordingly.</p>
+            <a href="[Task Link]" class="button">Go to Task</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="footer" colspan="2">
+            <p>This is an automated notification. Please do not reply.</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

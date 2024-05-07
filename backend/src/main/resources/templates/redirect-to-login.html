@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect to React Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff;
+        }
+        .content-wrapper {
+
+            width: 80%;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background-color: #339AF0;
+            border-radius: 10px;
+        }
+        .logo-div{
+
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: flex-start;
+            align-self: flex-start;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+        .logo-div img{}
+
+        .content{
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .content h1 {
+            font-size: 2em;
+            color: #fff;
+            margin: 0px;
+
+        }
+        .content p {
+            font-size: 1em;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .content img {
+            max-width: 40%;
+            height: auto;
+            margin: 20px;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="content-wrapper">
+                <div class="logo-div">
+                    <img src="../static/images/logo.png" th:src="|data:image/png;base64,${logo}|" alt="logo"/>
+                </div>
+
+                <div class="content">
+                    <h1 >Hello Welcome to PMS</h1>
+                    <p th:text="${pMsg}"> Click the button below to login.</p>
+                    <img src="/static/images/login-image2.png" th:src="|data:image/png;base64,${projectLogo}|"alt="image">
+                    <button onclick="redirectToLoginPage()">Go to Login Page</button>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+
+            function redirectToLoginPage() {
+
+                window.location.href = 'http://localhost:5173/';
+            }
+        </script>
+        </body>
+</html>
+<!DOCTYPE html>
+
