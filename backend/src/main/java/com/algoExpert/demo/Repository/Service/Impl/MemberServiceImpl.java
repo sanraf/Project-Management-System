@@ -83,12 +83,10 @@ public class MemberServiceImpl implements MemberService {
             userProject.setMemberList(members);
             projectRepository.save(userProject);
 
-            StringBuilder link = new StringBuilder(projectUrl);
-
-                String subject = "PMS Project Invitation";
+            String subject = "PMS Project Invitation";
                 String projectHtml = emailHtmlLayout.inviteToProjectHtml(user.getFullName()
                         , userProject.getTitle()
-                        ,link.toString()
+                        , String.valueOf(projectUrl)
                         ,userProject.getUser().getFullName());
                 //todo change TEMP_USER_EMAIL to user.getEmail()
                 appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
@@ -129,29 +127,5 @@ public class MemberServiceImpl implements MemberService {
             return null; // Or throw an exception, depending on your use case
         }
     }
-
-
-
-    public User someMethod() {
-        // Get the authentication object from the security context
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication.isAuthenticated()) {
-            // If using UsernamePasswordAuthenticationToken, cast it
-            UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) authentication;
-
-            // Now you can retrieve the credentials (password) or principal (username)
-            Object credentials = authenticationToken.getCredentials();
-            Object principal = authenticationToken.getPrincipal();
-
-            System.err.println(credentials);
-            System.err.println(principal);
-
-        }
-        return (User) authentication.getPrincipal();
-    }
-
-
-
 
 }
