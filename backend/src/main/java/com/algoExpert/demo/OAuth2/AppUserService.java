@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 @Service
 @Data
@@ -32,8 +30,6 @@ public class AppUserService implements UserService  {
 
     @Autowired
     private UserRepository userEntityRepository;
-    @Autowired
-    private Executor executor; // for running another thread
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -108,9 +104,9 @@ public class AppUserService implements UserService  {
         };
     }
 
-    //    method to run new thread to save oauth2 users
+    //    method to save oauth2 users
     void saveOauth2User(AppUser appUser) {
-        CompletableFuture.runAsync(() -> createUser(appUser), executor);
+        createUser(appUser);
     }
 
 //    get login provider from OAuth2 login
@@ -124,28 +120,8 @@ public class AppUserService implements UserService  {
     public void createUser(AppUser user){
 //        create user if not exist
         User userEntity = saveUserIfNotExists(user);
-
-//        create usr authorities
-
-//        List<AuthorityEntity> authorities = user
-//                .authorities
-//                .stream()
-//                .map(a -> saveAuthorityIfNotExists(a.getAuthority(), user.getProvider()))
-//                .toList();
-////        connect authority to user by merging them together
-//        userEntity.mergeAuthorities(authorities);
-//      save user
         userEntityRepository.save(userEntity);
     }
-
-//    private AuthorityEntity saveAuthorityIfNotExists(String authority, LoginProvider provider) {
-//        return authorityEntityRepository
-//                .findByName(authority)
-//                .orElseGet(() -> authorityEntityRepository
-//                        .save(
-//                                new AuthorityEntity(authority, provider)
-//                        ));
-//    }
 
     //    checks if user exists the save in db if not
     private User saveUserIfNotExists(AppUser user) {
@@ -159,6 +135,7 @@ public class AppUserService implements UserService  {
                             .image_url(user.getImage_url())
                             .provider(user.getProvider())
                             .roles(Collections.singletonList(Role.USER))
+                            .enabled(true)
                             .build();
                     return userEntityRepository.save(newUser);
                 });
@@ -203,7 +180,6 @@ public class AppUserService implements UserService  {
         userEntityRepository
                 .findByUsername(currentUser.getUsername())
                 .ifPresent(ue -> ue.setPassword(PasswordUtil.encodePassword(newPassword)));
-//            .ifPresent(ue -> ue.setPassword(PasswordUtil.encodePassword(newPassword)));
     }
 
     @Override
