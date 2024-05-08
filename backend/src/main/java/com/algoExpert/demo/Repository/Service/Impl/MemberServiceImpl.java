@@ -6,6 +6,7 @@ import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.Entity.UserNotification;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
@@ -22,7 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +94,21 @@ public class MemberServiceImpl implements MemberService {
                 //todo change TEMP_USER_EMAIL to user.getEmail()
                 appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
 
-                log.info("You have been invited to the project {} :",projectUrl);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+            String projectOwner = userProject.getUser().getFullName();
+            String projectName = userProject.getTitle();
+
+            UserNotification userNotificationCreated = UserNotification.builder()
+                    .notifMsg(projectOwner +" added you to project :" + projectName)
+                    .notifTime(simpleDateFormat.format(new Date()))
+                    .fullName(user.getFullName()).build();
+
+            List<UserNotification> userNotificationList =  user.getUserNotificationList();
+            userNotificationList.add(userNotificationCreated);
+            user.setUserNotificationList(userNotificationList);
+            userRepository.save(user);
+
+            log.info("You have been invited to the project {} :",projectUrl);
 
             return memberRepository.save(newMember);
         }

@@ -21,15 +21,15 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     private UserNotificationRepository notificationRepository;
     @Override
     public void createNotification(User user, String notifMsg,int taskId) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-
-        UserNotification userNotification = UserNotification.builder()
-                .notifMsg(notifMsg)
-                .notifTime(simpleDateFormat.format(new Date()))
-                .fullName(user.getFullName())
-                .taskId(taskId)
-                .user(user).build();
-        notificationRepository.save(userNotification);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+//
+//        UserNotification userNotification = UserNotification.builder()
+//                .notifMsg(notifMsg)
+//                .notifTime(simpleDateFormat.format(new Date()))
+//                .fullName(user.getFullName())
+//                .taskId(taskId)
+//                .user(user).build();
+//        notificationRepository.save(userNotification);
     }
 //
 

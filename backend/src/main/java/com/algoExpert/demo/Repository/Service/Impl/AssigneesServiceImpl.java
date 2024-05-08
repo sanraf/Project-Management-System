@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
@@ -64,6 +66,11 @@ public class AssigneesServiceImpl implements AssigneesService {
                 .orElseThrow(()->new InvalidArgument(String.format(MEMBER_NOT_FOUND,member_id)))
                 .getUsername();
 
+        int use_id = memberRepository.findById(member_id)
+                .orElseThrow(()->new InvalidArgument(String.format(MEMBER_NOT_FOUND,member_id)))
+                .getUser_id();
+        User assignedUser = userRepository.getReferenceById(use_id);
+
         Assignee assignee = new Assignee(0, member_id, task_id, email);
 
         List<Assignee> assigneeList= storedTask.getAssignees();
@@ -78,7 +85,21 @@ public class AssigneesServiceImpl implements AssigneesService {
         assigneeList.add(assignee);
         storedTask.setAssignees(assigneeList);
         Task saved = taskRepository.save(storedTask);
-        sendInvite(storedTask,loggedUser,storedTask.getProjectName(),email);
+        sendInvite(storedTask,assignedUser,storedTask.getProjectName(),email);
+
+        //todo build notification
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+
+        UserNotification userNotificationCreated = UserNotification.builder()
+                .notifMsg( "you have been assigned a task on:  project")
+                .notifTime(simpleDateFormat.format(new Date()))
+                .fullName(assignedUser.getFullName()).build();
+
+        List<UserNotification> userNotificationList =  assignedUser.getUserNotificationList();
+        userNotificationList.add(userNotificationCreated);
+        assignedUser.setUserNotificationList(userNotificationList);
+        userRepository.save(assignedUser);
         return saved ;
     }
 
@@ -106,6 +127,7 @@ public class AssigneesServiceImpl implements AssigneesService {
 
         String assignTaskHtml = emailHtmlLayout.assignTaskHtml(user.getFullName(), task.getTitle(), projectName, link,deadline);
         appEmailBuilder.sendEmailInvite(email,assignTaskHtml,subject);
+
         log.info(user.getFullName()+" {} :",link);
 
     }
