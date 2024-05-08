@@ -61,7 +61,7 @@ public class Config {
                 .authorizeHttpRequests(request -> {
                             try {
                                 request
-                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**").permitAll()
+                                        .requestMatchers("/auth/**","/confirm/**","/recover/**","/accessDenied","/static/images/**","/resources/templates/**").permitAll()
                                         .requestMatchers("/project/**").hasAnyRole(USER.name(), MEMBER.name())
                                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
@@ -87,11 +87,11 @@ public class Config {
                                         .requestMatchers(GET, "/comment/**").hasAnyAuthority(OWNER_READ.getPermission(),MEMBER_READ.getPermission())
                                         .requestMatchers(POST, "/comment/**").hasAnyAuthority(OWNER_CREATE.getPermission(),MEMBER_UPDATE.getPermission())
                                         .requestMatchers(DELETE,"/comment/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
-//                                        .requestMatchers("/assignee/**").hasAnyRole(OWNER.name(), MEMBER.name())
-//                                        .requestMatchers(PUT,"/assignee/**").hasAnyAuthority(OWNER_UPDATE.getPermission(),MEMBER_UPDATE.getPermission())
-//                                        .requestMatchers(GET, "/assignee/**").hasAnyAuthority(OWNER_READ.getPermission(),MEMBER_READ.getPermission())
-//                                        .requestMatchers(POST, "/assignee/**").hasAnyAuthority(OWNER_CREATE.getPermission(),MEMBER_UPDATE.getPermission())
-//                                        .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
+                                        .requestMatchers("/assignee/**").hasAnyRole(OWNER.name(), MEMBER.name())
+                                        .requestMatchers(PUT,"/assignee/**").hasAnyAuthority(OWNER_UPDATE.getPermission(),MEMBER_UPDATE.getPermission())
+                                        .requestMatchers(GET, "/assignee/**").hasAnyAuthority(OWNER_READ.getPermission(),MEMBER_READ.getPermission())
+                                        .requestMatchers(POST, "/assignee/**").hasAnyAuthority(OWNER_CREATE.getPermission(),MEMBER_UPDATE.getPermission())
+                                        .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
                                         .requestMatchers("/admin/**").hasAnyRole(USER.name()).anyRequest().authenticated()
                                         .and()
                                         .exceptionHandling(c->c.accessDeniedHandler(accessDeniedHandler()));
