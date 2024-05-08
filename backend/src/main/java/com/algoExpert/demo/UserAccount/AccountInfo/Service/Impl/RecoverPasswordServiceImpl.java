@@ -1,5 +1,6 @@
 package com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl;
 
+import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.Records.PasswordRequest;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -28,18 +29,35 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    static final Long EXPIRING_TIME = 2L;
+    @Autowired
+    private AppEmailBuilder appEmailBuilder;
+    static final Long EXPIRING_TIME = 1L;
     @Value("${confirm.password.url}")
     String confirmLink;
 
 
+    /**
+     * Confirming the new password
+     * <p>
+     * this method receives a token as parameter and validated if the token is still valid, if expired delete the existing
+     * token and create a new token then send email to confirm the new password
+     * @param token
+     * @return
+     * @throws InvalidArgument
+     */
     @Override
     public String confirmPassword(String token) throws InvalidArgument {
-        PasswordReset passwordReset = findPasswordByToken(token);
+        PasswordReset passwordReset = resetRepository.findByPasswordToken(token)
+                .orElse(null);
+
+        if (passwordReset == null) {
+            return "No Longer Applicable. Please request a new one to continue";
+        }
+
 
         if (isTokenExpired(passwordReset.getExpiresAt())){
             deleteResetPassword(passwordReset);
-            return "The password reset link has expired. Please request a new one to continue";
+            return "The password reset link has expired. Please click the button below to request a new one to continue";
         }
 
         User user = passwordReset.getUser();
@@ -49,7 +67,7 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
         deleteResetPassword(passwordReset);
         String link = "http://localhost:8080/login";
         log.info("Password reset was successful: {}", login(link));
-        return "Password reset was successful.: "+login(link);
+        return "Password Reset Was Successful ";
     }
 
     @Override
@@ -60,6 +78,11 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
     @Override
     public PasswordReset createPasswordReset(PasswordRequest passwordRequest) throws InvalidArgument {
         User user = userRepository.findByEmail(passwordRequest.userName()).orElseThrow(()-> new InvalidArgument(String.format(USERNAME_NOT_FOUND,passwordRequest.userName())));
+
+        PasswordReset passwordByUserId = findPasswordByUserId(user.getUser_id());
+        if(passwordByUserId !=null){
+            deleteResetPassword(passwordByUserId);
+        }
 
         if (!passwordRequest.password().trim().equals(passwordRequest.confirmPassword().trim())){
             throw new InvalidArgument(PASSWORD_MISMATCH);
@@ -73,6 +96,8 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
                 .user(user).build();
         saveToken(passwordReset);
         String link = confirmLink + passwordReset.getPasswordToken();
+        appEmailBuilder.sendEmailResetPassword(TEMP_USER_EMAIL,login(link));
+
         log.info("Click the link to reset the password : {}", login(link));
         return passwordReset;
     }
@@ -89,12 +114,12 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
 
     @Override
     public PasswordReset findPasswordByUserId(int userId) {
-        return null;
+        return resetRepository.findPasswordByUserId(userId);
     }
 
     @Override
     public PasswordReset findPasswordByToken(String token) throws InvalidArgument {
-        return resetRepository.findByPasswordToken(token).orElseThrow(()->new InvalidArgument(String.format(TOKEN_NOT_FOUND,token)));
+        return resetRepository.findByPasswordToken(token).get();
 
     }
 
