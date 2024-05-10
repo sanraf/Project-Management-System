@@ -8,12 +8,9 @@ function Assign(props) {
   const assignTask = async (memebrId) => {
     if (jwtAuth) {
      try {
-        const response = await axios.post(`http://localhost:8080/assignee/saveAssignee/${memebrId}/
-        ${props.assignModel.assigneeId}`, {}, {
-            headers: {
-                Authorization: `Bearer ${jwtAuth}`, // Assuming token is stored in a variable
-                'Content-Type': 'application/json'
-            }
+        const response = await axios.get(`http://localhost:8080/assignee/saveAssignee/${memebrId}/
+        ${props.assignModel.assigneeId}`, {
+           withCredentials:true
           });
           if(response.data) {
               window.location.reload()
