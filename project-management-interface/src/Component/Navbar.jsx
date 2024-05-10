@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import imageOne from "../assets/topnav-image1.jpg";
+import Cookies from 'js-cookie';
 
 
 function Navbar() {
@@ -56,6 +57,23 @@ function Navbar() {
       });
   };
 
+  const logOut = async () => {
+    try {
+      const response = await axios.delete("http://localhost:8080/user/logoutUser", {
+        withCredentials:true
+      })
+      if (response == "user logged out") {
+        Cookies.remove('jwtToken')
+        Cookies.remove("refreshToken")
+        window.location.href = "/"
+      } else {
+        console.log(response.data)
+      }
+    } catch(error) {
+      console.error("user could'nt be logged out",error)
+    }
+  }
+
   return (
     <>
       <div className="navbar">
@@ -73,29 +91,25 @@ function Navbar() {
                 <span>{siteUser ? siteUser.fullname : ""}</span>
                 <span>{siteUser ? siteUser.email : ""}</span>
               </div>
-              <img src={imageOne} onClick={() => toogleDropDownBoxes("inviteBox", 380, 0, "")} alt="" />
-              <div style={{ height: dropDownBoxesHeight.inviteBox }} className="invite_members">
+              <img src={imageOne} onClick={() => toogleDropDownBoxes("inviteBox", 400, 0, "")} alt="" />
+              <div style={{ height: dropDownBoxesHeight.inviteBox }} className="profile_popup invite_members">
                 <div className="member_invite_wrapper">
                   <h5 style={{ fontWeight: "bold" }}>ACCOUNT</h5>
                   <div style={{ position: "relative" }}>
                     <div className="project_create_table_invite">
-                      <div className="project_members">
-                        <span style={{ color: "#339AF0", fontSize: "13px", textTransform: "uppercase" }}>{name}</span>
-                      </div>
+                      <div className="task_assign_letter">{siteUser ? siteUser.email.charAt(0) : ""}</div>
                       <span>{siteUser ? siteUser.fullname : ""}</span>
                       <span>{siteUser ? siteUser.email : ""}</span>
                     </div>
                   </div>
-                  <a href='/' style={{ textDecoration: "none", fontSize: "13px", color: "#333", display: "block", marginTop: "1rem" }}>Switch account</a>
-                  <div style={{ border: "0.1px solid #ddd", marginTop: "7px" }}></div>
+                  <a href='/switch' id="account_switch">Switch account</a>
                   <h5 style={{ fontWeight: "bold" }}>ProjectGuru</h5>
-                  <div className="sidebar-links">
-                    <a href='/profilepage' >Profile and Visibility</a>
-                    <a>Activity</a>
-                    <a href='#' onClick={handleDeactivateAccount} >Deactivate account</a>
+                  <div className="sidebar-links profile_links">
+                    <a href='/profilepage' >Password reset</a>
+                    <a href='/disable'>Deactivate account</a>
                     <a>Settings</a>
-                    <div style={{ border: "0.1px solid #ddd", marginTop: "7px" }}></div>
-                    <a href='/'>Logout</a>
+                    <a href="">Help</a>
+                    <a id="logout" href='/'>Logout</a>
                   </div>
                 </div>
               </div>

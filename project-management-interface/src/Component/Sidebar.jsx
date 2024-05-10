@@ -14,7 +14,7 @@ function Sidebar() {
           withCredentials:true
         });
         if(response.data) {
-          console.log(response.data)
+           setProject(response.data)
         }
         } catch (error) {
           console.error('Error fetching data:', error);

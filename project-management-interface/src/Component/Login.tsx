@@ -79,7 +79,7 @@ function Login() {
                                 <h5 >Please Login</h5>
                                 <p>Thank you for choosing us, if registered please login</p>
                             </div>
-                          <span  onClick={()=>setShowRegister("block")}>Register on this page</span>
+                          <span id='registerText'  onClick={()=>setShowRegister("block")}>Register on this page</span>
                             <form action="" onSubmit={handleSubmit(login)} >
                               <div style={{display:showRegister}}>
                                 <h6>Full name</h6>
@@ -88,7 +88,8 @@ function Login() {
                               <h6>Email</h6>
                                 <input {...register("email",{required:"please enter email"})} type="text" id='email' name="email"  placeholder='email' />
                                <h6>Password</h6>
-                              <input  {...register("password",{required:"please enter password"})} id='password' type="text" name="password" placeholder='password' />
+                                <input  {...register("password", { required: "please enter password" })} id='password' type="text" name="password" placeholder='password' />
+                                   <p style={{display:showRegister == "none" ?"block" :"none"}}  id='forgot_password'>Forgot Password ?</p>
                                <div style={{display:showRegister}}>
                                     <h6>Re-enter password</h6>
                                      <p style={{display:passwordMessage}} id="wrong_password">Attention: Passwords do not match, please ensure they match to proceed</p>
@@ -99,11 +100,20 @@ function Login() {
                                     <button  type='submit'>Login</button>
                                 }
                             </form>
+                         
                             <h6 style={{display:emailMessage}} id='confirm_message'>Thank you for registering please confirm via email before logging in </h6>
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
-                                <i className="lni lni-github-original"></i>
-                                <i className="lni lni-google"></i>
+                                <div className='third_party_links'>
+                                    <a href=''>
+                                        <i className="lni lni-github-original"></i>
+                                        <span>Github</span>
+                                    </a>
+                                    <a href=''>
+                                        <i className="lni lni-google"></i>
+                                        <span>Google</span>
+                                    </a>
+                              </div>
                             </div>
                       </div>
                   </div>
