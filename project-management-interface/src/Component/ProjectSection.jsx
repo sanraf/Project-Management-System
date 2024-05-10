@@ -8,9 +8,9 @@ import Assign from './Assign';
 function ProjectSection() {
     const [editedTask, seteditedTask] = useState({});
     const [hiddenColumns, sethiddenColumns] = useState({priority:"none"});
-    const [projectMembers, setProjectMembers] = useState([{}]);
+    const [projectMembers, setProjectMembers] = useState([]);
     const [users, setUsers] = useState(["Alex Smith"]);
-    const [memberFound, setmemberFound] = useState([]);
+    const [memberFound, setmemberFound] = useState([{}]);
     const [loginMemberId, setloginMemberId] = useState();
     const [loggedInUser, setloggedInUser] = useState();
     const [taskComments, settaskComments] = useState([{ comment_id: 0, username: "", date_created: "", commentBody: "" }]);
@@ -58,8 +58,6 @@ function ProjectSection() {
    
     useEffect(() => {
         const projectId = sessionStorage.getItem("projectId");
-        const foundUser = (JSON.parse(sessionStorage.getItem("systemUser")));
-        setloggedInUser(foundUser);
         
         const fetchProject = async () => {
             try {
@@ -67,17 +65,14 @@ function ProjectSection() {
                     withCredentials:true
                 });
                 if(response.data) {
-                    setoneProject(response.data);
+                    setoneProject(response.data)
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         
         };
-        if(projectId){
-            fetchProject();
-        }
-       
+        fetchProject();
         return () => {
         }
     }, []);
@@ -90,39 +85,31 @@ function ProjectSection() {
         [indexType !== "" ? indexType : '']: rowIndex
     }));} 
     const createTable = async (projectNo) => {
-     console.log(loggedInUser.token)
-        if (loggedInUser) {
-            try {
-                const response = await axios.post(`http://localhost:8080/table/createTable/${projectNo}`,{}, {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data.project_id) {
-                    window.location.reload()
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.post(`http://localhost:8080/table/createTable/${projectNo}`,{}, {
+                withCredentials:true
+            });
+            if(response.data.project_id) {
+                window.location.reload()
             }
+            } catch (error) {
+                console.error('Error fetching data:', error);
         }
     } 
-    const sendEditedRow = async (task, updatedValue,columnType) => {
-        let taskToSend = {}
+    const sendEditedRow = async (task, updatedValue, columnType) => {
         
-        if (Object.keys(editedTask).length !== 0) {
-            taskToSend = { ...editedTask }
-        }
-        if (columnType == 'status') {
-            taskToSend = {...task, status: updatedValue}
-        }
-        if (loggedInUser) {
+        if (task[columnType] !== updatedValue) {
+
+            if(columnType !== "status") {
+            task[columnType] = updatedValue 
+            }
+            if (columnType == 'status') {
+            task.status = updatedValue
+            }
+
             try {
-                const response = await axios.put(`http://localhost:8080/task/editTask`,JSON.stringify(taskToSend), {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
+                const response = await axios.put(`http://localhost:8080/task/editTask`,task, {
+                    withCredentials: true
                 });
                 if(response.data) {
                     window.location.reload()
@@ -134,88 +121,63 @@ function ProjectSection() {
            
     }
     const Adding_Task = async (table_id) => {
-        if(loggedInUser) {
-             try {
-                const response = await axios.post(`http://localhost:8080/task/createTask/${table_id}`,{}, {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data) {
-                    window.location.reload()
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.post(`http://localhost:8080/task/createTask/${table_id}`,{}, {
+                withCredentials:true
+            });
+            if(response.data) {
+                window.location.reload()
             }
+            } catch (error) {
+                console.error('Error fetching data:', error);
         }
     }
     async function deleteTask(task_id,table_id) {
-        if (loggedInUser) {
-            try {
-                const response = await axios.delete(`http://localhost:8080/task/deleteTaskById/${task_id}/${table_id}`,{
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data) {
-                    window.location.reload()
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.delete(`http://localhost:8080/task/deleteTaskById/${task_id}/${table_id}`,{
+                withCredentials:true
+            });
+            if(response.data) {
+                window.location.reload()
             }
+            } catch (error) {
+                console.error('Error fetching data:', error);
         }
+
     }
     const deleteTable = async (project_id, table_id) => {
-        console.log(loggedInUser.token)
-        if (loggedInUser) {
-             try {
-                const response = await axios.delete(`http://localhost:8080/table/deleteTable/${project_id}/${table_id}`,{
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data) {
-                    window.location.reload()
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.delete(`http://localhost:8080/table/deleteTable/${project_id}/${table_id}`,{
+                withCredentials:true
+            });
+            if(response.data) {
+                window.location.reload()
             }
-         }
-        
+            } catch (error) {
+                console.error('Error fetching data:', error);
+        }
     }
     const duplicateTask = async(table_id,task)=> {
-        if (loggedInUser) {
-            try {
-                const response = await axios.post(`http://localhost:8080/task/duplicateTask/${table_id}`,JSON.stringify(task), {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if(response.data) {
-                    window.location.reload()
-                }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+        try {
+            const response = await axios.post(`http://localhost:8080/task/duplicateTask/${table_id}`,task, {
+                withCredentials:true
+            });
+            if(response.data) {
+                window.location.reload()
             }
+            } catch (error) {
+                console.error('Error fetching data:', error);
         }
     } 
     const updateTableName = async (newName, tableObg) => {
         if (tableObg.table_name != newName) {  
             tableObg.table_name = newName;
             try {
-                const response = await axios.put(`http://localhost:8080/table/updateTable`,JSON.stringify(tableObg), {
-                    headers: {
-                        Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                        'Content-Type': 'application/json'
-                    }
+                const response = await axios.put(`http://localhost:8080/table/updateTable`,tableObg, {
+                   withCredentials:true
                 });
                 if (response.data) {
                     console.log(response.data)
-                   
                 }
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -236,10 +198,7 @@ function ProjectSection() {
         if (username.length == 4 || loggedInUser && username.length == 8 ) {
             try {
                 const response = await axios.post(`http://localhost:8080/member/searchMembers?fullnameLetters=${username}`,{},{
-                headers: {
-                    Authorization: `Bearer ${loggedInUser.token}`, // Assuming token is stored in a variable
-                    'Content-Type': 'application/json'
-                }
+                withCredentials:true
             });
             if(response.data) {
                 setmemberFound(response.data);
@@ -320,8 +279,8 @@ function ProjectSection() {
                                                 ):""}
                                                 <h6>List of project members</h6>
                                                 {
-                                                    projectMembers.map((names,index)=>
-                                                    <p key={index}>{names}</p>
+                                                    oneProject.memberList.map((names,index)=>
+                                                    <p key={index}>{names.username}</p>
                                                     )
                                                 }
                                         </div>
@@ -387,12 +346,10 @@ function ProjectSection() {
                                             </div>
                                             <div className='field_name text_task table-task task-title'>
                                                 <i onClick={()=>toogleDropDownBoxes('editRow', 90, task.task_id,"rowId" )} className="more-task lni lni-more"></i> 
-                                                    <input onBlur={(e)=>sendEditedRow(task, e.target.value,'')}  onChange={(e) => rowUpdate('title', e.target.
-                                                        value, task,table.table_id)} defaultValue={task.title} />
+                                                    <input onBlur={(e)=>sendEditedRow(task, e.target.value,'title')}  defaultValue={task.title} />
                                             </div>
                                             <div className='field_name table-task text_task row_description'>
-                                                <input defaultValue={task.description} onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e) => rowUpdate('description', e.target.
-                                                    value, task, table.table_id)} />
+                                                <input defaultValue={task.description} onBlur={(e)=>sendEditedRow(task, e.target.value,'description')}  />
                                                     <i onClick={()=>loadComments(task.comments, task.task_id)} className="lni lni-comments-alt-2"></i>
                                             </div>
                                             <div className='field_name table-task text_task'>{task.owner}</div>
@@ -403,10 +360,8 @@ function ProjectSection() {
                                                         ) : <span>invite</span>}    
                                                     <i className="lni lni-circle-plus" onClick={()=>openAssignModel(task.assignees,task.task_id)}></i>
                                             </div>
-                                                <div className='field_name table-task'><input onBlur={(e) => sendEditedRow(task, e.target.value, '')}
-                                                    onChange={(e) => rowUpdate('start_date', e.target.
-                                                        value, task, table.table_id)}  defaultValue={task.start_date} type="date" /></div>
-                                            <div  className='field_name table-task'><input defaultValue={task.end_date} type="date" onBlur={(e)=>sendEditedRow(task, e.target.value,'')} onChange={(e)=>rowUpdate('end_date',e.target.value,task,table.table_id)} /></div>
+                                            <div className='field_name table-task'><input defaultValue={task.start_date} onBlur={(e) => sendEditedRow(task, e.target.value, 'start_date')} type="date" /></div>
+                                            <div  className='field_name table-task'><input defaultValue={task.end_date} type="date" onBlur={(e)=>sendEditedRow(task, e.target.value,'end_date')} /></div>
                                             <div onClick={()=>toogleDropDownBoxes("statusBox", 160, task.task_id,'statusIndex')} id={task.status} className='status field_name table-task'>
                                                 {task.status}
                                                 <div style={{height:dropDownBoxesHeight.statusIndex == task.task_id ? dropDownBoxesHeight.statusBox : 0}} className="status_dropdown">

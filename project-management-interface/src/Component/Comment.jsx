@@ -6,22 +6,16 @@ function Comment(props) {
   
   const comment = async (e) => {
     e.preventDefault()
-   
-    const userSytem = (JSON.parse(sessionStorage.getItem("systemUser")));
-    if(createComment && userSytem) {
       try {
-        const response = await axios.post(`http://localhost:8080/comment/create/${props.dropDownValue.commentTaskId}`,JSON.stringify(createComment), {
-            headers: {
-                Authorization: `Bearer ${userSytem.token}`, // Assuming token is stored in a variable
-                'Content-Type': 'application/json'
-            }
+        const response = await axios.post(`http://localhost:8080/comment/create/${props.dropDownValue.commentTaskId}`,createComment, {
+            withCredentials:true
         });
         if(response.data) {
           window.location.reload()
         }
         } catch (error) {
             console.error('Error fetching data:', error);
-      }
+      
     }
   }
   

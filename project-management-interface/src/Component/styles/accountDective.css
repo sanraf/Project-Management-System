@@ -1,0 +1,108 @@
+.disable_section{
+    font-family: "Roboto", sans-serif;
+    padding-top: 2rem;
+}
+.user_info_disable{
+    width: 23%;
+    margin-right: 3rem;
+}
+.user_info_disable h6{
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 1rem;
+
+}
+.user_info {
+    border: 1px solid #eee;
+    text-align: center;
+    padding: 2rem 0;
+    border-radius: 10px;
+}
+.user_info span{
+    height: 60px;
+    margin: 0 auto;
+    width: 60px;
+    font-size: 15px;
+    text-align: center;
+    line-height: 60px;
+}
+.user_info .user_info_text p:first-child{
+    font-size: 14px;
+    margin-bottom: 0;
+}
+.user_info .user_info_text p:last-child{
+    font-size: 12px;
+    color: var(--blue-color);
+    margin-top: 5px;
+}
+.user_info_text{margin-bottom: 18px;}
+.user_system_stats{padding: 0 1rem;}
+.user_system_stats:first-child{
+    border-right: 1px solid #eee;
+}
+.user_system_stats p:first-child{
+    font-size: 12px;
+    margin-bottom: 0;
+}
+.user_system_stats p:last-child{
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+.disable_user_stats{
+    border-top: 1px solid #eee;
+    justify-content: center;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+.disable_section h5{
+    font-size: 20px;
+    font-weight: 400;
+    color: #222;
+}
+.disable_details{
+    width: 65%;
+}
+.disable_details h4{
+    font-size: 20px;
+    color: #666;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+.disable_details p{
+    font-size: 13px;
+    color: #666;
+}
+.disable_details  h5{
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    color: var(--blue-color);
+    margin-top: 3rem;
+}
+.disable_notices p{
+    margin-left: 20px;
+    line-height: 20px;
+    position: relative;
+}
+.disable_notices p::before{
+    content: "";
+    padding: 4px;
+    background-color: var(--light-background-color);
+    left: -20px;
+    top: 5px;
+    border-radius: 100%;
+    position: absolute;
+    border: 1px solid var(--blue-color);
+}
+.disable_details button{
+     border-radius: var(--round-border-radius);
+    border: none;
+    background-color: var(--blue-color);
+    padding: 10px 1.5rem;
+    color: #fff;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
