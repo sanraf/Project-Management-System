@@ -1,11 +1,14 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.Admin.AdminEnums.FeatureType;
+import com.algoExpert.demo.Admin.Repository.Service.FeatureService;
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.*;
 import com.algoExpert.demo.Repository.Service.AssigneesService;
+import com.algoExpert.demo.Repository.Service.UserNotificationService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
@@ -33,17 +34,18 @@ public class AssigneesServiceImpl implements AssigneesService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private ProjectUserImpl projectUser;
-    @Autowired
-    private ProjectRepository projectRepository;
-    @Autowired
     private  UserRepository userRepository;
     @Autowired
     private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
+    @Autowired
+    private UserNotificationService notificationService;
+    @Autowired
+    private FeatureService featureService;
     @Value("${task.invite.url}")
     String taskInviteLink;
+
 
     //	 Assign a task to member
     @Transactional
@@ -87,19 +89,13 @@ public class AssigneesServiceImpl implements AssigneesService {
         Task saved = taskRepository.save(storedTask);
         sendInvite(storedTask,assignedUser,storedTask.getProjectName(),email);
 
-        //todo build notification
+        //************************** create and save notification ******************************//
+        String notifMsg = "You have been assigned "+storedTask.getTitle()+ " task on "+ storedTask.getProjectName() +" project";
+        notificationService.createNotification(assignedUser,notifMsg);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+        //************************** call feature service ******************************//
+        featureService.updateFeatureCount(FeatureType.ASSIGN_TASK);
 
-        UserNotification userNotificationCreated = UserNotification.builder()
-                .notifMsg( "you have been assigned a task on:  project")
-                .notifTime(simpleDateFormat.format(new Date()))
-                .fullName(assignedUser.getFullName()).build();
-
-        List<UserNotification> userNotificationList =  assignedUser.getUserNotificationList();
-        userNotificationList.add(userNotificationCreated);
-        assignedUser.setUserNotificationList(userNotificationList);
-        userRepository.save(assignedUser);
         return saved ;
     }
 
