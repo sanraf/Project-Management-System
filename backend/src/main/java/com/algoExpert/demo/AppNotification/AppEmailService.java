@@ -65,7 +65,7 @@ public class AppEmailService implements AppEmailBuilder {
             messageHelper.setReplyTo("no-reply@pmsteam.com");
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
-            messageHelper.setSubject("Your account has been create");
+            messageHelper.setSubject("Your account has been created");
             javaMailSender.send(mimeMessage);
         }catch (MailSendException e) {
             log.error("Failed to send email: {}", e.getMessage());
