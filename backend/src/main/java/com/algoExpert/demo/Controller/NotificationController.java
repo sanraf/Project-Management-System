@@ -26,11 +26,5 @@ public class NotificationController {
         return userNotificationService.findByLoginUser();
     }
 
-//    @PostMapping("/create")
-//    private UserNotification createNotification(){
-//        return userNotificationService.createNotification("user1@gmail.com","hello");
-//
-//    }
-
 
 }
