@@ -1,31 +1,24 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 
+import com.algoExpert.demo.Admin.AdminEnums.FeatureType;
+import com.algoExpert.demo.Admin.Repository.Service.FeatureService;
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.Member;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
-import com.algoExpert.demo.Entity.UserNotification;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.MemberService;
+import com.algoExpert.demo.Repository.Service.UserNotificationService;
 import com.algoExpert.demo.Repository.UserRepository;
-import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +38,11 @@ public class MemberServiceImpl implements MemberService {
     private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
+    @Autowired
+    private UserNotificationService notificationService;
+
+    @Autowired
+    private FeatureService featureService;
     @Value("${project.invite.homepage.url}")
     StringBuilder projectUrl;
        public static final String MEMBER = "MEMBER";
@@ -52,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     //    Invite member to project
-    @Transactional
+
     @Override
     public Member inviteMember(int project_id, int user_id) throws InvalidArgument {
         // check if user and project exist
@@ -94,22 +92,16 @@ public class MemberServiceImpl implements MemberService {
                 //todo change TEMP_USER_EMAIL to user.getEmail()
                 appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+            //************************** create and save notification ******************************//
             String projectOwner = userProject.getUser().getFullName();
             String projectName = userProject.getTitle();
 
-            UserNotification userNotificationCreated = UserNotification.builder()
-                    .notifMsg(projectOwner +" added you to project :" + projectName)
-                    .notifTime(simpleDateFormat.format(new Date()))
-                    .fullName(user.getFullName()).build();
-
-            List<UserNotification> userNotificationList =  user.getUserNotificationList();
-            userNotificationList.add(userNotificationCreated);
-            user.setUserNotificationList(userNotificationList);
-            userRepository.save(user);
+            String notifMsg = projectOwner + " added you to project " + projectName;
+            notificationService.createNotification(user,notifMsg);
 
             log.info("You have been invited to the project {} :",projectUrl);
-
+            //************************** call feature service ******************************//
+            featureService.updateFeatureCount(FeatureType.INVITE_MEMBER);
             return memberRepository.save(newMember);
         }
 
@@ -125,6 +117,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<User> searchMemberToInvite(String fullnameLetters) {
+
+        //************************** call feature service ******************************//
+        featureService.updateFeatureCount(FeatureType.SEARCH);
         return userRepository.findByFullName(fullnameLetters);
     }
 
