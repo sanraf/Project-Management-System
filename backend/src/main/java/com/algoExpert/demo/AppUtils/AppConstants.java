@@ -16,7 +16,9 @@ public class AppConstants {
     public final static String MEMBER_ROLE= "MEMBER";
     public final static String OWNER_ROLE= "OWNER";
     public static final String TOMORROW = "Tomorrow";
-    public final static String TEMP_USER_EMAIL= "santoschristopher199@gmail.com";
-
-
+    public final static String TEMP_USER_EMAIL= "temp";//santoschristopher199@gmail.com
+    public static final String STATUS = "DONE";
+    public static final String TODAY_MSG = "Task deadline today: ";
+    public static final String TOMORROW_MSG = "Task deadline Reminder tomorrow: ";
+    public static final String TODAY = "Today";
 }
