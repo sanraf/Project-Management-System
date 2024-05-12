@@ -16,6 +16,7 @@ public class ImageConvertor {
      *
      * @param imagePath The path to the image file relative to the 'static/images' directory.
      * @return A Base64-encoded string representing the image, or null if the conversion fails.
+     * @Author Santos Rafaelo
      */
     public String imageToBase64(String imagePath) {
         try {
