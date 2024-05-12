@@ -75,6 +75,22 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
         resetRepository.save(passwordReset);
     }
 
+    /**
+     * Creates a password reset request for the specified user based on the provided password request.
+     * <p>
+     * This method creates a new password reset request for the user identified by the username/email
+     * provided in the password request. It generates a unique token, associates it with the user, and
+     * sends an email containing a reset password link to the user's email address.
+     * </p>
+     *
+     * @param passwordRequest The password request containing the user's username/email, new password,
+     *                        and confirmation password.
+     * @return The created PasswordReset object representing the password reset request.
+     * @throws InvalidArgument If the provided username/email is not found in the user repository,
+     *                         if the new password and confirmation password do not match, or if there
+     *                         is an error while processing the password reset request.
+     * @Author Santos Rafaelo
+     */
     @Override
     public PasswordReset createPasswordReset(PasswordRequest passwordRequest) throws InvalidArgument {
         User user = userRepository.findByEmail(passwordRequest.userName()).orElseThrow(()-> new InvalidArgument(String.format(USERNAME_NOT_FOUND,passwordRequest.userName())));
@@ -95,6 +111,7 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
                 .expiresAt(LocalDateTime.now().plusMinutes(EXPIRING_TIME))
                 .user(user).build();
         saveToken(passwordReset);
+        //TODO change TEMP_USER_EMAIL to user.getUsername()
         String link = confirmLink + passwordReset.getPasswordToken();
         appEmailBuilder.sendEmailResetPassword(TEMP_USER_EMAIL,login(link));
 
