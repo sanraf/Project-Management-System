@@ -40,8 +40,7 @@ public class DeadlineTaskReminder {
     private UserNotificationService notificationService;
     @Value("${task.reminder.url}")
     String taskUrl;
-    public static final String STATUS = "DONE";
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+
 
 /**
  * Scheduled method to run reminders for tasks.
@@ -75,7 +74,8 @@ public class DeadlineTaskReminder {
  * @author Santos Rafaelo
  */
 
-//    @Scheduled(fixedRate = 20000)
+//    @Scheduled(cron = "0 0 5 * * ?")
+//    @PostConstruct  //use this for testing
     private void runReminder() throws InvalidArgument {
         todayDueDate();
         tomorrowDueDate();
@@ -92,14 +92,15 @@ public class DeadlineTaskReminder {
             System.err.println("ID "+task.getTask_id()+" from today's date");
             for (Assignee assignee:emails){
 
+                    //TODO change TEMP_USER_EMAIL to assignee.getUsername()
                     String body = emailHtmlLayout.taskDeadlineHtml(getUserFullName(assignee.getUsername()), task.getTitle(), task.getProjectName(), "Today", getTaskLink(task.getTask_id()));
-                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL,body,"Today");
+                    appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL,body,TODAY);
 
                     System.err.println(assignee.getUsername()+" Task Reminder: today is the due date for Task  "+task.getProjectName());
                     User user = userRepository.findByEmail(assignee.getUsername()).orElseThrow();
 
                     //save to database method
-                    notificationService.createNotification(user, "Task deadline today: " + task.getTitle());
+                    notificationService.createNotification(user, TODAY_MSG + task.getTitle());
                     System.err.println("ID "+task.getTask_id()+" TODAY SAVED");
 
 
@@ -118,14 +119,14 @@ public class DeadlineTaskReminder {
             List<Assignee> assignees = assigneesRepository.findByTaskId(task.getTask_id());
             System.err.println("ID "+task.getTask_id()+" from tomorrow's date");
             for (Assignee assignee:assignees){
-
+                    //TODO change TEMP_USER_EMAIL to assignee.getUsername()
                     String body = emailHtmlLayout.taskDeadlineHtml(getUserFullName(assignee.getUsername()), task.getTitle(), task.getProjectName(), "Tomorrow", getTaskLink(task.getTask_id()));
                     appEmailBuilder.sendTaskReminderEmail(TEMP_USER_EMAIL, body,TOMORROW);
 
                     System.err.println(assignee.getUsername()+" Task Reminder: Tomorrow is the due date for Task # "+task.getProjectName());
                     User user = userRepository.findByEmail(assignee.getUsername()).orElseThrow();
 
-                    notificationService.createNotification(user,"Task deadline Reminder tomorrow: "+task.getTitle());
+                    notificationService.createNotification(user,TOMORROW_MSG+task.getTitle());
                     System.err.println("ID "+task.getTask_id()+" TOMORROW SAVED");
                 }
 
