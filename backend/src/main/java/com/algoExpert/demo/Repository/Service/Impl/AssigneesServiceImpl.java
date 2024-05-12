@@ -108,9 +108,13 @@ public class AssigneesServiceImpl implements AssigneesService {
     }
 
     /**
-     * @param task
-     * @param user
-     * @param projectName
+     * Sends an invitation email to a user for a specific task.
+     *
+     * @param task The task for which the invitation is being sent.
+     * @param user The user to whom the invitation is being sent.
+     * @param projectName The name of the project to which the task belongs.
+     * @param email The email address of the recipient user.
+     * @Author Santos Rafaelo
      */
     private void  sendInvite(Task task, User user, String projectName,String email){
         String link = taskInviteLink +task.getTask_id();
