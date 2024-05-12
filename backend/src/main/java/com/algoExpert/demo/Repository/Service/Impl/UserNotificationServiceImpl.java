@@ -16,6 +16,19 @@ import java.util.List;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.USER_NOT_FOUND;
 
+/**
+ * Service class for managing user notifications.
+ * <p>
+ * This service provides methods to create, retrieve, and delete notifications for users.
+ * It interacts with the UserRepository, ProjectUserService, and UserNotificationRepository
+ * to perform database operations related to user notifications.
+ * </p>
+ *
+ * @Service Indicates that this class is a service component in the Spring framework,
+ *           allowing it to be automatically detected and registered as a bean during
+ *           application startup.
+ * @Author Santos Rafaelo
+ */
 @Service
 public class UserNotificationServiceImpl implements UserNotificationService {
     @Autowired
@@ -24,6 +37,13 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     private ProjectUserService projectUserService;
     @Autowired
     private UserNotificationRepository notificationRepository;
+
+    /**
+     * Creates a new notification for the specified user.
+     *
+     * @param user     The user for whom the notification is being created.
+     * @param notifMsg The message content of the notification.
+     */
     @Override
     public void createNotification(User user, String notifMsg) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
@@ -58,6 +78,13 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         notificationRepository.delete(notification);
     }
 
+    /**
+     * Checks if a notification with the specified user ID and task ID already exists.
+     *
+     * @param userId The ID of the user.
+     * @param taskId The ID of the task.
+     * @return {@code true} if a duplicate notification exists, {@code false} otherwise.
+     */
     @Override
     public boolean isDuplicate(Integer userId, Integer taskId) {
         return notificationRepository.countDuplicate(userId,taskId) > 0;
