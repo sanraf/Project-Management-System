@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import imageOne from "../assets/topnav-image1.jpg";
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
+import NotificationDropDown from './NotificationDropdown';
 
 
 function Navbar() {
@@ -73,7 +75,7 @@ function Navbar() {
       console.error("user could'nt be logged out",error)
     }
   }
-
+  const [openProfile, setOpenProfile] = useState(false);
   return (
     <>
       <div className="navbar">
@@ -83,8 +85,13 @@ function Navbar() {
           <div className="nav-right-bar">
             <div className="nav-icons">
               <i className="lni lni-information"></i>
-              <i className="lni lni-alarm"></i>
-              <i className="lni lni-cog"></i>
+              <i className="lni lni-alarm" onClick={()=> setOpenProfile((prev)=> !prev)}></i>
+                {
+                    openProfile && <NotificationDropDown />
+                }
+                    <Link to="/profileEditPage">
+                        <i className="lni lni-cog" ></i>
+                    </Link>
             </div>
             <div className="profile" >
               <div>
@@ -107,8 +114,8 @@ function Navbar() {
                   <div className="sidebar-links profile_links">
                     <a href='/profilepage' >Password reset</a>
                     <a href='/disable'>Deactivate account</a>
-                    <a>Settings</a>
-                    <a href="">Help</a>
+                    <a href='/profileEditPage'>Settings</a>
+                    <a href='/feedbackpage'>Help</a>
                     <a id="logout" href='/'>Logout</a>
                   </div>
                 </div>

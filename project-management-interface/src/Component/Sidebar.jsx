@@ -1,5 +1,6 @@
 
 import React,{useEffect,useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -26,6 +27,13 @@ function Sidebar() {
     sessionStorage.setItem("projectId",project_id);
     window.location.href = "project";
   }
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+   
+    navigate('/feedbackAdmin');
+  };
   return (
     <>
     <div className="sidebar">
@@ -44,7 +52,7 @@ function Sidebar() {
             <a href="users"><i className="lni lni-users"></i>Users</a>
             <a href=""><i className="lni lni-briefcase-alt"></i>Project stats</a>
             <a href=""><i className="lni lni-cogs"></i>System usage</a>
-            <a href=""><i className="lni lni-check-box"></i>Feedback</a>
+            <a href="" onClick={handleClick}><i className="lni lni-check-box"></i>Feedback</a>
           </div>
           <a href="/"><i id='info' className=" lni lni-information"></i> Guide </a>
           
