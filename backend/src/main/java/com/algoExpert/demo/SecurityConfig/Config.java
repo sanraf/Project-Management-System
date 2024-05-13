@@ -138,13 +138,6 @@ public class Config {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository(){
-//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-//        tokenRepository.setDataSource(dataSource);
-//        return tokenRepository;
-//    }
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();

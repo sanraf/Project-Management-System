@@ -65,7 +65,25 @@ public class AppEmailService implements AppEmailBuilder {
             messageHelper.setReplyTo("no-reply@pmsteam.com");
             messageHelper.setTo(to);
             messageHelper.setPriority(1);
-            messageHelper.setSubject("Your account has been create");
+            messageHelper.setSubject("Your account has been created");
+            javaMailSender.send(mimeMessage);
+        }catch (MailSendException e) {
+            log.error("Failed to send email: {}", e.getMessage());
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendEmailResetPassword(String to, String link) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true, StandardCharsets.UTF_8.name());
+            messageHelper.setText("Click the link below to reset your password\n "+link);
+            messageHelper.setReplyTo("no-reply@pmsteam.com");
+            messageHelper.setTo(to);
+            messageHelper.setPriority(1);
+            messageHelper.setSubject("Password Reset");
             javaMailSender.send(mimeMessage);
         }catch (MailSendException e) {
             log.error("Failed to send email: {}", e.getMessage());
