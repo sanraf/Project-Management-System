@@ -47,7 +47,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 import static com.algoExpert.demo.AppUtils.AppConstants.USERNAME_ALREADY_EXIST;
 
 @Service

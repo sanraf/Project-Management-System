@@ -1,6 +1,7 @@
 
 package com.algoExpert.demo.Entity;
 
+import com.algoExpert.demo.OAuth2.LoginProvider;
 import com.algoExpert.demo.role.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,20 +29,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
+//    private Long user_id;
 
     @NotBlank(message = "fullName required")
     private String fullName;
 
     @Column(unique = true)
-    @Email(message = "Invalid user email")
+//    @Email(message = "Invalid user email")
     private String email;
 
     @NotEmpty(message = "Password cannot be empty")
     private String password;
-
-    private boolean locked = false;
-
-    private boolean enabled = false;
 
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -50,6 +49,25 @@ public class User implements UserDetails {
     private List<UserNotification> userNotificationList;
 
     private LocalDate dateRegistered;
+    private boolean locked = false;
+    private boolean enabled = false;
+
+    //    additional fields
+    private String image_url;
+    private String username;
+    private LocalDateTime created_at;
+
+    @Enumerated(EnumType.STRING)
+    private LoginProvider provider;
+
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
+    private List<UserNotification> userNotificationList;
+
+    @PrePersist
+    void assignCreatedAt(){
+        this.created_at = LocalDateTime.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,13 +90,18 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public boolean isAccountNonLocked() {
+        return !locked;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     @Override
@@ -86,8 +109,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
 }

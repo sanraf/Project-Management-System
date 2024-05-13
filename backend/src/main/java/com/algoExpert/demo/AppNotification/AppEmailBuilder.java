@@ -15,5 +15,7 @@ public interface AppEmailBuilder {
     void sendTaskReminderEmail(String to,String body,String dueDay);
     @Async
     void sendEmailAccountConfirmation(String to,String email)throws MessagingException, IOException;
+    @Async
+    void sendEmailResetPassword(String to, String htmlBody);
 
 }

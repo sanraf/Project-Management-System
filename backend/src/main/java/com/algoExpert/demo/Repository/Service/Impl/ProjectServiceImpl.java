@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
