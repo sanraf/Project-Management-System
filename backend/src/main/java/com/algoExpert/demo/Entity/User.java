@@ -45,6 +45,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
+    private List<UserNotification> userNotificationList;
+
     private LocalDate dateRegistered;
 
     @Override
