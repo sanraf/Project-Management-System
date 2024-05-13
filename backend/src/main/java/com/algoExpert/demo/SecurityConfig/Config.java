@@ -4,13 +4,18 @@ package com.algoExpert.demo.SecurityConfig;
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 import com.algoExpert.demo.ExceptionHandler.CustomAccessDeniedHandler;
 import com.algoExpert.demo.Jwt.JwtAuthFilter;
+import com.algoExpert.demo.OAuth2.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +43,10 @@ import static org.springframework.http.HttpMethod.DELETE;
 
 @Configuration
 @EnableWebSecurity
+@Log4j2
+@RequiredArgsConstructor
 public class Config {
+    private final UserService userService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
@@ -61,7 +69,7 @@ public class Config {
                 .authorizeHttpRequests(request -> {
                             try {
                                 request
-                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**").permitAll()
+                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**", "/error").permitAll()
                                         .requestMatchers("/project/**").hasAnyRole(USER.name(), MEMBER.name())
                                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
@@ -100,12 +108,14 @@ public class Config {
 
                 )
 
-                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oc -> oc.userInfoEndpoint(ui -> ui.userService(userService.oauth2LoginHandler())
+                        .oidcUserService(userService.oidcLoginHandler())))
                 .sessionManagement(session->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
                  return httpSecurity.build();
     }
@@ -113,7 +123,7 @@ public class Config {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(userService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
@@ -140,4 +150,10 @@ public class Config {
         return new CustomAccessDeniedHandler();
     }
 
+    @Bean
+    ApplicationListener<AuthenticationSuccessEvent> successLogger() {
+        return event -> {
+            log.info("success: {}", event.getAuthentication());
+        };
+    }
 }
