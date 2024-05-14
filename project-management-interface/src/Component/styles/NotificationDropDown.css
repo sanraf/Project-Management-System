@@ -1,0 +1,201 @@
+.NotificationDropDowncontainer {
+    width: 500px;
+    margin-top: 1%;
+    margin-left: -20rem;
+    font-family: sans-serif;
+    letter-spacing: 0.5px;
+    position: absolute;
+    background-color: transparent; 
+    z-index: 1000; 
+}
+
+img {
+    max-width: 100%;
+    border-radius: 1rem;
+}
+
+.msg_header {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    width: 100%;
+    height: 10%;
+    border-bottom: none;
+    display: inline-block;
+    background-color: var(--blue-color);
+}
+
+.msg-header-img {
+    border-radius: 50%;
+    width: 90px;
+    margin-top: 10px;
+    margin-left: 5%;
+    float: left;
+}
+
+.active {
+    margin-left: 10px;
+    width: 240px;
+    float: left;
+    margin-top: 30px;
+}
+
+.active h4 {
+    font-size: 20px;
+    margin-left: 10px;
+    color: #fff;
+}
+
+.active h6 {
+    font-size: 10px;
+    margin: 10px;
+    line-height: 20px;
+    color: #fff; 
+}
+
+.header-icons {
+    height: 120px;
+    width: 120px;
+    float: right;
+    margin-top: 12px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-icons .fa {
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+    height: 15px;
+    width: 20px;
+}
+
+/* .chat-page {
+    padding: 0 0 50px 0;
+} */
+
+.msg-inbox {
+    border: 1px solid #ccc;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+    padding-bottom: 30px;
+    background-color: white;
+    
+}
+
+.chats {
+    padding: 30px 15px 0 25px;
+}
+
+.msg-page {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.recieved-chats-img {
+    display: inline-block;
+    width: 20px;
+    float: left;
+}
+
+.recieved-msg {
+    display: inline-block;
+    padding: 0 0 0 10px;
+    vertical-align: top;
+    width: 92%;
+}
+
+.recieved-msg-inbox {
+    width: 90%;
+    cursor: pointer;
+    
+}
+
+.recieved-msg-inbox .paragrough_holder {
+    background: #efefef none repeat scroll 0 0;
+    border-radius: 10px;
+    color: #646464;
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 10px 5px 12px;
+    width: 100%;
+    display: flex;
+}
+.recieved-msg-inbox .paragrough_holder .content{
+    width: 99%;
+}
+
+.time {
+    color: #777;
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 0;
+}
+
+
+
+
+
+.switch {
+    position: relative;
+    width: 55px;
+    height: 15px;
+   }
+   
+   .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+   }
+   
+   .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 34px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+   }
+   
+   .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 0px;
+    bottom: -5px;
+    background-color: var(--blue-color);
+    -webkit-transition: .4s;
+    transition: .4s;
+    box-sizing: border-box;
+    border: 10px solid white;
+    border-radius: 50%;
+   }
+   
+   input:checked + .slider {
+    background-color: #ccc;
+   }
+   
+   input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(30px);
+    background: red;
+    box-sizing: border-box;
+    border: 10px solid white;
+   }
+   .State{
+    margin-right: 1px;
+    
+   }
+   .State_color_Strip {
+    height: 100%;
+    width: 5px;
+
+   }
