@@ -11,6 +11,13 @@
 @import url("users.css");
 @import url("accountDective.css");
 
+@import url("InsideNavBar_Style.css");
+@import url("FeedbackAdmin.css");
+@import url("ProfileEditPage_Style.css");
+@import url("SettingsPage_Style.css");
+@import url("Notification_Style.css");
+@import url("Feedback_Style.css");
+
 
 :root{
 --subheader-font-size:13px;
