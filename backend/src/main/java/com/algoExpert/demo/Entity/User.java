@@ -60,10 +60,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private LoginProvider provider;
 
-
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
-    private List<UserNotification> userNotificationList;
-
     @PrePersist
     void assignCreatedAt(){
         this.created_at = LocalDateTime.now();
@@ -78,7 +74,6 @@ public class User implements UserDetails {
         return authorities;
     }
 
-
     @Override
     public String getPassword() {
         return password;
@@ -86,7 +81,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
