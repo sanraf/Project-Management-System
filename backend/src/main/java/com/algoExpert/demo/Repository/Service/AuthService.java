@@ -26,6 +26,8 @@ public interface AuthService {
     // get all users
     List<User> getUsers();
     HttpResponse loginUser (AuthRequest request);
+
+    HttpResponse loginSocialUser (String username);
     //    delete user by id
     List<UserDto> deleteUser(int userId);
 
