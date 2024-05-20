@@ -1,6 +1,8 @@
 package com.algoExpert.demo.OAuth2;
 
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.Entity.UserNotification;
+import com.algoExpert.demo.Repository.Service.Impl.UserNotificationServiceImpl;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
 import jakarta.transaction.Transactional;
@@ -30,6 +32,9 @@ public class AppUserService implements UserService  {
 
     @Autowired
     private UserRepository userEntityRepository;
+
+    @Autowired
+    private UserNotificationServiceImpl userNotificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -120,6 +125,7 @@ public class AppUserService implements UserService  {
     public void createUser(AppUser user){
 //        create user if not exist
         User userEntity = saveUserIfNotExists(user);
+        userNotificationService.createNotification(userEntity, "user account created ");
         userEntityRepository.save(userEntity);
     }
 
