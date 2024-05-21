@@ -4,6 +4,7 @@ import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 import com.algoExpert.demo.AppUtils.ImageConvertor;
+import com.algoExpert.demo.OAuth2.LoginProvider;
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
@@ -152,6 +153,7 @@ public class AuthServiceImpl implements AuthService {
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .roles(roleList)
+                    .provider(LoginProvider.APP)
                     .build();
             User savedUser = userRepository.save(user);
             String token = confirmationService.createToken(user);
