@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -107,7 +108,7 @@ public class Config {
                                         .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
                                         .requestMatchers("/admin/**").hasAnyRole(USER.name()).anyRequest().authenticated();
                             } catch (Exception e) {
-                                throw new RuntimeException(e.getMessage());
+                                throw new AccessDeniedException(e.getMessage());
                             }
                         }
 
@@ -132,7 +133,7 @@ public class Config {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }
