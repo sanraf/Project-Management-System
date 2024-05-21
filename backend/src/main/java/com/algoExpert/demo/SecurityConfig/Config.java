@@ -55,6 +55,11 @@ public class Config {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtAuthFilter authFilter;
+    @Autowired
+    private OAuth2LoginSuccessHandler  auth2LoginSuccessHandler;
+
+    @Autowired
+    private OAuth2LoginFailureHandler  auth2LoginFailureHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
