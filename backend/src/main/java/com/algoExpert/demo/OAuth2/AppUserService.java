@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -140,6 +141,7 @@ public class AppUserService implements UserService  {
                             .fullName(user.getFullName())
                             .image_url(user.getImage_url())
                             .provider(user.getProvider())
+                            .dateRegistered(LocalDate.now())
                             .roles(Collections.singletonList(Role.USER))
                             .enabled(true)
                             .build();
