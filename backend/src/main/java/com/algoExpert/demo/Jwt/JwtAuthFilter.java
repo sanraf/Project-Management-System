@@ -1,6 +1,7 @@
 package com.algoExpert.demo.Jwt;
 
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
+import com.algoExpert.demo.OAuth2.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -25,6 +26,9 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private UserService userDetailsService2;
 
 
     @Override

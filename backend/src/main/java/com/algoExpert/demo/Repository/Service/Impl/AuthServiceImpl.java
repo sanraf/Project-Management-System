@@ -2,12 +2,12 @@ package com.algoExpert.demo.Repository.Service.Impl;
 
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
+import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 
 import com.algoExpert.demo.ExceptionHandler.UserAlreadyEnabled;
 import com.algoExpert.demo.Jwt.JwtResponse;
 
 import com.algoExpert.demo.AppUtils.ImageConvertor;
-
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
@@ -15,17 +15,11 @@ import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtService;
-
-import com.algoExpert.demo.Repository.MemberRepository;
-import com.algoExpert.demo.Repository.ProjectRepository;
-import com.algoExpert.demo.Repository.RefreshTokenRepository;
-
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
 import com.algoExpert.demo.UserAccount.AccountInfo.Repository.AccountConfirmationRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Service.AccountConfirmationService;
-import com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl.AccountConfirmationServiceImpl;
 import com.algoExpert.demo.role.Role;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -39,7 +33,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -82,6 +81,9 @@ public class AuthServiceImpl implements AuthService {
     private RefreshTokenSevice refreshTokenSevice;
     @Autowired
     private ImageConvertor imageConvertor;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
 //    @Autowired
 //    UserMapper userMapper;
@@ -158,6 +160,7 @@ public class AuthServiceImpl implements AuthService {
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .roles(roleList)
+//                    .provider(LoginProvider.APP)
                     .build();
             User savedUser = userRepository.save(user);
             String token = confirmationService.createToken(user);
@@ -172,46 +175,6 @@ public class AuthServiceImpl implements AuthService {
             return savedUser;
         }
     }
-
-//    @Override
-//    public HttpResponse loginUser(AuthRequest request) {
-//        try {
-//            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-//            User logegdUser = null;
-//            String jwtToken = "";
-//            String refreshToken = "";
-//
-//            if(auth != null  && auth.isAuthenticated()){
-//                logegdUser = (User)auth.getPrincipal();
-//                jwtToken = jwtService.generateToken(request.email());
-//                refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
-//
-//            }
-//            return HttpResponse.builder()
-//                    .timeStamp(LocalTime.now().toString())
-//                    .status(HttpStatus.OK)
-//                    .message("Login Successful")
-//                    .email(logegdUser.getEmail())
-//                    .token(jwtToken)
-//                    .refreshToken(refreshToken)
-//                    .fullname(logegdUser.getFullName())
-//                    .statusCode(HttpStatus.OK.value())
-//                    .build();
-//
-//        } catch (BadCredentialsException e) {
-//            return HttpResponse.builder()
-//                    .timeStamp(LocalTime.now().toString())
-//                    .message("Incorrect username or password")
-//                    .build();
-//        } catch (Exception e) {
-//            return HttpResponse.builder()
-//                    .timeStamp(LocalTime.now().toString())
-//                    .message("Login failed: " + e.getMessage())
-//                    .status(HttpStatus.UNAUTHORIZED)
-//                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-//                    .build();
-//        }
-//    }
 
     @Override
     public HttpResponse loginUser(AuthRequest request) {
@@ -243,7 +206,55 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
     }
-//    // get all users
+
+//    @Override
+    public HttpResponse loginSocialUser(String username) {
+        try {
+//            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            User loggedUser = null;
+            String jwtToken = "";
+            String refreshToken = "";
+
+            if(auth != null  && auth.isAuthenticated()){
+                loggedUser = (User) auth.getPrincipal();
+                jwtToken = jwtService.generateToken(username);
+                refreshToken = refreshTokenSevice.createRefreshToken(username).getToken();
+            }
+
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .status(HttpStatus.OK)
+                    .message("Login Successful")
+                    .email(loggedUser.getUsername())
+                    .token(jwtToken)
+                    .refreshToken(refreshToken)
+                    .fullname(loggedUser.getFullName())
+                    .statusCode(HttpStatus.OK.value())
+                    .build();
+        } catch (BadCredentialsException e) {
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .message("Incorrect username or password")
+                    .build();
+        } catch (Exception e) {
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .message("Login failed: " + e.getMessage())
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .build();
+        }
+    }
+
+    // get all users
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
