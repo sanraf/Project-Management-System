@@ -1,12 +1,15 @@
 package com.algoExpert.demo.OAuth2;
 
+import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Jwt.JwtService;
+import com.algoExpert.demo.Repository.Service.Impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +28,8 @@ public class OAuth2Controller {
     @Autowired
     private JwtService jwtService;
 
-//    @Autowired
-//    private RefreshTokenSevice tokenSevice;
+    @Autowired
+    private AuthServiceImpl authService;
 
     @GetMapping("/oauth2user")
     public String getUserProject(){
@@ -78,5 +81,23 @@ public class OAuth2Controller {
             // If the user is not authenticated, redirect to the login page
             return "redirect:/login";
         }
+    }
+
+    @GetMapping("/socialLogin")
+    public HttpResponse loginOauth2user() {
+        // Get the Authentication object from the SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+//        String password = "";
+        String username = "";
+        // Check if the user is authenticated
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the username of the authenticated user
+//            AppUser oauth2User = (AppUser) authentication.getPrincipal();
+            username = authentication.getName();
+//            password = oauth2User.getPassword();
+//            username = oauth2User.getUsername();
+        }
+        return authService.loginSocialUser(username);
     }
 }

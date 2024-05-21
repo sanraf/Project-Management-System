@@ -8,6 +8,7 @@ import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -43,6 +44,34 @@ public class RefreshTokenSevice implements RefreshTokenInt {
             return refreshTokenRepository.save(refreshToken);
         }
         return refreshTokenUser.get();
+    }
+
+    public RefreshToken createRefreshToken2(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        Optional<RefreshToken> existingRefreshToken = refreshTokenRepository.findTokenByUserId(user.getUser_id());
+        boolean shouldCreateNewToken = false;
+
+        if (existingRefreshToken.isPresent()) {
+            RefreshToken refreshToken = existingRefreshToken.get();
+            if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
+                refreshTokenRepository.delete(refreshToken);
+                shouldCreateNewToken = true;
+            }
+        } else {
+            shouldCreateNewToken = true;
+        }
+
+        if (shouldCreateNewToken) {
+            RefreshToken newRefreshToken = RefreshToken.builder()
+                    .user(user)
+                    .token(UUID.randomUUID().toString())
+                    .expiryDate(Instant.now().plusMillis(600000)) // 10 minutes expiry time
+                    .build();
+            return refreshTokenRepository.save(newRefreshToken);
+        } else {
+            return existingRefreshToken.get();
+        }
     }
 
     public RefreshToken verifyExpiration(RefreshToken token){

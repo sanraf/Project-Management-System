@@ -4,6 +4,8 @@ package com.algoExpert.demo.SecurityConfig;
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 import com.algoExpert.demo.ExceptionHandler.CustomAccessDeniedHandler;
 import com.algoExpert.demo.Jwt.JwtAuthFilter;
+import com.algoExpert.demo.OAuth2.OAuth2LoginFailureHandler;
+import com.algoExpert.demo.OAuth2.OAuth2LoginSuccessHandler;
 import com.algoExpert.demo.OAuth2.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,15 +29,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.sql.DataSource;
 
 import static com.algoExpert.demo.role.Permission.*;
 import static com.algoExpert.demo.role.Role.*;
@@ -51,6 +50,13 @@ public class Config {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtAuthFilter authFilter;
+
+    @Autowired
+    private OAuth2LoginSuccessHandler auth2LoginSuccessHandler;
+    @Autowired
+    private OAuth2LoginFailureHandler auth2LoginFailureHandler;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -102,7 +108,7 @@ public class Config {
                                         .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
                                         .requestMatchers("/admin/**").hasAnyRole(USER.name()).anyRequest().authenticated();
                             } catch (Exception e) {
-                                throw new RuntimeException(e.getMessage());
+                                throw new AccessDeniedException(e.getMessage());
                             }
                         }
 
@@ -110,7 +116,11 @@ public class Config {
 
 //                .oauth2Login(Customizer.withDefaults())
                 .oauth2Login(oc -> oc.userInfoEndpoint(ui -> ui.userService(userService.oauth2LoginHandler())
-                        .oidcUserService(userService.oidcLoginHandler())))
+                        .oidcUserService(userService.oidcLoginHandler())
+                )
+                        .successHandler(auth2LoginSuccessHandler)
+                        .failureHandler(auth2LoginFailureHandler)
+                )
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider())
@@ -123,7 +133,7 @@ public class Config {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

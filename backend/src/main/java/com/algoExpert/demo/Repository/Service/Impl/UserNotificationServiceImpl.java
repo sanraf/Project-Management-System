@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +55,10 @@ public class UserNotificationServiceImpl implements UserNotificationService {
                 .notifTime(simpleDateFormat.format(new Date()))
                 .fullName(user.getFullName()).build();
 
-        List<UserNotification> userNotificationList =  user.getUserNotificationList();
+        List<UserNotification> userNotificationList = user.getUserNotificationList();
+        if (userNotificationList == null) {
+            userNotificationList = new ArrayList<>();
+        }
         userNotificationList.add(userNotificationCreated);
         user.setUserNotificationList(userNotificationList);
 

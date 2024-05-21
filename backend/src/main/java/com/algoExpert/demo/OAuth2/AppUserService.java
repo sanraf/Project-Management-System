@@ -1,6 +1,8 @@
 package com.algoExpert.demo.OAuth2;
 
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.Entity.UserNotification;
+import com.algoExpert.demo.Repository.Service.Impl.UserNotificationServiceImpl;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.role.Role;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +33,9 @@ public class AppUserService implements UserService  {
 
     @Autowired
     private UserRepository userEntityRepository;
+
+    @Autowired
+    private UserNotificationServiceImpl userNotificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -120,6 +126,7 @@ public class AppUserService implements UserService  {
     public void createUser(AppUser user){
 //        create user if not exist
         User userEntity = saveUserIfNotExists(user);
+        userNotificationService.createNotification(userEntity, "user account created ");
         userEntityRepository.save(userEntity);
     }
 
@@ -134,6 +141,7 @@ public class AppUserService implements UserService  {
                             .fullName(user.getFullName())
                             .image_url(user.getImage_url())
                             .provider(user.getProvider())
+                            .dateRegistered(LocalDate.now())
                             .roles(Collections.singletonList(Role.USER))
                             .enabled(true)
                             .build();
