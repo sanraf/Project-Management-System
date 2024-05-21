@@ -1,0 +1,117 @@
+.Feed_Container{
+    height: 100vh;
+    background-color: white;
+    position: relative;
+  }
+  .card {
+    position: absolute;
+    width: 90%;
+    margin: 30px;
+    background: var(--light-color);
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--title-color);
+    border-radius: 15px;
+    height: 80vh;
+   
+  }
+  .card__tags__Holder{
+    height: 40vh;
+    width:100%;
+    margin-top: 2rem;
+  }
+  .card__tags {
+    overflow: auto;
+    height: 100%;
+    width:100%;
+  }
+  .title {
+    font-weight: 900;
+    font-size: 1.7em;
+    height: 40vh;
+    background-color: white;
+    width: 100%;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  .title .title_elements{
+    background-color: var(--blue-color);
+    height: 200px;
+    width: 200px;
+    color: var(--title-color);
+    border-radius: var(--round-border-radius);
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--header-font-weight); 
+  }
+  
+  .tag__name {
+    display: inline-block;
+    color: #000000;
+    font-size: 1.1em;
+    background-color: white;
+    padding: 6px 23px 9px;
+    border-radius: 1rem;
+    margin: 8px 6px 8px 0;
+    margin-left: 10px;
+    position: relative;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 90%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .tag__name::before,
+  .tag__name::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--title-color);
+    
+  }
+  
+  .tag__name::before {
+    left: 7px;
+  }
+  
+  .tag__name::after {
+    right: 7px;
+  }
+  
+  .tag__name:hover {
+    transform: scale(1.1);
+    background-color: var(--blue-color);
+  }
+  .title_elements:nth-child(1){
+  background-color: rgb(216, 216, 216);
+  cursor: pointer;
+  }
+  .title_elements:nth-child(2){
+    background-color: var(--blue-color);
+  cursor: pointer;
+  }
+  .title_elements:nth-child(3){
+  background-color: rgb(216, 216, 216);
+  cursor: pointer;
+  }
+  .title_elements:nth-child(4){
+    background-color: var(--blue-color);
+  cursor: pointer;
+  }
+
+  
