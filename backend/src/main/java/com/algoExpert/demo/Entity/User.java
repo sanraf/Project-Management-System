@@ -81,7 +81,12 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        if (email != null){
+            username = email;
+            return username;
+        } else {
+            return username;
+        }
     }
 
     @Override
