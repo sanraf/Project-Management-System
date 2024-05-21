@@ -24,11 +24,11 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
     private JwtService jwtService;
 
 
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private UserService userDetailsService;
+    private UserService userDetailsService2;
 
 
     @Override
