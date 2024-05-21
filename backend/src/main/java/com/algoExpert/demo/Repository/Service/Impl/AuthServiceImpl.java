@@ -8,6 +8,7 @@ import com.algoExpert.demo.ExceptionHandler.UserAlreadyEnabled;
 import com.algoExpert.demo.Jwt.JwtResponse;
 
 import com.algoExpert.demo.AppUtils.ImageConvertor;
+import com.algoExpert.demo.OAuth2.LoginProvider;
 import com.algoExpert.demo.Records.AuthRequest;
 import com.algoExpert.demo.Records.RegistrationRequest;
 import com.algoExpert.demo.Dto.UserDto;
@@ -160,7 +161,8 @@ public class AuthServiceImpl implements AuthService {
                     .email(request.email())
                     .password(passwordEncoder.encode(request.password()))
                     .roles(roleList)
-//                    .provider(LoginProvider.APP)
+                    .username(request.email())
+                    .provider(LoginProvider.APP)
                     .build();
             User savedUser = userRepository.save(user);
             String token = confirmationService.createToken(user);
@@ -207,14 +209,12 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-//    @Override
+    @Override
     public HttpResponse loginSocialUser(String username) {
         try {
-//            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -226,7 +226,7 @@ public class AuthServiceImpl implements AuthService {
             if(auth != null  && auth.isAuthenticated()){
                 loggedUser = (User) auth.getPrincipal();
                 jwtToken = jwtService.generateToken(username);
-                refreshToken = refreshTokenSevice.createRefreshToken(username).getToken();
+                refreshToken = refreshTokenSevice.createRefreshToken2(username).getToken();
             }
 
             return HttpResponse.builder()
