@@ -8,6 +8,7 @@ import com.algoExpert.demo.Repository.AssigneesRepository;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import com.algoExpert.demo.Repository.Service.UserNotificationService;
 import com.algoExpert.demo.Repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,7 +76,7 @@ public class DeadlineTaskReminder {
  */
 
 //    @Scheduled(cron = "0 0 5 * * ?")
-//    @PostConstruct  //use this for testing
+    @PostConstruct  //use this for testing
     private void runReminder() throws InvalidArgument {
         todayDueDate();
         tomorrowDueDate();

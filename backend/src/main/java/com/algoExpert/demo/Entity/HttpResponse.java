@@ -16,6 +16,8 @@ public class HttpResponse {
     protected HttpStatus status;
     protected String reason;
     protected String message;
+    protected String method;
+    protected String urlInstance;
     protected String token;
     protected String refreshToken;
     protected String email;

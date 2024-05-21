@@ -3,6 +3,7 @@ package com.algoExpert.demo.Repository.Service.Impl;
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 
+import com.algoExpert.demo.ExceptionHandler.UserAlreadyEnabled;
 import com.algoExpert.demo.Jwt.JwtResponse;
 
 import com.algoExpert.demo.AppUtils.ImageConvertor;
@@ -32,8 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,8 +46,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.USERNAME_ALREADY_EXIST;
@@ -70,8 +75,6 @@ public class AuthServiceImpl implements AuthService {
     private AppEmailBuilder appEmailBuilder ;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
-    @Autowired
-    private AccountConfirmationRepository confirmationRepository ;
     @Value("${confirm.account.url}")
     String confirmLink;
 
@@ -126,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             if (user.isEnabled()) {
-                throw new InvalidArgument(String.format(USERNAME_ALREADY_EXIST, user.getEmail()));
+                throw new UserAlreadyEnabled(String.format(USERNAME_ALREADY_EXIST, user.getEmail()));
             } else {
                 log.info("New token is generated: {}", link);
                 AccountConfirmation confirmation = confirmationService.findAccountByUserId(user.getUser_id());
@@ -170,45 +173,77 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+//    @Override
+//    public HttpResponse loginUser(AuthRequest request) {
+//        try {
+//            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+//            User logegdUser = null;
+//            String jwtToken = "";
+//            String refreshToken = "";
+//
+//            if(auth != null  && auth.isAuthenticated()){
+//                logegdUser = (User)auth.getPrincipal();
+//                jwtToken = jwtService.generateToken(request.email());
+//                refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
+//
+//            }
+//            return HttpResponse.builder()
+//                    .timeStamp(LocalTime.now().toString())
+//                    .status(HttpStatus.OK)
+//                    .message("Login Successful")
+//                    .email(logegdUser.getEmail())
+//                    .token(jwtToken)
+//                    .refreshToken(refreshToken)
+//                    .fullname(logegdUser.getFullName())
+//                    .statusCode(HttpStatus.OK.value())
+//                    .build();
+//
+//        } catch (BadCredentialsException e) {
+//            return HttpResponse.builder()
+//                    .timeStamp(LocalTime.now().toString())
+//                    .message("Incorrect username or password")
+//                    .build();
+//        } catch (Exception e) {
+//            return HttpResponse.builder()
+//                    .timeStamp(LocalTime.now().toString())
+//                    .message("Login failed: " + e.getMessage())
+//                    .status(HttpStatus.UNAUTHORIZED)
+//                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+//                    .build();
+//        }
+//    }
+
     @Override
     public HttpResponse loginUser(AuthRequest request) {
-        try {
+
             Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-            User logegdUser = null;
+            User authenticatedUser = null;
             String jwtToken = "";
             String refreshToken = "";
 
-            if(auth != null  && auth.isAuthenticated()){
-                logegdUser = (User)auth.getPrincipal();
-                jwtToken = jwtService.generateToken(request.email());
-                refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
-            }
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .status(HttpStatus.OK)
-                    .message("Login Successful")
-                    .email(logegdUser.getEmail())
-                    .token(jwtToken)
-                    .refreshToken(refreshToken)
-                    .fullname(logegdUser.getFullName())
-                    .statusCode(HttpStatus.OK.value())
-                    .build();
-        } catch (BadCredentialsException e) {
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .message("Incorrect username or password")
-                    .build();
-        } catch (Exception e) {
-            return HttpResponse.builder()
-                    .timeStamp(LocalTime.now().toString())
-                    .message("Login failed: " + e.getMessage())
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .build();
-        }
-    }
 
-    // get all users
+        if(auth.isAuthenticated()){
+            authenticatedUser = (User)auth.getPrincipal();
+            jwtToken = jwtService.generateToken(request.email());
+            refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
+
+
+
+        }
+
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.OK)
+                .message("Login Successful")
+                .email(Objects.requireNonNull(authenticatedUser).getEmail())
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .fullname(authenticatedUser.getFullName())
+                .statusCode(HttpStatus.OK.value())
+                .build();
+
+    }
+//    // get all users
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();

@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -61,7 +63,7 @@ public class Config {
                 .authorizeHttpRequests(request -> {
                             try {
                                 request
-                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**").permitAll()
+                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**","/user/**").permitAll()
                                         .requestMatchers("/project/**").hasAnyRole(USER.name(), MEMBER.name())
                                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
@@ -93,8 +95,8 @@ public class Config {
                                         .requestMatchers(POST, "/assignee/**").hasAnyAuthority(OWNER_CREATE.getPermission(),MEMBER_UPDATE.getPermission())
                                         .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
                                         .requestMatchers("/admin/**").hasAnyRole(USER.name()).anyRequest().authenticated();
-                            } catch (Exception e) {
-                                throw new RuntimeException(e.getMessage());
+                            } catch (RuntimeException e) {
+                                throw new AccessDeniedException(e.getMessage());
                             }
                         }
 

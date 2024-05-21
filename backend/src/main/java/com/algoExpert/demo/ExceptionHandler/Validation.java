@@ -1,24 +1,23 @@
 package com.algoExpert.demo.ExceptionHandler;
 
+import com.algoExpert.demo.Entity.HttpResponse;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.ServletException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.IOException;
 import java.net.SocketException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,18 +34,44 @@ public class Validation {
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidArgument.class)
-    public Map<String,String> handleInvalidArgument(InvalidArgument argument){
-        Map<String,String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", argument.getMessage());
-        return errorMap;
+    public HttpResponse handleInvalidArgument(InvalidArgument argument,HttpServletRequest request){
+            return HttpResponse.builder()
+                    .timeStamp(LocalTime.now().toString())
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .message("Requested Item Not Found")
+                    .developerMessage(argument.getMessage())
+                    .urlInstance(request.getServletPath())
+                    .method(request.getMethod())
+                    .build();
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(UserAlreadyEnabled.class)
+    public HttpResponse userAlreadyEnabled(UserAlreadyEnabled argument, HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.CONFLICT)
+                .statusCode(HttpStatus.CONFLICT.value())
+                .message("Requested Item Found")
+                .developerMessage(argument.getMessage())
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
     }
 
     @ResponseStatus(HttpStatus.LOCKED)
     @ExceptionHandler(DisabledException.class)
-    public Map<String,String> disabledException(DisabledException disabledException){
-        Map<String,String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", disabledException.getMessage());
-        return errorMap;
+    public HttpResponse disabledException(DisabledException disabledException,HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.LOCKED)
+                .statusCode(HttpStatus.LOCKED.value())
+                .message("User account not activated")
+                .developerMessage(disabledException.getMessage())
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
     }
     @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
     @ExceptionHandler(SocketException.class)
@@ -64,10 +89,70 @@ public class Validation {
     }
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(BadCredentialsException.class)
-    public Map<String,String> deniedException(BadCredentialsException badCredentialsException){
-        Map<String,String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", badCredentialsException.getMessage());
-        return errorMap;
+    public HttpResponse badCredentialsException(BadCredentialsException badCredentialsException,HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.UNAUTHORIZED)
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .message("Incorrect Username or Password")
+                .developerMessage(badCredentialsException.getMessage())
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public HttpResponse serviceException(InternalAuthenticationServiceException serviceException ,HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.FORBIDDEN)
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .message("No account found for this username")
+                .developerMessage(serviceException.getMessage())
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public HttpResponse usernameNotFoundException(UsernameNotFoundException usernameNotFoundException , HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.NOT_FOUND)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .message("User Not Found")
+                .developerMessage(usernameNotFoundException.getMessage())
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
+    }
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    @ExceptionHandler(RuntimeException.class)
+    public HttpResponse runtimeException(RuntimeException runtimeException , HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.NOT_IMPLEMENTED)
+                .statusCode(HttpStatus.NOT_IMPLEMENTED.value())
+                .message(runtimeException.getMessage())
+                .developerMessage("Unidentified error for any uncaught exception")
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MalformedJwtException.class)
+    public HttpResponse malformedJwtException(MalformedJwtException malformedJwtException , HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(malformedJwtException.getMessage())
+                .developerMessage("jwt error")
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
     }
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ExpiredJwtException.class)

@@ -41,8 +41,6 @@ public class RecoverPasswordController {
             errorMsg = "No Longer Applicable. Please request a new one to continue";
         }
 
-
-
         resetPasswordView.addObject("errorMsg",errorMsg);
         resetPasswordView.addObject("successMsg",successMsg);
         resetPasswordView.addObject("log",logo);
