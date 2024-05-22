@@ -41,6 +41,7 @@ function Sidebar() {
         <a href='/createproject' id='sidebar-create-btn'>Create project <i className="lni lni-plus"></i></a>
         <div className="sidebar-links">
           <span className='sidebar-subtitle'>dashboard</span>
+          <a href=""><i className="lni lni-home"></i> Home </a>
           <a href=""><i className="lni lni-briefcase"></i> User Projects</a>
             {
               project ? project.map((item,project_index)=>

@@ -11,6 +11,7 @@ function Login() {
     const [showRegister, setShowRegister] = useState("none");
     const [emailMessage, setemailMessage] = useState("none");
     const [passwordMessage, setpasswordMessage] = useState("none");
+    const [badCredentials, setBadCredentials] = useState("");
 
     const {register, handleSubmit, setValue } = useForm({
         shouldUseNativeValidation:true,
@@ -28,7 +29,8 @@ function Login() {
             delete userDetails.re_password;
             try {
                 const response = await axios.post("http://localhost:8080/auth/loginUser",userDetails);
-                if (response.data.status == "OK") {
+                if (response.data.message == "Login Successful") {
+                    setBadCredentials("none");
                     const userDetails = { email: response.data.email,fullName: response.data.fullname}
                     sessionStorage.setItem("systemUser", JSON.stringify(userDetails))
                     Cookies.set('jwtToken', response.data.token, {
@@ -38,9 +40,10 @@ function Login() {
                         path: '/',expires: 365 
                     });
                     window.location.href = "/help";
-                } else {
-                    console.log(response.data)
-                    setShowRegister("block")
+                }
+                else {
+                    setBadCredentials(response.data.message)
+                    console.log(response.data.status)
                 }
                 } catch (error) {
                 console.error("Error logging in: ", error);
@@ -64,6 +67,12 @@ function Login() {
         }
     }
 
+    const passwordChange = (e) => {
+        e.preventDefault();
+        sessionStorage.setItem("sentEmail", "requestedEmail");
+        window.location.href = "/privacy";
+    }
+
     return (
       <>
         <div className="login_page">
@@ -79,7 +88,11 @@ function Login() {
                                 <h5 >Please Login</h5>
                                 <p>Thank you for choosing us, if registered please login</p>
                             </div>
-                          <span id='registerText'  onClick={()=>setShowRegister("block")}>Register on this page</span>
+                            {
+                                showRegister == "none" ? 
+                                    <span className='logintoogleText' onClick={() => setShowRegister("block")}>Register on this page</span> :
+                                    <span className='logintoogleText' onClick={() => setShowRegister("none")}> Login on this page</span>
+                            }
                             <form action="" onSubmit={handleSubmit(login)} >
                               <div style={{display:showRegister}}>
                                 <h6>Full name</h6>
@@ -89,10 +102,11 @@ function Login() {
                                 <input {...register("email",{required:"please enter email"})} type="text" id='email' name="email"  placeholder='email' />
                                <h6>Password</h6>
                                 <input  {...register("password", { required: "please enter password" })} id='password' type="text" name="password" placeholder='password' />
-                                   <p style={{display:showRegister == "none" ?"block" :"none"}}  id='forgot_password'>Forgot Password ?</p>
+                                <p style={{ display: showRegister == "none" && badCredentials ? "block" : "none" }}>{badCredentials}</p>
+                                <a href='' onClick={e =>passwordChange(e)} style={{display:showRegister == "none" ?"block" :"none"}}  id='forgot_password'>Forgot Password ?</a>
                                <div style={{display:showRegister}}>
                                     <h6>Re-enter password</h6>
-                                     <p style={{display:passwordMessage}} id="wrong_password">Attention: Passwords do not match, please ensure they match to proceed</p>
+                                    <p style={{display:passwordMessage}} id="wrong_password">Attention: Passwords do not match, please ensure they match to proceed</p>
                                     <input {...register("re_password", { required: showRegister == "block" ? true : false })} name='re_password' id='password' type="text" placeholder='password' />
                                 </div>
                                 {
@@ -100,7 +114,6 @@ function Login() {
                                     <button  type='submit'>Login</button>
                                 }
                             </form>
-                         
                             <h6 style={{display:emailMessage}} id='confirm_message'>Thank you for registering please confirm via email before logging in </h6>
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
