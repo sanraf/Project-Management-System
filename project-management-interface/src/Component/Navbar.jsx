@@ -4,6 +4,7 @@ import imageOne from "../assets/topnav-image1.jpg";
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import NotificationDropDown from './NotificationDropdown';
+import { useNavigate } from 'react-router-dom';
 
 
 function Navbar() {
@@ -76,6 +77,12 @@ function Navbar() {
     }
   }
   const [openProfile, setOpenProfile] = useState(false);
+
+  const navigate = useNavigate();
+  const redirectback = () =>{
+    navigate('/');
+  } 
+  
   return (
     <>
       <div className="navbar">
@@ -84,7 +91,7 @@ function Navbar() {
             <button id='input_search_btn'><i className="lni lni-search"></i></button></form>
           <div className="nav-right-bar">
             <div className="nav-icons">
-              <i className="lni lni-information"></i>
+              <i className="lni lni-information" onClick={redirectback }></i>
               <i className="lni lni-alarm" onClick={()=> setOpenProfile((prev)=> !prev)}></i>
                 {
                     openProfile && <NotificationDropDown />
@@ -112,10 +119,10 @@ function Navbar() {
                   <a href='/switch' id="account_switch">Switch account</a>
                   <h5 style={{ fontWeight: "bold" }}>ProjectGuru</h5>
                   <div className="sidebar-links profile_links">
-                    <a href='/profilepage' >Password reset</a>
-                    <a href='/disable'>Deactivate account</a>
+                    <a href='/settingspage' >Password reset</a>
+                    {/* <a href='/disable'>Deactivate account</a> */}
                     <a href='/profileEditPage'>Settings</a>
-                    <a href='/feedbackpage'>Help</a>
+                    <a href='/help'>Help</a>
                     <a id="logout" href='/'>Logout</a>
                   </div>
                 </div>
