@@ -26,8 +26,6 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
     @Autowired
     private AccountConfirmationRepository confirmationRepository;
     @Autowired
-    private AccountConfirmationService confirmationService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private AppEmailBuilder appEmailBuilder ;

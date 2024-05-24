@@ -16,11 +16,14 @@ import com.algoExpert.demo.role.Role;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
@@ -36,9 +39,6 @@ public class ProjectUserImpl implements ProjectUserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private  ProjectUserImpl projectUser;
 
     @Autowired
     private JwtService jwtService;
@@ -97,6 +97,13 @@ public class ProjectUserImpl implements ProjectUserService {
                         "Refresh token is not in database"
                 ));
     }
+
+    @Override
+    public Page<User> getUsersWithPagination(int offset, int pageSize) {
+        return userRepository.findAll(PageRequest.of(offset,pageSize));
+    }
+
+
     @Override
     public Integer loggedInUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -106,7 +113,7 @@ public class ProjectUserImpl implements ProjectUserService {
             // Get the principal (authenticated user)
             loggedUser = (User) authentication.getPrincipal();
         }
-        return loggedUser.getUser_id();
+        return Objects.requireNonNull(loggedUser).getUser_id();
     }
 
     @Override

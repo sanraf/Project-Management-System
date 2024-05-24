@@ -44,6 +44,7 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
      * @param token
      * @return
      * @throws InvalidArgument
+     * @Author Santos Rafaelo
      */
     @Override
     public String confirmPassword(String token) throws InvalidArgument {
@@ -93,7 +94,8 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
      */
     @Override
     public PasswordReset createPasswordReset(PasswordRequest passwordRequest) throws InvalidArgument {
-        User user = userRepository.findByEmail(passwordRequest.userName()).orElseThrow(()-> new InvalidArgument(String.format(USERNAME_NOT_FOUND,passwordRequest.userName())));
+        User user = userRepository.findByEmail(passwordRequest.userName())
+                .orElseThrow(()-> new InvalidArgument(String.format(USERNAME_NOT_FOUND,passwordRequest.userName())));
 
         PasswordReset passwordByUserId = findPasswordByUserId(user.getUser_id());
         if(passwordByUserId !=null){

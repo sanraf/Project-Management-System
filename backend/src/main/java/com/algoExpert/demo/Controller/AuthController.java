@@ -58,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/loginUser")
-    public HttpResponse userLogin(@RequestBody AuthRequest userCredentials){
+    public HttpResponse userLogin(@RequestBody AuthRequest userCredentials) throws Exception {
         return authService.loginUser(userCredentials);
     }
 

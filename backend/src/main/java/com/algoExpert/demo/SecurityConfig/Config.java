@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
@@ -29,11 +30,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.sql.DataSource;
 
 import static com.algoExpert.demo.role.Permission.*;
 import static com.algoExpert.demo.role.Role.*;
@@ -50,13 +55,11 @@ public class Config {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtAuthFilter authFilter;
+    @Autowired
+    private OAuth2LoginSuccessHandler  auth2LoginSuccessHandler;
 
     @Autowired
-    private OAuth2LoginSuccessHandler auth2LoginSuccessHandler;
-    @Autowired
-    private OAuth2LoginFailureHandler auth2LoginFailureHandler;
-
-
+    private OAuth2LoginFailureHandler  auth2LoginFailureHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -75,6 +78,7 @@ public class Config {
                 .authorizeHttpRequests(request -> {
                             try {
                                 request
+                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**","/user/**").permitAll()
                                         .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**", "/error").permitAll()
                                         .requestMatchers("/project/**").hasAnyRole(USER.name(), MEMBER.name())
                                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
