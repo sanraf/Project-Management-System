@@ -21,9 +21,9 @@ public class NotificationController {
         return "deleted";
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getUserNotifications")
     private List<UserNotification> getByUserId(){
-        return userNotificationService.findByLoginUser();
+        return userNotificationService.userNotifications();
     }
 
 
