@@ -65,10 +65,11 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         userRepository.save(user);
     }
 
-
-    public List<UserNotification> findByLoginUser() {
+    @Override
+    public List<UserNotification> userNotifications() {
         Integer userId = projectUserService.loggedInUserId();
-        return notificationRepository.getNotificationByUserId(userId);
+        User user = userRepository.findById(userId).orElseThrow();
+        return user.getUserNotificationList();
     }
 
     @Override
