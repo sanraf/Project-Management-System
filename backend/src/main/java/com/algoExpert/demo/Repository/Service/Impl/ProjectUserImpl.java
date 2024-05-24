@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.algoExpert.demo.AppUtils.AppConstants.*;
@@ -112,7 +113,7 @@ public class ProjectUserImpl implements ProjectUserService {
             // Get the principal (authenticated user)
             loggedUser = (User) authentication.getPrincipal();
         }
-        return loggedUser.getUser_id();
+        return Objects.requireNonNull(loggedUser).getUser_id();
     }
 
     @Override
