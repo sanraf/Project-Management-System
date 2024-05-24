@@ -90,7 +90,7 @@ function ProjectSection() {
                 withCredentials:true
             });
             if(response.data.project_id) {
-                window.location.reload()
+                window.location.reload();
             }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -112,7 +112,7 @@ function ProjectSection() {
                     withCredentials: true
                 });
                 if(response.data) {
-                    window.location.reload()
+                    // window.location.reload();
                 }
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -372,7 +372,23 @@ function ProjectSection() {
                                                     </div>
                                                 </div>
                                                 </div>
-                                            <div style={{display:hiddenColumns.priority}} className='field_name table-task text_task'>{task.priority}</div>
+                                                
+
+
+                                            {/* Trying to fix the priority column to display a drop dowmn and stick after being saved */}
+                                            {/* <div style={{display:hiddenColumns.priority}} className='field_name table-task text_task'>
+                                                {task.priority}
+                                                </div> */}
+                                            <div onClick={()=>toogleDropDownBoxes("priorityBox", 120, task.task_id,'priorityIndex')} id={task.priority} className='status field_name table-task'>
+                                            {task.priority}
+                                                <div style={{height:dropDownBoxesHeight.priorityIndex == task.task_id ? dropDownBoxesHeight.priorityBox : 0}} className="status_dropdown">
+                                                    <div className="status_dropdown_content">
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'priority')} id='Argent'>Argent</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'priority')} id='Not_Argent'>Not_Argent</span>
+                                                </div>
+                                                </div>
+                                            
+                                            </div>
                                             <div className='more'></div>
                                         </div>       
                                     </div>                     
