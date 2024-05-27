@@ -35,6 +35,11 @@ function ProfileEditPage() {
         }));
     };
 
+    //THe function when you want to deactivate
+    const Deactivate = () => {
+        navigate('/disable');
+    }
+
     return (
         <div className="page-row">
             <Sidebar />
@@ -73,8 +78,9 @@ function ProfileEditPage() {
                             </div>
                             <div className="View_Table_section_Button_Sction">
                                 <button onClick={handleClick}>Cancel</button>
-                                {/* <button>Save Changes</button>  */}
-                                <button>Delete Account</button>
+
+                                {/* creating a funtion so when you want to deactivate */}
+                                <button onClick={Deactivate}>Deactivate account</button>
                             </div>
                         </div>
                     </div>

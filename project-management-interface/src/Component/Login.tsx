@@ -1,27 +1,29 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import loginImageOne from "../assets/login-image2.png";
 import loginImageTwo from "../assets/login-image1.png";
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
-
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 function Login() {
+
     const [showRegister, setShowRegister] = useState("none");
     const [emailMessage, setemailMessage] = useState("none");
     const [passwordMessage, setpasswordMessage] = useState("none");
     const [badCredentials, setBadCredentials] = useState("");
 
-    const {register, handleSubmit, setValue } = useForm({
-        shouldUseNativeValidation:true,
-        defaultValues:{
-         fullName: "",  
-         email:"",
-            password: "",
-         re_password:""
-      }
-    });
+
+  const { register, handleSubmit, setValue } = useForm({
+    shouldUseNativeValidation: true,
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      re_password: "",
+    },
+  });
+
 
     const login = async (userDetails) => {
         if (showRegister == "none") {
@@ -48,24 +50,27 @@ function Login() {
                 } catch (error) {
                 console.error("Error logging in: ", error);
             }
-        } else {
-            if (userDetails.password === userDetails.re_password) {
-                setpasswordMessage("none");
-                delete userDetails.re_password;
-                try {
-                const response = await axios.post(`http://localhost:8080/auth/registerUser`,userDetails);
-                if(response.data) {
-                    setShowRegister("none")
-                    setemailMessage("block")
-                }
-                } catch (error) {
-                    console.error("Error adding task: ", error);
-                }
-            } else {
-                setpasswordMessage("block");
-            }
+    } else {
+      if (userDetails.password === userDetails.re_password) {
+        setpasswordMessage("none");
+        delete userDetails.re_password;
+        try {
+          const response = await axios.post(
+            `http://localhost:8080/auth/registerUser`,
+            userDetails
+          );
+          if (response.data) {
+            setShowRegister("none");
+            setemailMessage("block");
+          }
+        } catch (error) {
+          console.error("Error adding task: ", error);
         }
+      } else {
+        setpasswordMessage("block");
+      }
     }
+  };
 
     const passwordChange = (e) => {
         e.preventDefault();
@@ -137,16 +142,16 @@ function Login() {
                our community of project managers and teams who are achieving remarkable success with our powerful project
                 management platform.
               </p>
-                      </div>
-                      <div className="login_page_images">
-                          <img src={loginImageTwo}id='login_image_one' alt="" />
-                          <img src={loginImageOne} id='login_image_two' alt="" />
-                      </div>
-                  </div>
-              </div>
+            </div>
+            <div className="login_page_images">
+              <img src={loginImageTwo} id="login_image_one" alt="" />
+              <img src={loginImageOne} id="login_image_two" alt="" />
+            </div>
+          </div>
         </div>
-      </>
-  )
+      </div>
+    </>
+  );
 }
 
-export default Login
+export default Login;

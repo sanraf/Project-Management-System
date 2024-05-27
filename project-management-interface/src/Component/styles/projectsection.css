@@ -346,19 +346,41 @@
 .status_dropdown span{
     display: block;
 }
+#DONE{
+    background-color: #90ee9058;
+    color: green;
+}
 #Done{
     background-color: #90ee9058;
     color: green;
 }
+#TODO{
+    background-color: #f9bfbf85;
+    color: red;
+}
 #ToDo{
     background-color: #f9bfbf85;
     color: red;
+}
+#INPROGRESS{
+    background-color: var(--light-background-color);
+    color: var(--blue-color);
+    
 }
 #InProgress{
     background-color: var(--light-background-color);
     color: var(--blue-color);
     
 }
+#ARGENT{
+    background-color: #f9bfbf85;
+    color: red;
+}
+#NOT_ARGENT{
+    background-color: var(--light-background-color);
+    color: var(--blue-color);
+}
+
 .col_name{
     background-color: var(--light-background-color);
 }
