@@ -11,6 +11,7 @@ function Navbar() {
   const [name, setName] = useState();
   const [logUser, setLogUser] = useState();
   const [userId, setUserId] = useState();
+
   const [dropDownBoxesHeight, setDropDownBoxesHeight] = useState({
     statusBox: 0, addColumn: 0, columnIndex: 0, editRow: 0, inviteBox: 0,
     filterBox: 0, sort: 0, rowId: 0, statusIndex: 0, table: 0, tableIndex: 0,
@@ -59,7 +60,8 @@ function Navbar() {
       });
   };
 
-  const logOut = async () => {
+  const logOut = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.delete("http://localhost:8080/user/logoutUser", {
         withCredentials:true
@@ -84,28 +86,25 @@ function Navbar() {
             <button id='input_search_btn'><i className="lni lni-search"></i></button></form>
           <div className="nav-right-bar">
             <div className="nav-icons">
-              <i className="lni lni-information"></i>
+              <span id='not_length'>1</span>
               <i className="lni lni-alarm" onClick={()=> setOpenProfile((prev)=> !prev)}></i>
                 {
                     openProfile && <NotificationDropDown />
                 }
-                    <Link to="/profileEditPage">
-                        <i className="lni lni-cog" ></i>
-                    </Link>
             </div>
             <div className="profile" >
               <div>
-                <span>{siteUser ? siteUser.fullname : ""}</span>
+                <span>{siteUser ? siteUser.fullName : ""}</span>
                 <span>{siteUser ? siteUser.email : ""}</span>
               </div>
-              <img src={imageOne} onClick={() => toogleDropDownBoxes("inviteBox", 400, 0, "")} alt="" />
+              <img src={imageOne} onClick={() => toogleDropDownBoxes("inviteBox", 450, 0, "")} alt="" />
               <div style={{ height: dropDownBoxesHeight.inviteBox }} className="profile_popup invite_members">
                 <div className="member_invite_wrapper">
                   <h5 style={{ fontWeight: "bold" }}>ACCOUNT</h5>
                   <div style={{ position: "relative" }}>
                     <div className="project_create_table_invite">
                       <div className="task_assign_letter">{siteUser ? siteUser.email.charAt(0) : ""}</div>
-                      <span>{siteUser ? siteUser.fullname : ""}</span>
+                      <span>{siteUser ? siteUser.fullName : ""}</span>
                       <span>{siteUser ? siteUser.email : ""}</span>
                     </div>
                   </div>
@@ -116,7 +115,7 @@ function Navbar() {
                     <a href='/disable'>Deactivate account</a>
                     <a href='/profileEditPage'>Settings</a>
                     <a href='/feedbackpage'>Help</a>
-                    <a id="logout" href='/'>Logout</a>
+                    <a id="logout" onClick={(e)=>logOut(e)} href='/'>Logout</a>
                   </div>
                 </div>
               </div>

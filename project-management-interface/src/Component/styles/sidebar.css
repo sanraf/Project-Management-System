@@ -61,23 +61,34 @@
     text-decoration: none;
     font-size: var(--subheader-font-size);
     color: var(--title-color);
-    margin-bottom: 1rem;
     display: block;
     color: var(--title-color);
+    padding:14px 1rem;
 }
-
+.sidebar-links a{position: relative;}
+.activelink{
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
 .sidebar-links a i{
     color: var(--blue-color);
     font-size: 15px;
     margin-right: 12px;
     text-transform: capitalize;
 }
+.sidebar-links a .lni-chevron-down{
+    color: #aaa;
+    position: absolute;
+    right: 0;
+    top: 16px;
+}
 .admin_dash{margin-top: 3rem;}
 .sidebar .sub-links{
     font-size: 12px;
     text-transform: capitalize;
     position: relative;
-    margin-left: 2rem;
+    margin-left: 3rem;
+    margin-bottom: 1rem;
     color: #888;
     cursor: pointer;
 }

@@ -31,7 +31,7 @@ function Login() {
                 const response = await axios.post("http://localhost:8080/auth/loginUser",userDetails);
                 if (response.data.message == "Login Successful") {
                     setBadCredentials("none");
-                    const userDetails = { email: response.data.email,fullName: response.data.fullname}
+                    const userDetails = { email: response.data.email,fullName: response.data.fullname, role: response.data.role}
                     sessionStorage.setItem("systemUser", JSON.stringify(userDetails))
                     Cookies.set('jwtToken', response.data.token, {
                         path: '/', expires: 365 
@@ -39,7 +39,7 @@ function Login() {
                     Cookies.set('refreshToken', response.data.refreshToken,{
                         path: '/',expires: 365 
                     });
-                    window.location.href = "/help";
+                    window.location.href = "/home";
                 }
                 else {
                     setBadCredentials(response.data.message)

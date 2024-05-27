@@ -1,38 +1,34 @@
 import './styles/NotificationDropDown.css';
 import imageOne from "../assets/topnav-image1.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 function NotificationDropDown(){
 
-    const [data, setData] = useState([
-        { 
-            Id: 1, 
-			Name:"Khangwelo",
-            Description: "Presenting Hollywood Movie In English (English Movies, Hollywood Movies, Action Movies In English,  Adventure Movies In English, Scott Eastwood Movies In English) FAST CARS Exclusively on @blockbusterenglishmovies Sit back & enjoy ",
-			Dates: "11:01 PM | October 3",
-            opened: false 
-		},{ 
-            Id: 2, 
-			Name:"Khangwelo Kevin",
-            Description: "Check out the link in the description below.",
-			Dates: "11:01 PM | October 3",
-            opened: false
-		}		
-		,{ 
-            Id: 3,
-			Name:"Khangwelo Kevin Mamatho", 
-            Description: "Remember, responsible betting is the name of the game.",
-			Dates: "11:01 PM | October 3",
-            opened: true
-		}	
-		,{ 
-            Id: 4, 
-			Name:"Khangwelo",
-            Description: "000000000",
-			Dates: "11:01 PM | October 3",
-            opened: true
-		}	
-    ]);
+    const [data, setData] = useState([]);
+
+   useEffect(() => {
+       const getNotifications = async() => {
+            try {
+                const response = await axios.get(`http://localhost:8080/notification/getAll`, {
+                withCredentials:true
+                });
+                if(response.data) {
+                setData(response.data)
+                }
+                } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+       }
+       getNotifications();
+
+       sessionStorage.setItem("notLength", data.length);
+   
+    return () => {
+        
+    }
+   }, []);
+    
 
 	// Marking the text as green if opened and red if not opned
     const handleOpenMessage = (id) => {
@@ -48,23 +44,22 @@ function NotificationDropDown(){
     };
 
 
-    //filtering if is opned or not
+    //filtering if is opened or not
     const [showTrue, setShowTrue] = useState(true);
+    
     const handleCheckedBoxChange =() =>{
         setShowTrue(!showTrue)
     }
     const filteredItems = data.filter(item =>
-        item.opened === showTrue
+        item
+        // item.opened === showTrue
     );
     
     return(
         <div className="NotificationDropDowncontainer">
             <div className="msg_header">
-                <div className="msg-header-img">
-                    <img src={imageOne} alt="" />
-                </div>
                 <div className="active">
-                    <h4>Khangwelo Kevin Mamatho</h4>
+                    <h4>User Notifications</h4>
                 </div>
                 <div className="header-icons">
                     <label className="switch">
@@ -91,20 +86,17 @@ function NotificationDropDown(){
                                             <div className="paragrough_holder">
                                                 <div className="content">
                                                 <h5>
-                                                    @{item.Name}
+                                                    @{item.fullName}
                                                 </h5>
                                                 <p>
-                                                    {item.Description}
+                                                    {item.message}
                                                 </p>
                                                 </div>
-                                                <div 
-                                                    className="State" 
-                                                    style={{ backgroundColor: item.opened ? 'red' : '#339AF0' }} 
-                                                >
-                                                    <div className="State_color_Strip" style={{ color: item.opened ? 'red' : '#339AF0' }} >.</div>
-                                                </div>
+                                                {/* <div className="State" style={{ backgroundColor: item.opened ? 'rgb(154, 240, 154)' : '#339AF0', display:"none" }}>
+                                                    <div className="State_color_Strip" style={{ color: item.opened ? 'rgb(154, 240, 154)' : '#339AF0' }} >.</div>
+                                                </div> */}
                                             </div>
-                                            <span className="time">{item.Dates}</span>
+                                            <span className="time">{item.time}</span>
                                         </div>
                                     </div>
                                 </div>

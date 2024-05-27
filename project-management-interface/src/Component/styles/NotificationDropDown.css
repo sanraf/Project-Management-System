@@ -1,29 +1,28 @@
 .NotificationDropDowncontainer {
     width: 500px;
-    margin-top: 1%;
-    margin-left: -20rem;
+    margin-top: 2%;
     font-family: sans-serif;
     letter-spacing: 0.5px;
     position: absolute;
+    right: 1rem;
     background-color: transparent; 
-    z-index: 1000; 
+    z-index: 3; 
+    font-family: "Roboto", sans-serif;
 }
-
 img {
     max-width: 100%;
     border-radius: 1rem;
 }
-
 .msg_header {
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     width: 100%;
-    height: 10%;
     border-bottom: none;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--blue-color);
 }
-
 .msg-header-img {
     border-radius: 50%;
     width: 90px;
@@ -31,32 +30,25 @@ img {
     margin-left: 5%;
     float: left;
 }
-
 .active {
     margin-left: 10px;
     width: 240px;
     float: left;
-    margin-top: 30px;
 }
-
 .active h4 {
     font-size: 20px;
+    font-weight: 400;
     margin-left: 10px;
     color: #fff;
 }
-
 .active h6 {
     font-size: 10px;
     margin: 10px;
     line-height: 20px;
     color: #fff; 
 }
-
 .header-icons {
-    height: 120px;
-    width: 120px;
     float: right;
-    margin-top: 12px;
     margin-right: 10px;
     display: flex;
     align-items: center;
@@ -76,45 +68,38 @@ img {
 } */
 
 .msg-inbox {
-    border: 1px solid #ccc;
+    border: 1px solid #eee;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
     overflow: hidden;
     padding-bottom: 30px;
     background-color: white;
-    
 }
-
 .chats {
     padding: 30px 15px 0 25px;
 }
-
 .msg-page {
     height: 300px;
     overflow-y: auto;
 }
-
 .recieved-chats-img {
     display: inline-block;
     width: 20px;
     float: left;
 }
-
 .recieved-msg {
     display: inline-block;
     padding: 0 0 0 10px;
     vertical-align: top;
     width: 92%;
+    margin-bottom: 2rem;
 }
-
 .recieved-msg-inbox {
     width: 90%;
     cursor: pointer;
-    
 }
-
 .recieved-msg-inbox .paragrough_holder {
-    background: #efefef none repeat scroll 0 0;
+    background: #f9f9f9 none repeat scroll 0 0;
     border-radius: 10px;
     color: #646464;
     font-size: 14px;
@@ -126,18 +111,19 @@ img {
 .recieved-msg-inbox .paragrough_holder .content{
     width: 99%;
 }
-
+.paragrough_holder h5{
+    font-size: 13px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 10px;
+}
+.paragrough_holder p{font-size: 12px;line-height: 20px;}
 .time {
-    color: #777;
+    color: #999;
     display: block;
-    font-size: 12px;
+    font-size: 10px;
     margin: 8px 0 0;
 }
-
-
-
-
-
 .switch {
     position: relative;
     width: 55px;
@@ -170,7 +156,7 @@ img {
     width: 26px;
     left: 0px;
     bottom: -5px;
-    background-color: var(--blue-color);
+    background-color: rgb(154, 240, 154);
     -webkit-transition: .4s;
     transition: .4s;
     box-sizing: border-box;
@@ -186,16 +172,16 @@ img {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(30px);
-    background: red;
+    background: rgb(107, 185, 107);
     box-sizing: border-box;
     border: 10px solid white;
    }
    .State{
     margin-right: 1px;
-    
+    border-radius: 10px;
    }
    .State_color_Strip {
     height: 100%;
-    width: 5px;
-
+    width: 3px;
+    border-radius: 50px;
    }
