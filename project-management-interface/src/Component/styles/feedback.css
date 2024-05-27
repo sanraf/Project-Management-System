@@ -1,0 +1,96 @@
+.feedback_admin_section{
+    background-color: #fff;
+    padding:3rem 2rem;
+     font-family: Roboto, "sans-serif";
+     height: 100%;
+}
+.feedback_admin_section h6{
+    font-size: 18px;
+    color: #333;
+    font-weight: 400;
+    margin-top: 0;
+}
+.admin_feedback_first_row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+.admin_feedback_first_row .page_no{
+    font-size: 13px;
+}
+.feedback_icons {
+    display: flex;
+    align-items: center;
+}
+.all_checkmark{
+    margin-right: 0;
+}
+.feedback_icon_box{
+    position: relative;
+}
+.feedback_icon_box span{
+    display: block;
+    position: absolute;
+    background-color: var(--blue-color);
+    color: #fff;
+    padding:8px 1rem;
+    font-size: 12px;
+    top: 25px;
+    border-radius: 5px;
+    left: 10px;
+    text-transform: capitalize;
+}
+.feedback_icon_box:last-child span{
+    width: 75px;
+}
+.feedback_icons i{
+    font-size: 16px;
+    color: #666;
+    margin-left: 16px;
+}
+.admin_feedback_table{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    cursor: pointer;
+}
+.admin_feedback_table p{
+    font-size: 12px;
+    text-wrap: wrap;
+}
+.feedback_user{
+    width: 15%;
+    display: flex;
+    align-items: center;
+}
+.feedback_user span, .all_checkmark{
+    border: 1px solid #eee;
+    margin-right: 1rem;
+    padding: 3px;
+}
+.feedback_user p{
+    text-transform: capitalize;
+    color: #333;
+}
+.feedback_user span i, .all_checkmark i{
+    color: #fff;
+    display: block;
+    font-size: 9px;
+    margin: 0;
+}
+.feedback_massage{
+    width: 70%;
+}
+.feedback_massage p{
+    color: #777;
+}
+.feedback_date i{
+    color: var(--blue-color);
+    font-size: 12px;
+    margin-right: 10px;
+}
+.feedback_date{width: 15%;text-align: right;}

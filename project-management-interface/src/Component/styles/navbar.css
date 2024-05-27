@@ -35,6 +35,18 @@
     border-radius: 100%;
     color: var(--blue-color);
     margin-right: 8px;
+    position: relative;
+}
+.nav-icons #not_length{
+    font-size: 10px;
+    background-color: var(--blue-color);
+    color: #fff;
+    padding: 4px 7px;
+    border-radius: 50%;
+    position: absolute;
+    top:15px;
+    margin-left: -9px;
+    z-index: 2;
 }
 .nav-right-bar{
     display: flex;

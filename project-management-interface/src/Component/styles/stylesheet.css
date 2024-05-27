@@ -10,6 +10,9 @@
 @import url("login.css");
 @import url("users.css");
 @import url("accountDective.css");
+@import url("privacy.css");
+@import url("feedback.css");
+@import url("home.css");
 
 @import url("InsideNavBar_Style.css");
 @import url("FeedbackAdmin.css");
@@ -20,7 +23,7 @@
 
 
 :root{
---subheader-font-size:13px;
+--subheader-font-size:12px;
 --title-color:#333;
 --light-color:#eee;
 --darkblue-background-color: #339AF0;
