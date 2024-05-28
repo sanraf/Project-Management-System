@@ -7,6 +7,8 @@ import Users from "./Component/Users";
 import PrivateRoutes from "./Component/PrivateRoutes";
 import LoginRoute from "./Component/LoginRoute";
 import AccountDeactivate from "./Component/AccountDeactivate";
+import Privacy from "./Component/Privacy";
+import Home from "./Component/Home";
 import FeedbackAdmin from "./Component/FeedbackAdmin";
 import FeedbackPage from "./Component/FeedbackPage";
 import SettingsPage from "./Component/SettingsPage";
@@ -25,18 +27,20 @@ function App() {
           <Route element={<CreateProject />} path="/createProject" exact />
           <Route element={<ProjectSection />} path="/project" exact />
           <Route element={<AccountDeactivate />} path="/disable" exact />
+          <Route element={<Home />} path="/home" exact />
+          <Route path="/feedbackAdmin" element={<FeedbackAdmin />} />
+          <Route path="/profileEditPage" element={<ProfileEditPage />} />
+          <Route path="/settingspage" element={<SettingsPage />} />
+          <Route path="/notificationsettings" element={<NotificationSettings />}/>
+          <Route path="/feedbackpage" element={<FeedbackPage />} />
         </Route>
         <Route path="/" element={<LoginRoute />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/privacy" element={<Privacy />} />
+
         <Route path="/oauth2login" element={<OAuth2Login />} />
-        <Route path="/feedbackAdmin" element={<FeedbackAdmin />} />
-        <Route path="/profileEditPage" element={<ProfileEditPage />} />
-        <Route path="/settingspage" element={<SettingsPage />} />
-        <Route
-          path="/notificationsettings"
-          element={<NotificationSettings />}
-        />
-        <Route path="/feedbackpage" element={<FeedbackPage />} />
+     
+
       </Routes>
     </Router>
   );

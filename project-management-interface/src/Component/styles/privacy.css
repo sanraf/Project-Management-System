@@ -1,0 +1,98 @@
+.privacy_section{
+    background-color: #f1f1f1;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+}
+.privacy_login_box{
+    width: 25%;
+    border: 1px solid #eee;
+    background-color: #fff;
+    padding: 3rem 4rem;
+}
+.privacy_title{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.privacy_title img{
+    width: 150px;
+    height: 150px;
+}
+.privacy_title h6{
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    margin-top: 1rem;
+}
+.privacy_title p{
+    font-size: 13px;
+    color: #666;
+    width: 70%;
+    margin: 0 auto;
+    line-height: 22px;
+}
+.privacy_title .password_email, .privacy_password_form {
+    margin-top: 2rem;
+    text-align: left;
+}
+.privacy_title .password_email label, .privacy_password_form label{
+    text-transform: capitalize;
+    font-size: 12px;
+}
+.privacy_password_form input[type="submit"]{
+    width: 40%;
+    text-transform: capitalize;
+    padding: 1rem;
+}
+.privacy_title .password_email input[type="text"], .privacy_password_box input[type="text"]{
+    width: 100%;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.privacy_title .password_email input[type="text"]::placeholder{
+    color: #ccc;
+    font-size: 12px;
+}
+.privacy_title .password_email div{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.privacy_title .password_email div input, .privacy_password_form input[type="submit"]{
+    font-size: 13px;
+    border-radius: var(--round-border-radius);
+    border: none;
+    background-color: var(--blue-color);
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+.privacy_title .password_email div input, .privacy_title .password_email div a{
+    width: 40%;
+}
+.privacy_title .password_email div p{
+    width: 20%;
+    text-align: center;
+}
+.privacy_title .password_email div a{
+    font-size: 13px;
+    color: #333;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+#privacy_login_link{
+    font-size: 13px;
+    text-decoration: none;
+    color: #333;
+}
+#privacy_login_link span{
+    color: var(--blue-color);
+    text-decoration: underline;
+}

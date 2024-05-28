@@ -7,7 +7,7 @@ function LoginRoute() {
       try {
         const userFound = await refreshToken();
           if (userFound) {
-            window.location.href = "/help"
+            window.location.href = "/home"
         }
       } catch (error) {
           console.error('Error fetching data:', error)
