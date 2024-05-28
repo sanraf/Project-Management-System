@@ -102,28 +102,31 @@ function Navbar() {
                 }
             </div>
             <div className="profile" >
-              <div>
-                <span>{siteUser ? siteUser.fullName : ""}</span>
-                <span>{siteUser ? siteUser.email : ""}</span>
+              <div className="profile_user_details" onClick={() => toogleDropDownBoxes("inviteBox", 380, 0, "")}>
+                  <div className="task_assign_letter">{siteUser ? siteUser.fullName.charAt(0) : ""}</div>
+                  <div className='top_profile_username'>
+                    <span>{siteUser ? siteUser.fullName : ""}</span>
+                    <span>{siteUser ? siteUser.email : ""}</span>
+                  </div>
               </div>
-              <img src={imageOne} onClick={() => toogleDropDownBoxes("inviteBox", 450, 0, "")} alt="" />
               <div style={{ height: dropDownBoxesHeight.inviteBox }} className="profile_popup invite_members">
                 <div className="member_invite_wrapper">
                   <h5 style={{ fontWeight: "bold" }}>ACCOUNT</h5>
                   <div style={{ position: "relative" }}>
-                    <div className="project_create_table_invite">
-                      <div className="task_assign_letter">{siteUser ? siteUser.email.charAt(0) : ""}</div>
-                      <span>{siteUser ? siteUser.fullName : ""}</span>
-                      <span>{siteUser ? siteUser.email : ""}</span>
+                    <div className="profile_user_details">
+                      <div className="task_assign_letter">{siteUser ? siteUser.fullName.charAt(0) : ""}</div>
+                      <div className='top_profile_username'>
+                        <span>{siteUser ? siteUser.fullName : ""}</span>
+                        <span>{siteUser ? siteUser.email : ""}</span>
+                      </div>
                     </div>
                   </div>
                   <a href='/switch' id="account_switch">Switch account</a>
                   <h5 style={{ fontWeight: "bold" }}>ProjectGuru</h5>
                   <div className="sidebar-links profile_links">
-                    <a href='/settingspage' >Password reset</a>
                     {/* <a href='/disable'>Deactivate account</a> */}
-                    <a href='/profileEditPage'>Settings</a>
-                    <a href='/feedbackpage'>Help</a>
+                    <a href='/settingspage'>Settings</a>
+                    <a href='/help'>Help</a>
                     <a id="logout" onClick={(e)=>logOut(e)} href='/'>Logout</a>
                   </div>
                 </div>

@@ -1,5 +1,4 @@
 // import './styles/Notification_Style.css';
-import { BiEdit } from "react-icons/bi";
 import InsideNavBar from './InsideNavBar';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
