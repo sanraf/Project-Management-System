@@ -63,36 +63,42 @@
     border-radius: 100%;
     margin-left: 8px;
 }
-.profile span{
-    display: block;
-    text-align: right;
-}
-.profile span:first-child{
-    color: #bbb;
-    font-size: 11px;
-}
-.profile span:last-child{
-    font-size: 12px;
-    color: var(--title-color)
-}
 .navbar .profile_popup{
     right: 20px;
     top: 80px;
 }
-.profile_popup .task_assign_letter{
+.profile_user_details{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.profile_user_details .task_assign_letter{
     display: block;
     text-align: center;
-    height: 30px;
-    width: 30px;
-    line-height: 31px;
+    padding: 5px;
+    font-size: 13px;
     margin-right: 10px;
+}
+
+.top_profile_username span:last-child{
+    color: #999;
+}
+.top_profile_username span{
+    text-align: left;
+    display: block;
+    font-size: 12px;
+}
+.profile a{
+    padding: 10px 0;
 }
 #account_switch{
     margin-top: 1rem;
     border-bottom: 1px solid #ccc;
     padding-bottom: 1rem;
+    padding-left: 0;
 }
 #logout{
     border-top:1px solid #ccc ;
     padding-top: 1rem;
+    margin-top: 5px;
 }

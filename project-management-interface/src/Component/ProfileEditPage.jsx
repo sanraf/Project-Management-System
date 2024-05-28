@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import { BiEdit } from "react-icons/bi";
-import { CiViewTable } from "react-icons/ci";
-import { FaProjectDiagram, FaTasks } from "react-icons/fa";
 // import './styles/ProfileEditPage_Style.css';
 import { useNavigate } from 'react-router-dom';
 import InsideNavBar from './InsideNavBar';
-
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 
@@ -28,7 +23,7 @@ function ProfileEditPage() {
     };
 
     const handleChange = (event, field) => {
-        const value = event.target.value;
+        const value = event.target.value;0
         setUserData(prevData => ({
             ...prevData,
             [field]: value
