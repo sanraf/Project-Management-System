@@ -42,6 +42,7 @@
     position: relative;
     width: 100%;
     display: flex;
+    align-items: center;
     left: 1px;
   }
   .Edit_Table_section_name p{
@@ -81,4 +82,32 @@
   }
   button:nth-child(2){
     cursor: pointer;
+  }
+
+  .showPassword{
+    font-size: 1.3em;
+  }
+
+  .userMessage-wrapper{
+    
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0;
+    padding-right: 1rem;
+    gap: 2rem;
+  }
+
+  .userMessage-wrapper h2{
+    font-size: medium;
+    font-style: oblique;
+  }
+
+  .userMessage.success{
+    color: var(--blue-color);
+  }
+
+  .userMessage.error{
+    color: rgb(226, 39, 39);
   }
