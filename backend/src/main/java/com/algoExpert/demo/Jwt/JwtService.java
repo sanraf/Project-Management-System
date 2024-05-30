@@ -1,8 +1,8 @@
 package com.algoExpert.demo.Jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.algoExpert.demo.ExceptionHandler.JwtTokenExpiredException;
+import com.algoExpert.demo.ExceptionHandler.JwtTokenMalformedException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -22,7 +22,14 @@ public class JwtService {
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenExpiredException("JWT token has expired", e);
+        } catch (JwtException e) {
+            throw new JwtTokenMalformedException("JWT token is malformed", e);
+        }
+
     }
 
     public Date extractExpiration(String token) {
@@ -48,8 +55,13 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try {
+            final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (JwtException e) {
+            throw new JwtTokenMalformedException("JWT token is malformed", e);
+        }
+
     }
 
 
@@ -65,7 +77,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
