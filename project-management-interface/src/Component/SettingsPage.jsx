@@ -115,75 +115,17 @@ function SettingsPage(){
 
 
     return(
-        // <div className="page-row">
-        // <Sidebar />
-        // <div className="project-wrapper">
-        //   <Navbar />
-        // <div className="Edit_Container">
-        //     <div className="Nav_Holder">
-        //     <InsideNavBar />
-        //     </div>
-        //     <div className="Edit_Elements_Container_Holder">
-        //         <div className="Edit_Elements_Container">
-        //             <div className='password-edit-subtitle'>
-        //                 <h1>Edit Profile</h1>
-        //                 <p> Manage your Name, and Email Addresses</p>
-        //                 <p> Below are the name and email addresses on file for your account.</p>
-        //             </div>
-        //             <div className="Edit_Table_section">
-        //             <div className="Edit_Table_section_name">
-        //                 <p>Enter old password</p>
-        //             </div>
-        //             <div className="Edit_Table_section_name">
-        //                 <input type="text" placeholder="Enter your password"/>
-        //                 {/* <RiLockPasswordLine /> */}
-        //             </div>
-        //             </div>
-        //             <div className="Edit_Table_section">
-        //             <div className="Edit_Table_section_name">
-        //                 <p>Enter your password</p>
-        //             </div>
-        //             <div className="Edit_Table_section_name">
-        //                 <input type="text" placeholder="Enter your password"/>
-        //                 {/* <RiLockPasswordLine /> */}
-        //             </div>
-        //             </div>
-        //             <div className="Edit_Table_section">
-        //             <div className="Edit_Table_section_name">
-        //                 <p>Confirm Password</p>
-        //             </div>
-        //             <div className="Edit_Table_section_name" >
-        //                 <input type="text" placeholder="Confirm your password"/>
-        //                 {/* <RiLockPasswordLine /> */}
-        //             </div>
-        //             </div>
-        //             <div className="Edit_Table_section_Button_Sction">
-        //             <input type="checkbox" />
-        //             <p>I agree with the Terms and <b>Conditions.</b></p>
-        //             </div>
-        //             <div className="Edit_Table_section_Button_Sction">
-        //             <button onClick={handleClick}>Cancel</button>
-        //             <button>Save Changes</button>
-        //         </div>
-        //         </div>
-        //     </div>
-        //     </div>
-            
-        //     </div>
-        // </div>
-
-
         <div className="page-row">
         <Sidebar />
         <div className="project-wrapper">
           <Navbar />
-        <div className="Edit_Container">
+        <div className="Edit_Container settings_container">
             <div className="Nav_Holder">
             <InsideNavBar />
             </div>
-            <div className="Edit_Elements_Container_Holder">
+            <div className="Edit_Elements_Container_Holder settings_sections">
             <div className="Edit_Elements_Container">
-            <div className='password-edit-subtitle'>
+            <div className='settings_header'>
               <h1>Edit Profile</h1>
               <p> Manage your Name, and Email Addresses</p>
               <p> Below are the name and email addresses on file for your account.</p>
@@ -191,7 +133,7 @@ function SettingsPage(){
             
             <form className="setting-form" onSubmit={handleSubmit}>
 
-                    <div className="Edit_Table_section">
+                    <div className="table_section">
                     <div className="Edit_Table_section_name">
                     <p>Enter Old password</p>
                     </div>
@@ -205,9 +147,7 @@ function SettingsPage(){
                     />
                     <i className="lni lni-eye showPassword"  onClick={() => togglePasswordVisibility('currentPassword')}></i>
                     </div>
-                    </div>
-
-                    <div className="Edit_Table_section">
+                    <div className="table_section">
                     <div className="Edit_Table_section_name">
                         <p>Enter New Password</p>
                     </div>
@@ -223,7 +163,7 @@ function SettingsPage(){
                     </div>
                     </div>
 
-                    <div className="Edit_Table_section">
+                    <div className="table_section">
                     <div className="Edit_Table_section_name">
                         <p>Confirm New Password</p>
                     </div>
@@ -239,7 +179,7 @@ function SettingsPage(){
                     </div>
                     </div>
 
-                    <div className="Edit_Table_section_Button_Sction">
+                    <div className="Edit_Table_section_Button_Sction password_condition">
                     <input
                         type="checkbox"
                         checked={agreeTerms}
@@ -250,7 +190,7 @@ function SettingsPage(){
                     </p>
                     </div>
 
-                    <div className="Edit_Table_section_Button_Sction">
+                    <div className="settings-buttons  Edit_Table_section_Button_Sction">
                     <button type="button" onClick={handleCancel}>
                         Cancel
                     </button>

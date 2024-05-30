@@ -1,41 +1,37 @@
-.Edit_Container{
-    background-color: rgb(246, 246, 246);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+.settings_container{
     font-family: 'Roboto', sans-serif;
-    padding: 20px;
-    overflow-y: scroll;
+    padding: 40px 20px;
+    background-color: #fff;
+    height: 100%;
   }
-  .Edit_Elements_Container_Holder{
-    width: 98%;
-    height: 80vh;
-    margin: 1rem;
-    background-color: white;
+  .settings_sections{
+    border: 1px solid #eee;
+    padding: 2rem;
   }
-  .Edit_Elements_Container{
-    margin: 2rem;
-    color: #333;
-  }
-  .Edit_Elements_Container h1{
-    font-size: 25px;
+  .settings_sections h1{
+    font-size: 20px;
     font-weight: 400;
   }
-  .password-edit-subtitle{
+  .settings_sections h1 i{
+    background-color: var(--light-background-color);
+    color: var(--blue-color);
+    padding: 10px;
+    border-radius: 100%;
+    margin-right: 10px;
+  }
+  .settings_header{
     margin-bottom: 3rem;
   }
-   .password-edit-subtitle p{
+   .settings_header p{
     color: #777;
    }
-  .Edit_Elements_Container  p{
+   .settings_sections  p{
     font-size: 13px;
   }
-
-  .Edit_Table_section{
+  .table_section{
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
     border-top: 2px solid rgb(246, 246, 246);
   }
   .Edit_Table_section_name{
@@ -48,41 +44,46 @@
   .Edit_Table_section_name p{
     color: #333;
   }
-  .Edit_Table_section input{
+  .table_section input{
     height: 4vh;;
     width: 100%;
     border: none;
     padding: 8px;
   }
-  .icon{
-    font-size: 2rem;
-    align-self: center;
-    cursor: pointer;
+  .table_section input::placeholder{
+    font-size: 12px;
+    color: #ccc;
   }
-  .Edit_Table_section_Button_Sction{
+  .password_condition{
+    display: flex;
+    margin-top: 1rem;
+  }
+  .settings-buttons{
     padding-top: 3rem;
     display: flex;
     gap: 1rem;
     border-top: 2px solid rgb(246, 246, 246);
   }
-  .Edit_Table_section_Button_Sction button{
-  width: 120px;
-  padding: 12px 0;
-  background-color: var(--blue-color);
-  border: none;
-  color: #fff;
-  font-size: 13px;
-  border-radius: 10px;
+  .settings-buttons button{
+    padding: 12px 0;
+    border: none;
+    font-size: 13px;
+    border-radius: 10px;
   }
+  .Edit_Table_section_Button_Section button, .Notification_Table_section_Button_Section button{
+    width: 120px;
+  }
+  .Edit_Table_section_Button_Section button:last-child, .Notification_Table_section_Button_Section button:last-child{
+    background-color: var(--blue-color);
+    color: #fff;
+  }
+
+   .Edit_Table_section_Button_Section button:first-child, .Notification_Table_section_Button_Section button:first-child{
+    background-color: var(--light-background-color);
+    color: #333;
+  }
+ 
   
- .Edit_Table_section_Button_Sction button:first-child{
-  background-color: var(--light-background-color);
-  cursor: pointer;
-  color: #333;
-  }
-  button:nth-child(2){
-    cursor: pointer;
-  }
 
   .showPassword{
     font-size: 1.3em;
@@ -111,3 +112,4 @@
   .userMessage.error{
     color: rgb(226, 39, 39);
   }
+

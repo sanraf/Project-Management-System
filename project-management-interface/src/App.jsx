@@ -37,10 +37,7 @@ function App() {
         <Route path="/" element={<LoginRoute />} />
         <Route path="/login" element={<Login />} />
         <Route path="/privacy" element={<Privacy />} />
-
         <Route path="/oauth2login" element={<OAuth2Login />} />
-     
-
       </Routes>
     </Router>
   );

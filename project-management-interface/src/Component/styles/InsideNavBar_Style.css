@@ -2,7 +2,7 @@ nav{
     position: relative;
     height: 50px;
     background-color: transparent;
-    border-bottom: 2px solid var(--blue-color);
+    border-bottom: 2px solid var(--light-background-color);
     display:  flex;
     justify-content: center;
     align-items: center;
@@ -12,12 +12,13 @@ nav{
     position: relative;
     display: inline-block;
     font-size: 1rem;
-    font-weight: 500;
-    color:black;
+    font-weight: 400;
+    color:#333;
     text-decoration: none;
     padding: 0 23px;
     z-index: 1;
     width: 100%;
+    font-size: 14px;
   }
   nav span{
     position: absolute;
@@ -25,23 +26,12 @@ nav{
     left: 0;
     width:25%;
     height: 100%;
-    background-color: var(--blue-color);
+    background-color: var(--light-background-color);
     font-weight: 300;
     border: 8px;
     transition:  .5s;
   }
-  nav a:nth-child(1):hover~span{
-    left: 0;
-  }
-  nav a:nth-child(2):hover~span{
-    left: 25%;
-  }
-  nav a:nth-child(3):hover~span{
-    left: 50%;
-  }
-  nav a:nth-child(4):hover~span{
-    left: 75%;
-  }
+
 
   .Settings_Icon_Holder{
     display: flex;
@@ -49,16 +39,15 @@ nav{
     gap: 1rem;
   }
   .Settings_Icon_Holder h1{
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 400;
     color: #333;
+    margin-bottom: 3rem;
   }
   .Settings_Icon{
     font-size: 1.6rem;
     cursor: pointer;
   }
-
-
   .dropdown{
     position: absolute;
     top: 4.5rem;

@@ -48,7 +48,7 @@ function Home() {
                               <div className="home-project-card-container">
                                   {
                                       userProjects ? userProjects.map(project =>
-                                        <div onClick={()=>loadProject(project.id)} className="home-project-cards">
+                                        <div key={project.id} onClick={()=>loadProject(project.id)} className="home-project-cards">
                                               <h6><span></span> { project.title}</h6>
                                             <p>Project description</p>
                                         </div>

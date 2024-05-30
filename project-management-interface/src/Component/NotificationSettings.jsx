@@ -14,68 +14,42 @@ function NotificationSettings(){
         <Sidebar />
         <div className="project-wrapper">
           <Navbar />
-        <div className="Notification_Container">
+        <div className="Notification_Container settings_container">
             <div className="Nav_Holder">
             <InsideNavBar />
             </div>
-            <div className="Notification_Elements_Container_Holder">
-            <div className="Notification_Elements_Container">
-                <h1>Notifications</h1>
-               <p> Manage your Notifications.</p>
-               <p> Below are the notifications you may manage.</p>
-               
-            
-            <div className="Notification_Table_section">
-                <div className="Notification_Table_section_name"><p>Email notification</p>
+               <div className="Notification_Elements_Container settings_sections">
+                    <div className="settings_header">
+                        <h1><i className="lni lni-alarm"></i>Notifications</h1>
+                        <p> Manage your Notifications.</p>
+                        <p> Below are the notifications you may manage.</p>
+                    </div>
+                    <div className="table_section">
+                        <div className="Notification_Table_section_name"><p>Project creation notification email</p>
+                        </div>
+                        <div className="Notification_Table_section_name noti-radio-buttons">
+                            <p>on</p>
+                            <input type="radio" name="k" value="on"/>
+                            <p>off</p>
+                            <input type="radio" name="k" value="off"/>
+                        </div>
+                     </div>
+                    <div className="table_section">
+                        <div className="Notification_Table_section_name"><p>Task deadline notification email</p>
+                        </div>
+                        <div className="Notification_Table_section_name noti-radio-buttons">
+                            <p>on</p>
+                            <input type="radio" name="k" value="on"/>
+                            <p>off</p>
+                            <input type="radio" name="k" value="off"/>
+                        </div>
+                    </div>
+                            
+                    <div className="settings-buttons Notification_Table_section_Button_Section">
+                        <button onClick={handleClick}>Cancel</button>
+                        <button>Save Changes</button>
+                    </div>
                 </div>
-                <div className="Notification_Table_section_name">
-                on
-                <input type="radio" name="k" value="on"/>
-                Off
-                <input type="radio" name="k" value="off"/>
-                </div>
-                
-            </div>
-            <div className="Notification_Table_section">
-                <div className="Notification_Table_section_name">
-                <p>Send me email notification when a user comments on my blog</p>
-                </div>
-                <div className="Notification_Table_section_name">
-                    on
-                    <input type="radio" name="q" value="on"/>
-                    Off
-                    <input type="radio" name="q" value="off"/>
-                </div>
-            </div>
-            <div className="Notification_Table_section">
-                <div className="Notification_Table_section_name">
-                <p>Send me email notification for the latest update</p>
-                </div>
-                <div className="Notification_Table_section_name">
-                on
-                <input type="radio" name="a" value="on"/>
-                Off
-                <input type="radio" name="a" value="off"/>
-                </div>
-            </div>
-            <div className="Notification_Table_section">
-                <div className="Notification_Table_section_name">
-                <p>Send me email notification when a user sends me message</p>
-                </div>
-                <div className="Notification_Table_section_name">
-                on
-                <input type="radio" name="z" value="on"/>
-                Off
-                <input type="radio" name="z" value="off"/>
-                </div>
-            </div>
-            
-            <div className="Notification_Table_section_Button_Sction">
-                <button onClick={handleClick}>Cancel</button>
-                <button>Save Changes</button>
-            </div>
-            </div>
-            </div>
             </div>
             
             </div>

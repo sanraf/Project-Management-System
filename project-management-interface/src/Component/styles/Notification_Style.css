@@ -1,58 +1,22 @@
-.Notification_Container{
-    background-color: rgb(246, 246, 246);
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+
+
+  .Notification_Elements_Container .table_section{
+    padding: 14px 0;
   }
-  .Notification_Elements_Container_Holder{
-    width: 98%;
-    height: 80vh;
-    margin: 1rem;
-    background-color: white;
-  }
-  .Notification_Elements_Container{
-    margin: 2rem;
-  }
-  .Notification_Table_section{
+  .Notification_Table_section_name{
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    border-top: 2px solid rgb(246, 246, 246);
   }
-  .Notification_Table_section_name{
-    position: relative;
-    width: 100%;
-    display: flex;
-    left: 1px;
+  .noti-radio-buttons  p{
+    margin-left: 6rem;
+    margin-right: 1rem;
   }
-  .Notification_Table_section input{
-    height: 4vh;;
-    width: 100%;
-  }
-  .Notification_Table_section_Button_Sction{
-    padding-top: 4rem;
-    display: flex;
-    gap: 1rem;
-    border-top: 2px solid rgb(246, 246, 246);
-  }
-  .Notification_Table_section_Button_Sction button{
-  height: 50px;
-  width: 150px;
-  background-color: var(--blue-color);
-  border: none;
-  color: #fff;
-  font-size: 1rem;
-  
+  .Notification_Table_section_name input{
+    width: 15px;
+    height: 15px;
   }
   
-  button:nth-child(1){
-  background-color: rgb(216, 216, 216);
-  cursor: pointer;
-  }
-  button:nth-child(2){
-    cursor: pointer;
-  }
+ 
 
   
