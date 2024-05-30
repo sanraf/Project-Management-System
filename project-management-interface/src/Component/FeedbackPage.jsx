@@ -29,48 +29,33 @@ function FeedbackPage(){
 
     return(
         <div className="page-row">
-        <Sidebar />
-        <div className="project-wrapper">
-          <Navbar />
-        <div className="Feedback_Container">
-            <InsideNavBar />
-            <div className="Feedback_Container_Holder">
-                <div className="Feedback_Container_Holder_Heading">
-                    <h1>PMS Feed Back</h1>
-                </div>
-                
-                <div className="Feedback_Container_Holder_Body_Holder">
-                <div className="Feedback_Container_Holder_Body_LeftSide">
-                    <div className="Feedback_Container_Holder_Body_LeftSide_Elements" >
-                    <p>Name :</p>
-                    <input type="text" />
-                    <p>Email :</p>
-                    <input type="text" />
-                    <p>Subject :</p>
-                    <input type="text" />
-                    <p>Message :</p>
-                    <textarea type="text" />
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <button>Submit</button>
+            <Sidebar />
+            <div className="project-wrapper">
+                <Navbar />
+                <div className="Feedback_Container settings_container">
+                    <InsideNavBar />
+                    <div className="Feedback_Container_Holder settings_sections">
+                        <div className="settings_header">
+                            <h1><i className="lni lni-comments-reply"></i>PMS Feed Back</h1>
+                            <p>Please provide any feedback you would like to mention about the system. Will be sure to address any concerns stated. </p>
+                        </div>
+                        <div className="Feedback_Container_Holder_Body_LeftSide">
+                        <form action="">
+                                <p>Name :</p>
+                                <input type="text" placeholder="fullname"/>
+                                <p>Email :</p>
+                                <input type="text" placeholder="enter email"/>
+                                <p>Subject :</p>
+                                <input type="text" placeholder="enter subject"/>
+                                <p>Message :</p>
+                                <textarea name="" placeholder="enter message" id=""></textarea>
+                                <div className="settings-buttons send-feedback">
+                                    <button>Send feedback</button> 
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div className="Feedback_Container_Holder_Body_RightSide">
-                    <div className="Feedback_Container_Holder_Body_RightSide_Image">
-                        Image
-                    </div>
-                    <div className="Feedback_Container_Holder_Body_RightSide_Graph">
-                    <BarChart chartData={userData}/>
-                
-
-                    </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                
-                
             </div>
         </div>
         
