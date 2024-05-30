@@ -3,6 +3,7 @@ package com.algoExpert.demo.Entity;
 
 import com.algoExpert.demo.OAuth2.LoginProvider;
 import com.algoExpert.demo.role.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -48,6 +49,7 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
     private List<UserNotification> userNotificationList;
 
+
     private LocalDate dateRegistered;
     private boolean locked = false;
     private boolean enabled = false;
@@ -55,15 +57,16 @@ public class User implements UserDetails {
     //    additional fields
     private String image_url;
     private String username;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime created_at;
 
     @Enumerated(EnumType.STRING)
     private LoginProvider provider;
 
-    @PrePersist
-    void assignCreatedAt(){
-        this.created_at = LocalDateTime.now();
-    }
+//    @PrePersist
+//    void assignCreatedAt(){
+//        this.created_at = LocalDateTime.now();
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
