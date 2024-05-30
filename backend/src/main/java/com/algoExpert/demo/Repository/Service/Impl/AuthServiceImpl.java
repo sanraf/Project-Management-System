@@ -43,12 +43,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
@@ -163,6 +161,7 @@ public class AuthServiceImpl implements AuthService {
                     .roles(roleList)
                     .username(request.email())
                     .provider(LoginProvider.APP)
+                    .created_at(LocalDateTime.now())
                     .build();
             User savedUser = userRepository.save(user);
             String token = confirmationService.createToken(user);
@@ -185,15 +184,14 @@ public class AuthServiceImpl implements AuthService {
             User authenticatedUser = null;
             String jwtToken = "";
             String refreshToken = "";
+            List<Role> roles = null;
 
 
         if(auth.isAuthenticated()){
             authenticatedUser = (User)auth.getPrincipal();
             jwtToken = jwtService.generateToken(request.email());
             refreshToken = refreshTokenSevice.createRefreshToken(request.email()).getToken();
-
-
-
+            roles = authenticatedUser.getRoles();
         }
 
         return HttpResponse.builder()
@@ -203,6 +201,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(Objects.requireNonNull(authenticatedUser).getEmail())
                 .token(jwtToken)
                 .refreshToken(refreshToken)
+                .role(roles)
                 .fullname(authenticatedUser.getFullName())
                 .statusCode(HttpStatus.OK.value())
                 .build();
