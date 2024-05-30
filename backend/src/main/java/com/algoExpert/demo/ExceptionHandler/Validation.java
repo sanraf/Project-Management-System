@@ -1,8 +1,6 @@
 package com.algoExpert.demo.ExceptionHandler;
 
 import com.algoExpert.demo.Entity.HttpResponse;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -94,8 +92,8 @@ public class Validation {
                 .timeStamp(LocalTime.now().toString())
                 .status(HttpStatus.UNAUTHORIZED)
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .message("Incorrect Username or Password")
-                .developerMessage(badCredentialsException.getMessage())
+                .message(badCredentialsException.getMessage())
+                .developerMessage("Incorrect Username or Password")
                 .urlInstance(request.getServletPath())
                 .method(request.getMethod())
                 .build();
@@ -142,8 +140,8 @@ public class Validation {
                 .build();
     }
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(MalformedJwtException.class)
-    public HttpResponse malformedJwtException(MalformedJwtException malformedJwtException , HttpServletRequest request){
+    @ExceptionHandler(JwtTokenMalformedException .class)
+    public HttpResponse malformedJwtException(JwtTokenMalformedException  malformedJwtException , HttpServletRequest request){
         return HttpResponse.builder()
                 .timeStamp(LocalTime.now().toString())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -154,9 +152,24 @@ public class Validation {
                 .method(request.getMethod())
                 .build();
     }
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(EmptyFieldNotRequired.class)
+    public HttpResponse emptyFieldNotRequired(EmptyFieldNotRequired emptyFieldNotRequired , HttpServletRequest request){
+        return HttpResponse.builder()
+                .timeStamp(LocalTime.now().toString())
+                .status(HttpStatus.FORBIDDEN)
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .message(emptyFieldNotRequired.getMessage())
+                .developerMessage("Missing inputs")
+                .urlInstance(request.getServletPath())
+                .method(request.getMethod())
+                .build();
+    }
+
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(ExpiredJwtException.class)
-    public Map<String,String> jwtException(ExpiredJwtException jwtException){
+    @ExceptionHandler(JwtTokenExpiredException.class)
+    public Map<String,String> jwtException(JwtTokenExpiredException jwtException){
         Map<String,String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", jwtException.getMessage());
         return errorMap;
