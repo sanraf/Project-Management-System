@@ -1,9 +1,12 @@
 package com.algoExpert.demo.Entity;
 
+import com.algoExpert.demo.role.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 
@@ -24,4 +27,5 @@ public class HttpResponse {
     protected int userId;
     protected String fullname;
     protected String developerMessage;
+    protected List<Role> role;
 }

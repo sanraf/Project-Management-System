@@ -2,6 +2,7 @@ package com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl;
 
 import com.algoExpert.demo.Entity.HttpResponse;
 import com.algoExpert.demo.Entity.User;
+import com.algoExpert.demo.ExceptionHandler.EmptyFieldNotRequired;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Records.ChangePasswordRequest;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
@@ -37,11 +38,17 @@ public class ChangePasswordServiceImpl implements ChangePasswordService {
         boolean isCurrentMatch = passwordEncoder.matches(passwordRequest.currentPassword(),user.getPassword());
         boolean isNewMatch = passwordRequest.newPassword().equals(passwordRequest.confirmNewPassword());
 
+        if (passwordRequest.currentPassword().isBlank() ||
+                passwordRequest.newPassword().isBlank() ||
+                passwordRequest.confirmNewPassword().isBlank()){
+                throw new EmptyFieldNotRequired("All fields are required");
+        }
+
         if (!isCurrentMatch){
-            throw new BadCredentialsException("Current password mismatch");
+            throw new BadCredentialsException("Old password do not match");
         }
         if (!isNewMatch){
-            throw new BadCredentialsException("New password mismatch");
+            throw new BadCredentialsException("Confirm new password do not match");
         }
         user.setPassword(passwordEncoder.encode(passwordRequest.newPassword()));
         notificationService.createNotification(user,"Your password has been change successful");

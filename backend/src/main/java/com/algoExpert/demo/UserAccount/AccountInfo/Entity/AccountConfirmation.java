@@ -1,6 +1,7 @@
 package com.algoExpert.demo.UserAccount.AccountInfo.Entity;
 
 import com.algoExpert.demo.Entity.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,9 @@ public class AccountConfirmation {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expiresAt;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime confirmAt;
 
     @OneToOne
