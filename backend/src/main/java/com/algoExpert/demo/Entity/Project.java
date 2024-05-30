@@ -15,7 +15,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer project_id;
+    private Integer projectId;
 
     @NotBlank(message = "project title required")
     private String title;
