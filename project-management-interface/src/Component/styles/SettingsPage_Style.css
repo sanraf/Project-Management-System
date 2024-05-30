@@ -38,6 +38,7 @@
     position: relative;
     width: 100%;
     display: flex;
+    align-items: center;
     left: 1px;
   }
   .Edit_Table_section_name p{
@@ -76,9 +77,39 @@
     background-color: var(--blue-color);
     color: #fff;
   }
+
    .Edit_Table_section_Button_Section button:first-child, .Notification_Table_section_Button_Section button:first-child{
     background-color: var(--light-background-color);
     color: #333;
   }
  
   
+
+  .showPassword{
+    font-size: 1.3em;
+  }
+
+  .userMessage-wrapper{
+    
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0;
+    padding-right: 1rem;
+    gap: 2rem;
+  }
+
+  .userMessage-wrapper h2{
+    font-size: medium;
+    font-style: oblique;
+  }
+
+  .userMessage.success{
+    color: var(--blue-color);
+  }
+
+  .userMessage.error{
+    color: rgb(226, 39, 39);
+  }
+
