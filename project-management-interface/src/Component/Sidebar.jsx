@@ -35,6 +35,7 @@ function Sidebar() {
             })
           });
           sessionStorage.setItem("userProjects", JSON.stringify(projectDetails))
+          sessionStorage.setItem("projectStats", JSON.stringify(response.data))
         }
         } catch (error) {
           console.error('Error fetching data:', error);

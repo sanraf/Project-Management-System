@@ -373,12 +373,6 @@ function ProjectSection() {
                                                 </div>
                                                 </div>
                                                 
-
-
-                                            {/* Trying to fix the priority column to display a drop dowmn and stick after being saved */}
-                                            {/* <div style={{display:hiddenColumns.priority}} className='field_name table-task text_task'>
-                                                {task.priority}
-                                                </div> */}
                                             <div onClick={()=>toogleDropDownBoxes("priorityBox", 120, task.task_id,'priorityIndex')} id={task.priority} className='status field_name table-task'>
                                             {task.priority}
                                                 <div style={{height:dropDownBoxesHeight.priorityIndex == task.task_id ? dropDownBoxesHeight.priorityBox : 0}} className="status_dropdown">
@@ -387,17 +381,16 @@ function ProjectSection() {
                                                         <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'priority')} id='Not_Argent'>Not_Argent</span>
                                                 </div>
                                                 </div>
-                                            
                                             </div>
                                             <div className='more'></div>
                                         </div>       
                                     </div>                     
                                     )
-                                }
-                            </div>
-                        </div>
-                        ) 
-                        }
+                                    }
+                            
+                                </div>
+                           </div>
+                        )}
                     </div>
                 </div>
             </div>  
