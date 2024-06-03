@@ -31,5 +31,6 @@ public interface AuthService {
     //    delete user by id
     List<UserDto> deleteUser(int userId);
 
+    String forgotPasswordChange(String token, String newPassword);
 
 }

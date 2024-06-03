@@ -49,6 +49,9 @@ public class ProjectUserImpl implements ProjectUserService {
     @Autowired
     private TableRepository tableRepository;
 
+    @Autowired
+    private FeedbackRepo feedbackRepo;
+
 
     @Override
     public Project findProject(int project_id) throws InvalidArgument {
@@ -188,6 +191,15 @@ public class ProjectUserImpl implements ProjectUserService {
 
         return projectRepository.findAllById(userProjectIds);
     }
-    //    get User Project Ids
+    //send user feedback
+    @Override
+    public String sendUserFeedback(Feedback userFeedback) {
+        try {
+            feedbackRepo.save(userFeedback);
+            return "feedback successfully saved";
+        }catch (Exception e){
+            return "feedback could not be saved" + e;
+        }
+    }
 
 }

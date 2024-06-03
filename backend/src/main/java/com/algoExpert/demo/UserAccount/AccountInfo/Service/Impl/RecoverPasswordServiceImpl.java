@@ -1,6 +1,8 @@
 package com.algoExpert.demo.UserAccount.AccountInfo.Service.Impl;
 
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
+import com.algoExpert.demo.AppUtils.ImageConvertor;
+import com.algoExpert.demo.ExceptionHandler.UserNotFound;
 import com.algoExpert.demo.Records.PasswordRequest;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -8,12 +10,21 @@ import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.PasswordReset;
 import com.algoExpert.demo.UserAccount.AccountInfo.Repository.PasswordResetRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Service.PasswordResetService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -34,6 +45,19 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
     static final Long EXPIRING_TIME = 1L;
     @Value("${confirm.password.url}")
     String confirmLink;
+
+    @Autowired
+    private ImageConvertor imageConvertor;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
+
 
 
     /**
@@ -141,6 +165,65 @@ public class RecoverPasswordServiceImpl implements PasswordResetService {
         return resetRepository.findByPasswordToken(token).get();
 
     }
+    @Override
+    public String sendPasswordRecoveryEmail(String email) {
+        User user =  userRepository.findByEmail(email).get();
+        if(user == null){
+            throw new UserNotFound("requested user was not found in database");
+        }
+        String token =  UUID.randomUUID().toString();
+        storeUserPasswordToken(token,user);
+        return constructEmailToken(token,user);
+    }
+
+    public String constructEmailToken(String token, User user){
+        String confirmationUrl = "http://localhost:8080/auth/forgotPassword?token=" + token;
+        Context context = new Context();
+        context.setVariable("confirmationUrl", confirmationUrl);
+
+        String htmlContent = templateEngine.process("reset_password",context);
+        return constructEmail("Reset Password",htmlContent, user);
+    }
+    public String constructEmail(String subject, String body, User user){
+        MimeMessage email = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+
+        //attach image to html page
+        ModelAndView modelAndView = new ModelAndView("reset_password");
+        String imageCon =  imageConvertor.imageToBase64("password_reset.png");
+        modelAndView.addObject("password_reset_image", imageCon);
+
+        try {
+            helper = new MimeMessageHelper(email, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body,true);
+            javaMailSender.send(email);
+            return "Mail send successfully";
+        }catch (MessagingException e){
+            e.printStackTrace();
+            return "Mail could not be sent";
+        }
+    }
+
+    public void storeUserPasswordToken(String token, User user){
+        PasswordReset foundPasswordReset =  resetRepository.findPasswordByUserId(user.getUser_id());
+
+        if(foundPasswordReset != null){
+            foundPasswordReset.setPasswordToken(token);
+            resetRepository.save(foundPasswordReset);
+        }else {
+            PasswordReset passwordReset =  PasswordReset.builder()
+                    .passwordToken(token)
+                    .user(user)
+                    .expiresAt(LocalDateTime.now().plusHours(1))
+                    .build();
+            resetRepository.save(passwordReset);
+        }
+    }
+
+
+
 
     String login(String link){
         return "<a href=\"" + link + "\">";

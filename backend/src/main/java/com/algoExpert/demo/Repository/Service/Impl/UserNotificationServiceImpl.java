@@ -1,13 +1,17 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.Dto.NotificationSettings;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Entity.UserNotification;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
+import com.algoExpert.demo.ExceptionHandler.UserNotFound;
 import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import com.algoExpert.demo.Repository.Service.UserNotificationService;
 import com.algoExpert.demo.Repository.UserNotificationRepository;
 import com.algoExpert.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -94,6 +98,54 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     public boolean isDuplicate(Integer userId, Integer taskId) {
         return notificationRepository.countDuplicate(userId,taskId) > 0;
     }
+
+    @Override
+    public List<UserNotification> findByLoginUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the principal (authenticated user)
+            loggedUser = (User) authentication.getPrincipal();
+        }
+        return loggedUser.getUserNotificationList();
+    }
+    @Override
+    public String updateNotiSettings(NotificationSettings notiSettings) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User foundUser = null;
+        if(authentication != null && authentication.isAuthenticated()){
+            foundUser = (User)  authentication.getPrincipal();
+        }
+        try{
+            foundUser.setTaskNotification(notiSettings.isTaskNotification());
+            foundUser.setProjectNotification(notiSettings.isProjectNotification());
+            userRepository.save(foundUser);
+            return  "notification settings updated";
+        }catch (Exception e){
+            return "notification settings update failed" + e.getMessage();
+        }
+    }
+
+    @Override
+    public NotificationSettings findNotificationSettings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User foundUser = null;
+        if(authentication != null && authentication.isAuthenticated()){
+            foundUser = (User)  authentication.getPrincipal();
+            NotificationSettings notSettings = NotificationSettings.builder()
+                    .taskNotification(foundUser.isTaskNotification())
+                    .projectNotification(foundUser.isProjectNotification())
+                    .build();
+            return notSettings;
+
+        }else{
+            throw new UserNotFound("could not get user");
+        }
+
+    }
+
+
+
 
 
 }

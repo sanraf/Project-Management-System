@@ -54,6 +54,9 @@ public class User implements UserDetails {
     private boolean locked = false;
     private boolean enabled = false;
 
+    private boolean taskNotification = true;
+    private boolean projectNotification = true;
+
     //    additional fields
     private String image_url;
     private String username;
@@ -62,6 +65,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private LoginProvider provider;
+
 
 //    @PrePersist
 //    void assignCreatedAt(){

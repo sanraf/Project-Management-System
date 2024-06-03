@@ -15,6 +15,7 @@ import com.algoExpert.demo.Jwt.JwtService;
 import com.algoExpert.demo.Repository.Service.Impl.RefreshTokenSevice;
 import com.algoExpert.demo.Repository.Service.TaskService;
 import com.algoExpert.demo.Repository.Service.UserNotificationService;
+import com.algoExpert.demo.UserAccount.AccountInfo.Service.PasswordResetService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,9 +46,11 @@ public class AuthController {
     @Autowired
     private UserNotificationService userNotificationService;
 
-
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    PasswordResetService passwordResetService;
 
 
     @Autowired
@@ -62,15 +66,20 @@ public class AuthController {
         return authService.loginUser(userCredentials);
     }
 
-//    refresh token method
-
-    @GetMapping("/redirect")
-    public ModelAndView redirectToLoginPage() {
-        String s = "heeloo";
-        ModelAndView modelAndView = new ModelAndView("redirect");
-        modelAndView.addObject("m",s);
-        return modelAndView;
-
+    @PostMapping("/userPasswordReset")
+    public String createResetPasswordEmail(@RequestParam("email") String userEmail){
+        return passwordResetService.sendPasswordRecoveryEmail(userEmail);
     }
+
+    @GetMapping("/forgotPassword")
+    public RedirectView passwordChangePage(@RequestParam("token") String token){
+        return new RedirectView("http://localhost:5173/privacy?token=" + token);
+    }
+
+    @PostMapping("/changeForgotPassword/{token}/{newPassword}")
+    public String changeForgotPassword(@PathVariable String token, @PathVariable String newPassword){
+        return authService.forgotPasswordChange(token,newPassword);
+    }
+
 
 }
