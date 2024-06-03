@@ -17,5 +17,6 @@ public interface  PasswordResetService {
     boolean isTokenExpired(LocalDateTime expiresAt);
     PasswordReset findPasswordByUserId(int userId);
     PasswordReset findPasswordByToken(String token)throws InvalidArgument;
+    String sendPasswordRecoveryEmail(String email);
 
 }

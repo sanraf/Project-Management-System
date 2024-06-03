@@ -19,7 +19,9 @@ import com.algoExpert.demo.Jwt.JwtService;
 import com.algoExpert.demo.Repository.Service.AuthService;
 import com.algoExpert.demo.Repository.UserRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Entity.AccountConfirmation;
+import com.algoExpert.demo.UserAccount.AccountInfo.Entity.PasswordReset;
 import com.algoExpert.demo.UserAccount.AccountInfo.Repository.AccountConfirmationRepository;
+import com.algoExpert.demo.UserAccount.AccountInfo.Repository.PasswordResetRepository;
 import com.algoExpert.demo.UserAccount.AccountInfo.Service.AccountConfirmationService;
 import com.algoExpert.demo.role.Role;
 import jakarta.mail.MessagingException;
@@ -70,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    private AppEmailBuilder appEmailBuilder ;
+    private AppEmailBuilder appEmailBuilder;
     @Autowired
     private EmailHtmlLayout emailHtmlLayout;
     @Value("${confirm.account.url}")
@@ -83,6 +85,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private PasswordResetRepository passwordResetRepository;
+
+
+
 
 //    @Autowired
 //    UserMapper userMapper;
@@ -267,6 +275,28 @@ public class AuthServiceImpl implements AuthService {
                 .stream().map(user -> new UserDto(user.getUser_id(),
                         user.getUsername(),
                         user.getEmail())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String forgotPasswordChange(String token, String newPassword) {
+        try {
+            PasswordReset passwordResetUser =  passwordResetRepository.findByPasswordToken(token).get();
+
+            if(passwordResetUser != null) {
+                User user = passwordResetUser.getUser();
+                String encodedPassword =  passwordEncoder.encode(newPassword);
+                user.setPassword(encodedPassword);
+                userRepository.save(user);
+                return "password successfully saved";
+            }else {
+                return "password could not be saved";
+            }
+        }catch (NoSuchElementException e){
+            return "Invalid token";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "error occurred while resetting password";
+        }
     }
 
 //    public List<User> deleteUser(int userId){

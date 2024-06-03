@@ -1,5 +1,6 @@
 package com.algoExpert.demo.Controller;
 
+import com.algoExpert.demo.Entity.Feedback;
 import com.algoExpert.demo.Entity.Project;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -86,6 +87,11 @@ public class UserController {
             @RequestParam(defaultValue = "asc") String sortDirection) {
 
         return userService.getProjectWithSortedAndSearchedTables(projectId,page,size,search,sortField,sortDirection);
+    }
+
+    @PostMapping("/sendFeedback")
+    public String sendFeedback(@RequestBody Feedback userFeedback){
+        return  projectUserService.sendUserFeedback(userFeedback);
     }
 
 

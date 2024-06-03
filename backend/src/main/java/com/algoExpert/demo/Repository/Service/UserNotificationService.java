@@ -1,5 +1,6 @@
 package com.algoExpert.demo.Repository.Service;
 
+import com.algoExpert.demo.Dto.NotificationSettings;
 import com.algoExpert.demo.Entity.User;
 import com.algoExpert.demo.Entity.UserNotification;
 import jakarta.transaction.Transactional;
@@ -15,5 +16,10 @@ public interface UserNotificationService {
      void deleteNotification(int id);
      boolean isDuplicate(Integer userId,Integer taskId);
      List<UserNotification> userNotifications();
+
+     String updateNotiSettings(NotificationSettings notiSettings);
+     public List<UserNotification> findByLoginUser();
+
+     NotificationSettings findNotificationSettings();
 
 }
