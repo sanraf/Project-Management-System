@@ -59,7 +59,8 @@ body{
     background-color: var(--light-background-color);
     position: fixed;
     padding:0 20px;
-    overflow: scroll;
+    z-index: 4;
+    overflow-y: scroll;
 }
 .comments_size{
     font-size: 14px;

@@ -170,7 +170,7 @@ function ProjectSection() {
         }
     } 
     const updateTableName = async (newName, tableObg) => {
-        if (tableObg.table_name != newName) {  
+        if (tableObg.table_name != newName && newName != "") {  
             tableObg.table_name = newName;
             try {
                 const response = await axios.put(`http://localhost:8080/table/updateTable`,tableObg, {
@@ -232,7 +232,7 @@ function ProjectSection() {
             <div className="project-wrapper">
                 <Navbar/>  
                 <div className="project-section">
-                    <Assign closeMode={toogleDropDownBoxes} authToken={loggedInUser?loggedInUser.token:""} taskMembers={assignees} projectPeople={oneProject.memberList} assignModel={dropDownBoxesHeight} />  
+                    <Assign closeMode={toogleDropDownBoxes} taskMembers={assignees} projectPeople={oneProject.memberList} assignModel={dropDownBoxesHeight} />  
                     <div className="container">
                         <Comment  closeComment={toogleDropDownBoxes} dropDownValue={dropDownBoxesHeight} commentList={taskComments} />
                         <h6 className='page-section-header'>{oneProject.title}</h6>
@@ -296,9 +296,9 @@ function ProjectSection() {
                         {
                         oneProject.tables.map((table,table_index)=>
                                 <div key={table.table_id} className="table_section">
-                                    <div className='edit-table'>
-                                        <input id='table_title' onBlur={(e)=>updateTableName(e.target.value, table)} defaultValue={table.table_name} contentEditable/>
+                                <div className='edit-table'>
                                         <i className="lni lni-chevron-down" onClick={()=>toogleDropDownBoxes("table", 90,table_index,'tableIndex')}></i>
+                                        <input id='table_title' onBlur={(e)=>updateTableName(e.target.value, table)} defaultValue={table.table_name} contentEditable/>
                                         <div style={{height: table_index == dropDownBoxesHeight.tableIndex ? dropDownBoxesHeight.table :0}} className="edit-table-hidden-box">
                                             <div className='edit_table_icon' onClick={()=>deleteTable(oneProject.project_id, table.table_id)}>
                                                 <i className="lni lni-trash-can"></i>
@@ -366,22 +366,12 @@ function ProjectSection() {
                                                 {task.status}
                                                 <div style={{height:dropDownBoxesHeight.statusIndex == task.task_id ? dropDownBoxesHeight.statusBox : 0}} className="status_dropdown">
                                                     <div className="status_dropdown_content">
-                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='Done'>Done</span>
-                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='ToDo'>ToDo</span>
-                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='InProgress'>InProgress</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='DONE'>DONE</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='TODO'>TODO</span>
+                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='INPROGRESS'>INPROGRESS</span>
                                                     </div>
                                                 </div>
                                                 </div>
-                                                
-                                            <div onClick={()=>toogleDropDownBoxes("priorityBox", 120, task.task_id,'priorityIndex')} id={task.priority} className='status field_name table-task'>
-                                            {task.priority}
-                                                <div style={{height:dropDownBoxesHeight.priorityIndex == task.task_id ? dropDownBoxesHeight.priorityBox : 0}} className="status_dropdown">
-                                                    <div className="status_dropdown_content">
-                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'priority')} id='Argent'>Argent</span>
-                                                        <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'priority')} id='Not_Argent'>Not_Argent</span>
-                                                </div>
-                                                </div>
-                                            </div>
                                             <div className='more'></div>
                                         </div>       
                                     </div>                     

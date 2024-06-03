@@ -85,20 +85,22 @@
 }
 .admin_dash{margin-top: 3rem;}
 .sidebar .sub-links{
-    font-size: 12px;
+    font-size: 13px;
     text-transform: capitalize;
     position: relative;
     margin-left: 3rem;
     margin-bottom: 1rem;
-    color: #888;
+    color: #666;
+    line-height: 20px;
     cursor: pointer;
 }
 .sidebar .sub-links:after{
     position: absolute;
     content: "";
-    height: 2px;
-    width: 10px;
-    background-color: #aaa;
+    height: 7px;
+    border-radius: 100%;
+    width: 7px;
+    border: 1px solid #666;
     left: -30px;
     top: 5px;
 }
