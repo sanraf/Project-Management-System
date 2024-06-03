@@ -26,6 +26,7 @@ public class Task {
     private String status;
     private String priority;
     private String projectName;
+    private List<String> hiddenColumn;
 
     //    relationships
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
