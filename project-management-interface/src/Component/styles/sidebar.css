@@ -84,25 +84,24 @@
     top: 16px;
 }
 .admin_dash{margin-top: 3rem;}
-.sidebar .sub-links{
+.sidebar p{
     font-size: 13px;
     text-transform: capitalize;
     position: relative;
-    margin-left: 3rem;
-    margin-bottom: 1rem;
     color: #666;
+    padding:10px 1rem;
     line-height: 20px;
     cursor: pointer;
+    margin-bottom: -5px;
 }
-.sidebar .sub-links:after{
-    position: absolute;
-    content: "";
-    height: 7px;
+
+.sub_links p span{
+    height: 10px;
     border-radius: 100%;
-    width: 7px;
+    width: 10px;
     border: 1px solid #666;
-    left: -30px;
-    top: 5px;
+    display: inline-block;
+    margin-right: 12px;
 }
 
 #info{

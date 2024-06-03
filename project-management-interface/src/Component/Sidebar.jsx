@@ -8,17 +8,27 @@ import Cookies from 'js-cookie';
 function Sidebar() {
   const [project, setProject] = useState([]);
   const [activeLink, setactiveLink] = useState("");
+  const [projectLink, setprojectLink] = useState(0);
   const [showlinks, setshowlinks] = useState("none");
   const [userRole, setuserRole] = useState();
   
+  const showActiveProjectPage = () => {
+    setactiveLink(window.location.href)
+
+    if (window.location.href.includes("project")) {  
+      setprojectLink(sessionStorage.getItem("projectId"))
+      setshowlinks("block")
+    } 
+  }
+
   useEffect(() => { 
     const systemUser = JSON.parse(sessionStorage.getItem("systemUser"));
     if (systemUser) {
       const foundRole = systemUser.role.filter(user => user == "USER" || user == "ADMIN")
       setuserRole(foundRole[0])
     }
-    setactiveLink(window.location.href)
-
+    showActiveProjectPage();
+    
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/user/fetchUserProject`, {
@@ -44,7 +54,7 @@ function Sidebar() {
     fetchData();
   },[]);
   const loadProject =(project_id)=>{
-    sessionStorage.setItem("projectId",project_id);
+    sessionStorage.setItem("projectId", project_id);
     window.location.href = "project";
   }
   const navigate = useNavigate();
@@ -57,7 +67,8 @@ function Sidebar() {
 
   const displayLinks = (e) => {
     e.preventDefault();
-    setactiveLink("projects")
+    setactiveLink("project_page");
+    setprojectLink(0);
     showlinks == "block" ? setshowlinks("none") : setshowlinks("block");
   }
   const moveActive = (linkType, e) => {
@@ -75,17 +86,19 @@ function Sidebar() {
           <div  style={{ display: userRole == "USER" ? "block" : "none" }}>
               <span className='sidebar-subtitle'>dashboard</span>
               <a href="" onClick={(e)=>moveActive("home",e)} className={activeLink.includes("home") ? "activelink" :""}><i className="lni lni-home"></i> Home </a>
-              <a href="" className={activeLink == "projects" ? "activelink" :""} onClick={(e)=>displayLinks(e)}>
+              <a href="" className={activeLink == "project_page" ? "activelink" :""} onClick={(e)=>displayLinks(e)}>
                 <i className="lni lni-briefcase"></i>
                 User Projects
                 <i className="lni lni-chevron-down"></i>
-              </a>
-                {
+            </a>
+            <div className="sub_links">
+              {
                   project ? project.map((item,project_index)=>
-                    <p style={{display:showlinks}} className='sub-links' key={project_index} onClick={()=>loadProject(item.project_id)}> {item.title} </p>
+                    <p className={activeLink.includes("project") && projectLink == item.project_id ? "activelink" :""} style={{display:showlinks}}  key={project_index} onClick={()=>loadProject(item.project_id)}><span></span> {item.title} </p>
                   ):""
-              }
-              <a href="/" className={activeLink.includes("help") ? "activelink" :""} onClick={(e)=>moveActive("help",e)}><i id='info' className="lni lni-information"></i> Guide </a>
+                }
+            </div> 
+            <a href="/" className={activeLink.includes("help") ? "activelink" :""} onClick={(e)=>moveActive("help",e)}><i id='info' className="lni lni-information"></i> Guide </a>
           </div>
           <div className='admin_dash' style={{display: userRole == "ADMIN" ? "block":"none"}}>
             <span className='sidebar-subtitle'>Adminstartion</span>
