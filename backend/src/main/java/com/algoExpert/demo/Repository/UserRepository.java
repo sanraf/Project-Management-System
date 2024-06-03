@@ -17,6 +17,13 @@ public interface UserRepository  extends JpaRepository<User, Integer> {
 
     @Query("SELECT MONTH(u.dateRegistered), COUNT(u) FROM User u WHERE YEAR(u.dateRegistered) = :year GROUP BY MONTH(u.dateRegistered)")
     List<Object[]> getNewUsers(int year);
+//
+    Optional<User> findByUsername(String username);
 
+//    @Query("SELECT u FROM User u")
+//    List<User> findAllWithPagination(@Param("offset") int offset, @Param("pageSize") int pageSize);
+    void deleteByUsername(String username);
+
+    boolean existsByUsername(String username);
 
 }

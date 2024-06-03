@@ -10,6 +10,14 @@ import java.io.*;
 @Slf4j
 public class ImageConvertor {
 
+    /**
+     * Converts the image located at the specified image path to a Base64-encoded string.
+     * The image must be stored in the 'static/images' directory of the classpath.
+     *
+     * @param imagePath The path to the image file relative to the 'static/images' directory.
+     * @return A Base64-encoded string representing the image, or null if the conversion fails.
+     * @Author Santos Rafaelo
+     */
     public String imageToBase64(String imagePath) {
         try {
 

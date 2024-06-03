@@ -10,6 +10,7 @@ import com.algoExpert.demo.Repository.Service.ProjectUserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class UserController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private ProjectUserService userService;
 
     @Autowired
     private RefreshTokenSevice refreshTokenSevice;
@@ -66,4 +70,24 @@ public class UserController {
     public Boolean logoutUser(){
         return refreshTokenSevice.userLogout();
     }
+
+    @GetMapping("/paginate/{offset}/{pageSize}")
+    public Page<User> pagination(@PathVariable Integer offset, @PathVariable Integer pageSize) {
+        return userService.getUsersWithPagination(offset, pageSize);
+    }
+
+    @GetMapping("/getSingleProjectPaginationTables/{projectId}")
+    public ResponseEntity<Project> getProjectWithSortedAndSearchedTables(
+            @PathVariable Integer projectId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "tableName") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+
+        return userService.getProjectWithSortedAndSearchedTables(projectId,page,size,search,sortField,sortDirection);
+    }
+
+
+
 }

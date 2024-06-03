@@ -50,7 +50,7 @@ public class AuthController {
 
 
     @Autowired
-    private RefreshTokenSevice tokenSevice;
+    private RefreshTokenSevice tokenService;
 //    create user
     @PostMapping("/registerUser")
     public User registerUser(@RequestBody RegistrationRequest request) throws  InvalidArgument, MessagingException, IOException {
@@ -58,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/loginUser")
-    public HttpResponse userLogin(@RequestBody AuthRequest userCredentials){
+    public HttpResponse userLogin(@RequestBody AuthRequest userCredentials) throws Exception {
         return authService.loginUser(userCredentials);
     }
 

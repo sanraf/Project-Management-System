@@ -4,13 +4,22 @@ package com.algoExpert.demo.SecurityConfig;
 import com.algoExpert.demo.AuthService.UserDetailsServiceImpl;
 import com.algoExpert.demo.ExceptionHandler.CustomAccessDeniedHandler;
 import com.algoExpert.demo.Jwt.JwtAuthFilter;
+import com.algoExpert.demo.OAuth2.OAuth2LoginFailureHandler;
+import com.algoExpert.demo.OAuth2.OAuth2LoginSuccessHandler;
+import com.algoExpert.demo.OAuth2.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,11 +47,19 @@ import static org.springframework.http.HttpMethod.DELETE;
 
 @Configuration
 @EnableWebSecurity
+@Log4j2
+@RequiredArgsConstructor
 public class Config {
+    private final UserService userService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtAuthFilter authFilter;
+    @Autowired
+    private OAuth2LoginSuccessHandler  auth2LoginSuccessHandler;
+
+    @Autowired
+    private OAuth2LoginFailureHandler  auth2LoginFailureHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -61,7 +78,8 @@ public class Config {
                 .authorizeHttpRequests(request -> {
                             try {
                                 request
-                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**").permitAll()
+                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**","/user/**").permitAll()
+                                        .requestMatchers("/auth/**","/confirm/account**","/recover/**","/accessDenied","/assignee/**", "/error").permitAll()
                                         .requestMatchers("/project/**").hasAnyRole(USER.name(), MEMBER.name())
                                         .requestMatchers(POST, "/project/**").hasAnyAuthority(USER_CREATE.getPermission())
                                         .requestMatchers(PUT, "/project/**").hasAnyAuthority(OWNER_UPDATE.getPermission())
@@ -94,18 +112,24 @@ public class Config {
                                         .requestMatchers(DELETE,"/assignee/**").hasAnyAuthority(OWNER_DELETE.getPermission(),MEMBER_DELETE.getPermission())
                                         .requestMatchers("/admin/**").hasAnyRole(USER.name()).anyRequest().authenticated();
                             } catch (Exception e) {
-                                throw new RuntimeException(e.getMessage());
+                                throw new AccessDeniedException(e.getMessage());
                             }
                         }
 
                 )
 
-                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oc -> oc.userInfoEndpoint(ui -> ui.userService(userService.oauth2LoginHandler())
+                        .oidcUserService(userService.oidcLoginHandler())
+                )
+                        .successHandler(auth2LoginSuccessHandler)
+                        .failureHandler(auth2LoginFailureHandler)
+                )
                 .sessionManagement(session->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(Customizer.withDefaults())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
                  return httpSecurity.build();
     }
@@ -128,16 +152,15 @@ public class Config {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public PersistentTokenRepository persistentTokenRepository(){
-//        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-//        tokenRepository.setDataSource(dataSource);
-//        return tokenRepository;
-//    }
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
     }
 
+    @Bean
+    ApplicationListener<AuthenticationSuccessEvent> successLogger() {
+        return event -> {
+            log.info("success: {}", event.getAuthentication());
+        };
+    }
 }

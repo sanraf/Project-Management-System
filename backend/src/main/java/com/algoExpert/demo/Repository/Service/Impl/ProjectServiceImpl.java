@@ -4,7 +4,6 @@ import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
-import com.algoExpert.demo.Mapper.ProjectMapper;
 import com.algoExpert.demo.Repository.MemberRepository;
 import com.algoExpert.demo.Repository.ProjectRepository;
 import com.algoExpert.demo.Repository.Service.*;
@@ -14,6 +13,7 @@ import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.algoExpert.demo.AppUtils.AppConstants.TEMP_USER_EMAIL;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -37,9 +36,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private TaskService taskService;
 
     @Autowired
     private TableService tableService;
@@ -70,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project savedProject = projectRepository.save(project);
 
         // Create a default table using new member id
-        tableService.createTable(savedProject.getProject_id());
+        tableService.createTable(savedProject.getProjectId());
 
         List<Member> members = savedProject.getMemberList();
         if (members == null) {
@@ -79,7 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Member newMember = Member.builder()
                 .user_id(user.getUser_id())
-                .project_id(savedProject.getProject_id())
+                .project_id(savedProject.getProjectId())
                 .username(user.getUsername())
                 .projectRole(OWNER)
                 .build();
@@ -99,7 +95,7 @@ public class ProjectServiceImpl implements ProjectService {
         //todo change TEMP_USER_EMAIL to user.getEmail()
         appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
 
-        return savedProject.getProject_id();
+        return savedProject.getProjectId();
     }
 
     //  get all projects
@@ -134,14 +130,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
 
     public Project editProject(Project newProjectValue) throws InvalidArgument{
-        return projectRepository.findById(newProjectValue.getProject_id())
+        return projectRepository.findById(newProjectValue.getProjectId())
                 .map(existingProject -> {
                     if (newProjectValue != null) {
                         Optional.ofNullable(newProjectValue.getTitle()).ifPresent(existingProject::setTitle);
                         Optional.ofNullable(newProjectValue.getDescription()).ifPresent(existingProject::setDescription);
                     }
                     return projectRepository.save(existingProject);
-                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newProjectValue.getProject_id() + " not found"));
+                }).orElseThrow(() -> new InvalidArgument("Task with ID " + newProjectValue.getProjectId() + " not found"));
 
     }
 

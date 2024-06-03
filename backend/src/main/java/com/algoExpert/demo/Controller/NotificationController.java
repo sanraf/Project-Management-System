@@ -21,16 +21,10 @@ public class NotificationController {
         return "deleted";
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getUserNotifications")
     private List<UserNotification> getByUserId(){
-        return userNotificationService.findByLoginUser();
+        return userNotificationService.userNotifications();
     }
-
-//    @PostMapping("/create")
-//    private UserNotification createNotification(){
-//        return userNotificationService.createNotification("user1@gmail.com","hello");
-//
-//    }
 
 
 }

@@ -14,9 +14,12 @@ import java.util.List;
 public class TaskContainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int table_id;
-    private String table_name;
+    private int tableId;
+    private String tableName;
+    private int projectId;
+
     @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
+
 
 }

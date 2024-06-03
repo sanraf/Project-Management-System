@@ -53,7 +53,7 @@ public class TableServiceImpl implements TableService {
         }
 
 //        int count = project.getTables().size();
-        TaskContainer table = new TaskContainer(0, "Table", null);
+        TaskContainer table = new TaskContainer(0, "Table", project_id,null);
         Task task = new Task(0, "task", "description",project.getUser().getFullName(), "","", "", "", project.getTitle(), null,null);
 
 
@@ -128,11 +128,11 @@ public class TableServiceImpl implements TableService {
             throw new IllegalArgumentException("Invalid newTableValue");
         }
 
-        TaskContainer table = tableRepository.findById(newTableValue.getTable_id())
-                .orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTable_id() + " not found"));
+        TaskContainer table = tableRepository.findById(newTableValue.getTableId())
+                .orElseThrow(() -> new InvalidArgument("Task with ID " + newTableValue.getTableId() + " not found"));
 
-        if (newTableValue.getTable_name() != null) {
-            table.setTable_name(newTableValue.getTable_name());
+        if (newTableValue.getTableName() != null) {
+            table.setTableName(newTableValue.getTableName());
         }
 
         return tableRepository.save(table);
