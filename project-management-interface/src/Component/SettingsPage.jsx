@@ -132,8 +132,7 @@ function SettingsPage(){
             </div>
             
             <form className="setting-form" onSubmit={handleSubmit}>
-
-                    <div className="table_section">
+                    <div className="settings_table_section">
                     <div className="Edit_Table_section_name">
                     <p>Enter Old password</p>
                     </div>
@@ -147,7 +146,8 @@ function SettingsPage(){
                     />
                     <i className="lni lni-eye showPassword"  onClick={() => togglePasswordVisibility('currentPassword')}></i>
                     </div>
-                    <div className="table_section">
+                    </div>
+                    <div className="settings_table_section">
                     <div className="Edit_Table_section_name">
                         <p>Enter New Password</p>
                     </div>
@@ -163,7 +163,7 @@ function SettingsPage(){
                     </div>
                     </div>
 
-                    <div className="table_section">
+                    <div className="settings_table_section">
                     <div className="Edit_Table_section_name">
                         <p>Confirm New Password</p>
                     </div>
@@ -180,21 +180,14 @@ function SettingsPage(){
                     </div>
 
                     <div className="Edit_Table_section_Button_Sction password_condition">
-                    <input
-                        type="checkbox"
-                        checked={agreeTerms}
-                        onChange={handleAgreeTermsChange}
-                    />
-                    <p>
-                        I agree with the Terms and <b>Conditions.</b>
-                    </p>
+                      <input type="checkbox" checked={agreeTerms}onChange={handleAgreeTermsChange}/>
+                      <p>
+                          I agree with the Terms and <b>Conditions.</b>
+                      </p>
                     </div>
-
-                    <div className="settings-buttons  Edit_Table_section_Button_Sction">
-                    <button type="button" onClick={handleCancel}>
-                        Cancel
-                    </button>
-                    <button type="submit">Save Changes</button>
+                    <div className="Edit_Table_section_Button_Section  settings-buttons">
+                      <button type="button" onClick={handleCancel}>Cancel</button>
+                      <button type="submit">Save Changes</button>
                     </div>
                  
             </form>

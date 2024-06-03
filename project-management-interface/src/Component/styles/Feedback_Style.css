@@ -8,7 +8,7 @@
     margin-bottom: 1rem;
   }
   .Feedback_Container_Holder_Body_LeftSide textarea{
-    height: 200px;
+    height: 100px;
   }
   .Feedback_Container_Holder_Body_LeftSide input::placeholder, .Feedback_Container_Holder_Body_LeftSide textarea::placeholder{
     font-size: 11px;

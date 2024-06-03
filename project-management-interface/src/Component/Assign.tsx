@@ -3,10 +3,7 @@ import React,{useEffect} from 'react'
 import axios from 'axios';
 
 function Assign(props) {
-  const jwtAuth = props.authToken
- 
   const assignTask = async (memebrId) => {
-    if (jwtAuth) {
      try {
         const response = await axios.get(`http://localhost:8080/assignee/saveAssignee/${memebrId}/
         ${props.assignModel.assigneeId}`, {
@@ -16,9 +13,9 @@ function Assign(props) {
               window.location.reload()
           }
           } catch (error) {
-              console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
       }
-   }
+   
     
   }
   
