@@ -41,7 +41,8 @@ function Sidebar() {
           projectDetails.push( {
             "title": element.title,
             "description": element.description,
-            "id":element.project_id
+            "owner": element.user.email,
+            "id":element.projectId
             })
           });
           sessionStorage.setItem("userProjects", JSON.stringify(projectDetails))
@@ -53,8 +54,8 @@ function Sidebar() {
     };
     fetchData();
   },[]);
-  const loadProject =(project_id)=>{
-    sessionStorage.setItem("projectId", project_id);
+  const loadProject =(projectId)=>{
+    sessionStorage.setItem("projectId", projectId);
     window.location.href = "project";
   }
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ function Sidebar() {
             <div className="sub_links">
               {
                   project ? project.map((item,project_index)=>
-                    <p className={activeLink.includes("project") && projectLink == item.project_id ? "activelink" :""} style={{display:showlinks}}  key={project_index} onClick={()=>loadProject(item.project_id)}><span></span> {item.title} </p>
+                    <p className={activeLink.includes("project") && projectLink == item.projectId ? "activelink" :""} style={{display:showlinks}}  key={project_index} onClick={()=>loadProject(item.projectId)}><span></span> {item.title} </p>
                   ):""
                 }
             </div> 
