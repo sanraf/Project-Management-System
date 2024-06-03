@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 
 
 function CreateProject() {
-  const [project, setProject] = useState({project_id:0, title: '', description: '', membersList:[], tables:[]});
+  const [project, setProject] = useState({projectId:0, title: '', description: '', membersList:[], tables:[]});
 
   const createProject = async (e) => {
     e.preventDefault();

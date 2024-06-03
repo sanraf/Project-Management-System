@@ -1,0 +1,126 @@
+
+
+.pagination-container {
+    width: 100%;
+    display: flex;
+    position: relative;
+    align-items: center;
+    /* bottom: -10%; */
+    transition: all 300ms ease-in-out;
+  }
+
+  select {
+    border: 1px solid #ccc;
+    border: none;
+    transition: all 0.3s ease;
+
+}
+
+
+
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+.data-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+
+
+.data-container div {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-container div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.pagination {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 300ms ease-in-out;
+  }
+
+  .pagination li {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px #e3e3e3 solid;
+    color: #000000;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    margin: 0;
+    padding: 0rem;
+    border-radius: 50%; 
+    background-color: #007bff;
+    font-weight: 400;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-button img{
+    padding: 0.8rem .9rem;
+    width: 1rem;
+    height: 1.2rem;
+    border: 1px #e3e3e3 solid;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    transition: all 300ms ease-in-out;
+   
+  }
+  .pagination button:hover:not(:disabled) img {
+    background-color: var(--darkblue-background-color);
+
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: var(--darkblue-background-color);
+    transform: translateY(-3px);
+}
+
+.pagination .active {
+    background-color: var(--darkblue-background-color);
+    transform: translateY(-3px);
+}
+
+.pagination .inactive {
+    background-color: white;
+}
+
