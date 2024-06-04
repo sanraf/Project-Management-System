@@ -68,7 +68,7 @@
 }
 .sidebar-links a{position: relative;}
 .activelink{
-    background-color: #f9f9f9;
+    background-color: var(--light-background-color);
     border-radius: 10px;
 }
 .sidebar-links a i{

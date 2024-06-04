@@ -123,11 +123,11 @@ function Login() {
                             <div className="third_party_login">
                                 <p id=''>Login with other sites</p>
                                 <div className='third_party_links'>
-                                    <a href=''>
+                                    <a href="http://localhost:8080/oauth2/authorization/github">
                                         <i className="lni lni-github-original"></i>
                                         <span>Github</span>
                                     </a>
-                                    <a href=''>
+                                    <a href="http://localhost:8080/oauth2/authorization/google">
                                         <i className="lni lni-google"></i>
                                         <span>Google</span>
                                     </a>

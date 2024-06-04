@@ -61,7 +61,7 @@ body{
     position: fixed;
     padding:0 20px;
     z-index: 4;
-    overflow-y: scroll;
+   
 }
 .comments_size{
     font-size: 14px;
