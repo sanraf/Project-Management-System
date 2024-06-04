@@ -30,7 +30,7 @@ const OAuth2Login = () => {
         });
 
         // Redirect to the desired page within your React app
-        window.location.href = "/help";
+        window.location.href = "/home";
       } else {
         console.log("Error during login:", response.data.message);
         // Handle error scenario

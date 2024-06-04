@@ -101,7 +101,6 @@ function ProjectSection() {
           }
         );
         if (response.data) {
-          console.log(response.data);
           setoneProject(response.data);
           setCurrentItems(response.data.tables);
           setTotalTables(response.data.tableCount);
@@ -168,15 +167,14 @@ function ProjectSection() {
       }
 
       try {
-        const response = await axios.put(
-          `http://localhost:8080/task/editTask`,
-          task,
+        const response = await axios.put(`http://localhost:8080/task/editTask`,task,
           {
             withCredentials: true,
           }
         );
         if (response.data) {
           // window.location.reload();
+          setTrckChange(trackChange + 1);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -509,33 +507,22 @@ function ProjectSection() {
               </div>
               {oneProject.tables.map((table, table_index) => (
                 <div key={table.tableId} className="table_section">
-                  <div className="edit-table">
-                    <input
-                      id="table_title"
-                      onChange={(e) => updateTableName(e.target.value, table)}
-                      defaultValue={table.tableName}
-                      contentEditable
-                    />
-                    <i
-                      className="lni lni-chevron-down"
-                      onClick={() =>
-                        toogleDropDownBoxes(
-                          "table",
-                          90,
-                          table_index,
-                          "tableIndex"
-                        )
-                      }
-                    ></i>
-                    <div
+                      <div className="edit-table">
+                           <i className="lni lni-chevron-down" onClick={()=>toogleDropDownBoxes("table", 90,table_index,'tableIndex')}></i>
+                            <input
+                            id="table_title"
+                            onChange={(e) => updateTableName(e.target.value, table)}
+                            defaultValue={table.tableName}
+                            contentEditable
+                            />
+                        <div
                       style={{
                         height:
                           table_index == dropDownBoxesHeight.tableIndex
                             ? dropDownBoxesHeight.table
                             : 0,
                       }}
-                      className="edit-table-hidden-box"
-                    >
+                      className="edit-table-hidden-box">
                       <div
                         className="edit_table_icon"
                         onClick={() =>
@@ -641,7 +628,7 @@ function ProjectSection() {
                               className="more-task lni lni-more"
                             ></i>
                             <input
-                              onChange={(e) =>
+                              onBlur={(e) =>
                                 sendEditedRow(task, e.target.value, "title")
                               }
                               defaultValue={task.title}
@@ -650,7 +637,7 @@ function ProjectSection() {
                           <div className="field_name table-task text_task row_description">
                             <input
                               defaultValue={task.description}
-                              onChange={(e) =>
+                              onBlur={(e) =>
                                 sendEditedRow(
                                   task,
                                   e.target.value,
@@ -688,7 +675,7 @@ function ProjectSection() {
                           <div className="field_name table-task">
                             <input
                               defaultValue={task.start_date}
-                              onChange={(e) =>
+                              onBlur={(e) =>
                                 sendEditedRow(
                                   task,
                                   e.target.value,
@@ -699,77 +686,18 @@ function ProjectSection() {
                             />
                           </div>
                           <div className="field_name table-task">
-                            <input
-                              defaultValue={task.end_date}
-                              type="date"
-                              onChange={(e) =>
-                                sendEditedRow(task, e.target.value, "end_date")
-                              }
-                            />
+                            <input defaultValue={task.end_date} type="date" onBlur={(e) => sendEditedRow(task, e.target.value, "end_date")}/>
                           </div>
-                          <div
-                            onClick={() =>
-                              toogleDropDownBoxes(
-                                "statusBox",
-                                160,
-                                task.task_id,
-                                "statusIndex"
-                              )
-                            }
-                            id={task.status}
-                            className="status field_name table-task"
-                          >
+                          <div onClick={() => toogleDropDownBoxes( "statusBox",160,task.task_id,"statusIndex")} id={task.status} className="status field_name table-task">
                             {task.status}
-                            <div
-                              style={{
-                                height:
-                                  dropDownBoxesHeight.statusIndex ==
-                                  task.task_id
-                                    ? dropDownBoxesHeight.statusBox
-                                    : 0,
-                              }}
-                              className="status_dropdown"
-                            >
+                            <div style={{height: dropDownBoxesHeight.statusIndex == task.task_id ? dropDownBoxesHeight.statusBox: 0}} className="status_dropdown">
                               <div className="status_dropdown_content">
-                                <span onClick={(e) =>
-                                    sendEditedRow(
-                                      task,
-                                      e.target.innerText,
-                                      "status"
-                                    )
-                                  }
-                                  id="DONE"
-                                >
-                                  DONE
-                                </span>
-                                <span
-                                  onClick={(e) =>
-                                    sendEditedRow(
-                                      task,
-                                      e.target.innerText,
-                                      "status"
-                                    )
-                                  }
-                                  id="ToDo"
-                                >
-                                  ToDo
-                                </span>
-                                <span
-                                  onClick={(e) =>
-                                    sendEditedRow(
-                                      task,
-                                      e.target.innerText,
-                                      "status"
-                                    )
-                                  }
-                                  id="InProgress"
-                                >
-                                  InProgress
-                                </span>
-                              </div>
+                                    <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='DONE'>DONE</span>
+                                    <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='TODO'>TODO</span>
+                                    <span onClick={(e)=>sendEditedRow(task, e.target.innerText,'status')} id='INPROGRESS'>INPROGRESS</span>
+                                </div>
                             </div>
                           </div>
-
                           <div className="more"></div>
                         </div>
                       </div>
