@@ -2,9 +2,11 @@ import React, { useEffect,useState } from 'react'
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import imageOne from "../assets/hero-img2.png"
+import axios from 'axios';
 
 function Home() {
     const [user, setuser] = useState();
+    const [allMembers, setAllMember] = useState([]);
     const [userProjects, setuserProjects] = useState([]);
 
     useEffect(() => {
@@ -21,6 +23,20 @@ function Home() {
         }
         
     }, []);
+
+    useEffect(()=>{
+
+        const getMember = async () =>{
+          const respond = await axios.get('http://localhost:8080/member/getAllMembers',{withCredentials:true})
+          if(respond.data){
+            setAllMember(respond.data);
+          }
+          
+        }
+        getMember();
+      },[])
+
+
     const loadProject =(project_id)=>{
     sessionStorage.setItem("projectId",project_id);
     window.location.href = "project";
@@ -61,17 +77,25 @@ function Home() {
                                       userProjects ? userProjects.map(project =>
                                           <div key={project.id} onClick={() => loadProject(project.id)} className="home-project-cards">
                                               <div className="home_project_card_title">
-                                                  <i className="lni lni-briefcase-alt"></i>
+                          
+                                                  {(user.email == project.owner) ? <i title = 'your project' className="lni lni-briefcase-alt"></i>:<i title = 'your organisation' className="lni lni-network"></i>}
+                                                  
                                                    <h6> {project.title}</h6>
-                                                    <span>Date created: 11 May,2024</span>
+                                                    <span>Date created: {project.createdDate}</span>
                                                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                                                         Facilis assumenda laboriosam adipisci tenetur.</p>
                                               </div>
-                                              <div className="home_project_members">
-                                                  <h6>Project members</h6>
-                                                  <span className='task_assign_letter'>M</span>
-                                                  <span className='task_assign_letter'>M</span>
-                                              </div>
+                                    
+                                                <div className="home_project_members" >
+                                                <h6>Project members</h6>
+                                                {allMembers.filter((data)=> data.projectId == project.id).map(
+                                                (mamber,i) =>
+                                                <span mytooltip={mamber.username} className='task_assign_letter'key={i}>{mamber.username.charAt(0)}</span>
+                                                )}
+                                
+                                            </div>
+                                              
+                               
                                         </div>
                                       ):""
                                   }
