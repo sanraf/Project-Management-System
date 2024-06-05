@@ -1,6 +1,8 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
 
+import com.algoExpert.demo.Admin.AdminEnums.FeatureType;
+import com.algoExpert.demo.Admin.Repository.Service.FeatureService;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
@@ -40,7 +42,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private  UserRepository userRepository;
 
+
+    @Autowired
+    private FeatureService featureService;
+
     //    create new task
+    @Transactional
     @Override
     public TaskContainer createTask(int table_id) throws InvalidArgument {
 
@@ -65,6 +72,11 @@ public class TaskServiceImpl implements TaskService {
                 .username(username)
                 .status("TODO")
                 .projectName(projectName).build();
+
+        FeatureType[] featureTypesToUpdate1 = {FeatureType.CREATE_TASK};
+        for (FeatureType featureType : featureTypesToUpdate1) {
+            featureService.updateFeatureCount(featureType);
+        }
 
         taskList.add(task);
         table.setTasks(taskList);
@@ -93,6 +105,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     //duplicate task
+    @Transactional
     @Override
     public TaskContainer duplicateTask(Task task, Integer table_id) {
         TaskContainer table = tableRepository.findById(table_id).get();
@@ -108,6 +121,12 @@ public class TaskServiceImpl implements TaskService {
                 .projectName(task.getProjectName()).build();
 
         List<Task> taskList = table.getTasks();
+
+        FeatureType[] featureTypesToUpdate1 = {FeatureType.DUPLICATE};
+        for (FeatureType featureType : featureTypesToUpdate1) {
+            featureService.updateFeatureCount(featureType);
+        }
+
         taskList.add(newTask);
         table.setTasks(taskList);
         return tableRepository.save(table);
@@ -131,6 +150,14 @@ public class TaskServiceImpl implements TaskService {
         List<Task> taskList = table.getTasks();
         taskList.remove(storedTask);
         table.setTasks(taskList);
+
+        FeatureType[] featureTypesToUpdate1 = {FeatureType.DELETE_TASK};
+        for (FeatureType featureType : featureTypesToUpdate1) {
+            featureService.updateFeatureCount(featureType);
+        }
+
+
+
         tableRepository.save(table);
         return table;
     }

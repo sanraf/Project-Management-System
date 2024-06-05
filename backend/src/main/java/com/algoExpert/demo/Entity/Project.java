@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -25,6 +26,8 @@ public class Project {
     @Transient
     private Long tableCount;
     private String sortDirection = Sort.Direction.ASC.name();
+
+    private LocalDate created_at;
 
     //  relationships
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
