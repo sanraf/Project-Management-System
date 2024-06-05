@@ -303,8 +303,8 @@ function ProjectSection() {
           withCredentials: true,
         }
       );
-      if (response.data.projectId) {
-        window.location.reload();
+      if (response.data) {
+        // window.location.reload();
         setTrckChange(trackChange + 1);
       }
     } catch (error) {
@@ -658,7 +658,7 @@ function ProjectSection() {
                           <div className="assignee field_name table-task text_task">
                             {task.assignees.length > 0 ? (
                               task.assignees.map((taskAssignee, i) => (
-                                <span key={i} className="task_assign_letter">
+                                <span mytooltip = {taskAssignee.username} key={i} className="task_assign_letter">
                                   {taskAssignee.username.charAt(0)}
                                 </span>
                               ))
@@ -715,7 +715,7 @@ function ProjectSection() {
                       onClick={() => goToPage(currentPage - 1)}
                       disabled={currentPage === 1}
                     >
-                      <img src={previousIcon} alt="Previous" />
+                      <i className="lni lni-chevron-left"></i>
                     </button>
                   </li>
                   {renderPageButtons().map((page, index) => (
@@ -742,7 +742,7 @@ function ProjectSection() {
                         currentPage === Math.ceil(totalTables / pageSize)
                       }
                     >
-                      <img src={nextIcon} alt="Next" />
+                      <i className="lni lni-chevron-right"></i>
                     </button>
                   </li>
                 </ul>
