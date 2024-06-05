@@ -25,6 +25,7 @@ public class Project {
     @Transient
     private Long tableCount;
     private String sortDirection = Sort.Direction.ASC.name();
+    private String createdDate;
 
     //  relationships
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

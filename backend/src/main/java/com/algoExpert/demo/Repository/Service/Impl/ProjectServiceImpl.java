@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +62,12 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new InvalidArgument("User with ID " + projectUser.loggedInUserId() + " not found"));
 
 
-        project.setUser(user);
+
+            DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E dd MMM yyyy");
+            String formattedDate = LocalDateTime.now().format(myFormatObj);
+
+            project.setUser(user);
+            project.setCreatedDate(formattedDate);
 
         // Save the project and retrieve the saved instance
         Project savedProject = projectRepository.save(project);
@@ -75,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Member newMember = Member.builder()
                 .user_id(user.getUser_id())
-                .project_id(savedProject.getProjectId())
+                .projectId(savedProject.getProjectId())
                 .username(user.getUsername())
                 .projectRole(OWNER)
                 .build();
