@@ -114,6 +114,21 @@ margin-right: 10px;
     font-size: 15px;
     padding: 4px;
 }
+
+.home_project_members .task_assign_letter:hover::before  {
+    content: attr(mytooltip);
+    position: absolute;
+    background: #ffffff;
+    border-radius: 5px;
+    padding: 2px;
+    border: 1px gray solid;
+    margin-top: 30px;
+    margin-left: 20px;
+    padding: 0 0.5rem;
+    color: #4f4f4f;
+    text-transform: none;
+  }
+
 .home_project_members span:first-child{margin-left: 8px;}
 .home-projects #home_btn{
  
