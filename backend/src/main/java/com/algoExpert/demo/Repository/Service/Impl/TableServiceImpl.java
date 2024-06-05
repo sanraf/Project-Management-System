@@ -65,6 +65,8 @@ public class TableServiceImpl implements TableService {
                 .title("Task")
                 .description("Description")
                 .status("TODO")
+                .start_date(" ")
+                .end_date(" ")
                 .username(project.getUser().getFullName())
                 .projectName(project.getTitle()).build();
 
