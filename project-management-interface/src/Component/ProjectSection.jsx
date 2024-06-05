@@ -304,7 +304,6 @@ function ProjectSection() {
         }
       );
       if (response.data) {
-        // window.location.reload();
         setTrckChange(trackChange + 1);
       }
     } catch (error) {
