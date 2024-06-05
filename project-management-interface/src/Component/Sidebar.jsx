@@ -36,12 +36,14 @@ function Sidebar() {
         });
         if(response.data) {
           setProject(response.data)
+        
           const projectDetails = []
           response.data.forEach(element => {
           projectDetails.push( {
             "title": element.title,
             "description": element.description,
             "owner": element.user.email,
+            "createdProjectDate": element.createdDate,
             "id":element.projectId
             })
           });
@@ -54,6 +56,8 @@ function Sidebar() {
     };
     fetchData();
   },[]);
+
+
   const loadProject =(projectId)=>{
     sessionStorage.setItem("projectId", projectId);
     window.location.href = "project";
