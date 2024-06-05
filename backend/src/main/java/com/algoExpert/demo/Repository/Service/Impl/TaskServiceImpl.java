@@ -30,13 +30,10 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private TableRepository tableRepository;
-
     @Autowired
     private CommentRepository commentRepository;
-
     @Autowired
     private ProjectUserImpl projectUser;
-
     @Autowired
     private  UserRepository userRepository;
 
@@ -64,6 +61,8 @@ public class TaskServiceImpl implements TaskService {
                 .description("Description+")
                 .username(username)
                 .status("TODO")
+                .start_date(" ")
+                .end_date(" ")
                 .projectName(projectName).build();
 
         taskList.add(task);
