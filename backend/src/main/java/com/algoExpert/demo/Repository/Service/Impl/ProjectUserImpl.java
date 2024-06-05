@@ -1,5 +1,9 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.Admin.AdminEnums.FeatureType;
+import com.algoExpert.demo.Admin.Repository.FeatureUsageRepository;
+import com.algoExpert.demo.Admin.Repository.Service.FeatureService;
+import com.algoExpert.demo.Admin.Repository.Service.Impl.FeatureServiceImpl;
 import com.algoExpert.demo.Entity.*;
 import com.algoExpert.demo.ExceptionHandler.InvalidArgument;
 import com.algoExpert.demo.Jwt.JwtResponse;
@@ -14,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -50,6 +56,13 @@ public class ProjectUserImpl implements ProjectUserService {
 
     @Autowired
     private FeedbackRepo feedbackRepo;
+
+
+    @Autowired
+    private FeatureService featureService;
+
+    @Autowired
+    private FeatureUsageRepository featureUsageRepository;
 
 
     @Override
@@ -145,6 +158,14 @@ public class ProjectUserImpl implements ProjectUserService {
         Sort sort = Sort.by(direction, sortField);
         Pageable pageable = PageRequest.of(page, size, sort);
 
+
+            // If the FeatureUsage table is not empty, update only the CREATE_PROJECT feature type
+            FeatureType[] featureTypesToUpdate = {FeatureType.SORT};
+            for (FeatureType featureType : featureTypesToUpdate) {
+                featureService.updateFeatureCount(featureType);
+            }
+
+
         List<TaskContainer> tables;
 
         tables = (search != null) ?
@@ -200,5 +221,15 @@ public class ProjectUserImpl implements ProjectUserService {
             return "feedback could not be saved" + e;
         }
     }
+
+
+
+//    @Override
+//    public User getUserById(int userId) {
+//        return userRepository.findById(userId).orElseThrow();
+//    }
+
+
+
 
 }

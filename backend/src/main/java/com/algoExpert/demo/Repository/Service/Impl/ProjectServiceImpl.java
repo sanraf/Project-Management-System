@@ -1,5 +1,9 @@
 package com.algoExpert.demo.Repository.Service.Impl;
 
+import com.algoExpert.demo.Admin.AdminEnums.FeatureType;
+import com.algoExpert.demo.Admin.Repository.FeatureUsageRepository;
+import com.algoExpert.demo.Admin.Repository.Service.FeatureService;
+import com.algoExpert.demo.Admin.Repository.Service.Impl.FeatureServiceImpl;
 import com.algoExpert.demo.AppNotification.AppEmailBuilder;
 import com.algoExpert.demo.AppNotification.EmailHtmlLayout;
 import com.algoExpert.demo.Entity.*;
@@ -11,9 +15,9 @@ import com.algoExpert.demo.Repository.TableRepository;
 import com.algoExpert.demo.Repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -52,6 +56,14 @@ public class ProjectServiceImpl implements ProjectService {
     StringBuilder projectUrl;
     @Autowired
     ProjectUserService projectUser;
+
+    @Autowired
+    private FeatureService featureService;
+    @Autowired
+    private FeatureServiceImpl feature;
+
+    @Autowired
+    private FeatureUsageRepository featureUsageRepository;
     private static final String OWNER = "OWNER";
     //  create project
     @Transactional
@@ -101,6 +113,20 @@ public class ProjectServiceImpl implements ProjectService {
                 , link);
         //todo change TEMP_USER_EMAIL to user.getEmail()
         appEmailBuilder.sendEmailInvite(user.getEmail(),projectHtml,subject);
+
+
+        if (featureUsageRepository.count() == 0) {
+            for (FeatureType featureType : FeatureType.values()) {
+                featureService.updateFeatureCount(featureType);
+
+            }
+        } else {
+            FeatureType[] featureTypesToUpdate = {FeatureType.CREATE_PROJECT};
+            for (FeatureType featureType : featureTypesToUpdate) {
+                featureService.updateFeatureCount(featureType);
+
+            }
+        }
 
         return savedProject.getProjectId();
     }
