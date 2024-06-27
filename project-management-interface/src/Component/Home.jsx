@@ -81,7 +81,7 @@ function Home() {
                                                   {(user.email == project.owner) ? <i title = 'your project' className="lni lni-briefcase-alt"></i>:<i title = 'your organisation' className="lni lni-network"></i>}
                                                   
                                                    <h6> {project.title}</h6>
-                                                    <span>Date created: {project.createdDate}</span>
+                                                    <span>Date created: {project.createdProjectDate}</span>
                                                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                                                         Facilis assumenda laboriosam adipisci tenetur.</p>
                                               </div>

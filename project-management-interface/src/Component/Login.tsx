@@ -106,13 +106,13 @@ function Login() {
                               <h6>Email</h6>
                                 <input {...register("email",{required:"please enter email"})} type="text" id='email' name="email"  placeholder='email' />
                                <h6>Password</h6>
-                                <input  {...register("password", { required: "please enter password" })} id='password' type="text" name="password" placeholder='password' />
+                                <input  {...register("password", { required: "please enter password" })} id='password' type="password" name="password" placeholder='password' />
                                 <p style={{ display: showRegister == "none" && badCredentials ? "block" : "none" }}>{badCredentials}</p>
                                 <a href='' onClick={e =>passwordChange(e)} style={{display:showRegister == "none" ?"block" :"none"}}  id='forgot_password'>Forgot Password ?</a>
                                <div style={{display:showRegister}}>
                                     <h6>Re-enter password</h6>
                                     <p style={{display:passwordMessage}} id="wrong_password">Attention: Passwords do not match, please ensure they match to proceed</p>
-                                    <input {...register("re_password", { required: showRegister == "block" ? true : false })} name='re_password' id='password' type="text" placeholder='password' />
+                                    <input {...register("re_password", { required: showRegister == "block" ? true : false })} name='re_password' id='password' type="password" placeholder='password' />
                                 </div>
                                 {
                                     showRegister == "block" ? <button type='submit'>Register</button> :
